@@ -6,203 +6,50 @@
 <title>海南金牌港数字孪生指挥中心 · v1.0.0</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="../vendor/font-awesome/css/all.min.css">
-<script src="../vendor/echarts.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap');
 *{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;box-sizing:border-box}
 html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#030712;color:#fff}
 body{display:flex;flex-direction:column}
-.tool{flex:0 0 auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:6px 10px;background:#0b1220;border-bottom:1px solid #1e293b;font-size:12px;color:#94a3b8;z-index:20}
-.tool a,.tool button{color:#e2e8f0;border:1px solid #334155;background:#1e293b;border-radius:6px;padding:5px 9px;cursor:pointer;text-decoration:none}
 .stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
-.wall{position:relative;aspect-ratio:16/9;width:min(98vw,calc(98vh*16/9));height:min(98vh,calc(98vw*9/16));display:flex;flex-direction:column;overflow:hidden;border:1px solid rgba(14,116,240,.35);box-shadow:0 0 40px rgba(0,0,0,.55);background:linear-gradient(165deg,#080c20,#0d1a3a 48%,#0a1228)}
-body.present .tool{display:none}
+.wall{position:relative;aspect-ratio:16/9;width:min(98vw,calc(98vh*16/9));height:min(98vh,calc(98vw*9/16));overflow:hidden;border:1px solid rgba(14,116,240,.35);box-shadow:0 0 40px rgba(0,0,0,.55);background:#030712}
+.wall>img.shot{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;pointer-events:none;user-select:none}
+.chrome{position:absolute;z-index:20;left:12px;top:6px;display:flex;gap:8px;align-items:center}
+.chrome a,.chrome button{color:#e2e8f0;border:1px solid rgba(148,163,184,.35);background:rgba(15,23,42,.72);border-radius:6px;padding:4px 9px;cursor:pointer;text-decoration:none;font-size:12px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.hot{position:absolute;z-index:10;display:block;border:0;background:transparent;cursor:pointer;padding:0}
+.hot:hover{outline:1px solid rgba(0,228,255,.35);outline-offset:1px;background:rgba(0,228,255,.06)}
+.hot.on{cursor:default}
+.hot.on:hover{outline:none;background:transparent}
+body.present .chrome{display:none}
 body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
-.card{position:relative;border:1px solid rgba(14,116,240,.28);border-radius:6px;padding:12px;background:rgba(8,28,62,.9);box-shadow:inset 0 0 14px rgba(14,116,240,.05);overflow:hidden}
-.mark{width:3px;height:16px;background:#00e4ff;flex-shrink:0;border-radius:1px}
-.chip{font-size:11px;color:#b4c7e7}
-.theme{min-width:88px;text-align:center;padding:7px 12px;font-size:13px;font-weight:600;border-radius:5px;text-decoration:none;cursor:pointer;border:1px solid rgba(14,116,240,.28);background:#0a1729;color:#b4c7e7}
-.theme.on{color:#06202a;background:linear-gradient(180deg,#7ee7f0,#00e4ff);border-color:#00e4ff;font-weight:800}
 .toast{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);background:rgba(8,28,62,.95);border:1px solid rgba(14,116,240,.28);padding:8px 14px;border-radius:8px;font-size:12px;opacity:0;transition:.2s;z-index:40}
 .toast.show{opacity:1}
 #themes{display:none}
-.bar{height:6px;border-radius:99px;background:rgba(14,116,240,.15);overflow:hidden}
-.bar>i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#0e74f0,#00e4ff)}
+.badge{position:absolute;right:12px;top:6px;z-index:20;font-size:11px;color:#94a3b8;background:rgba(15,23,42,.72);border:1px solid rgba(148,163,184,.35);border-radius:6px;padding:4px 8px}
 </style>
 </head>
 <body>
-<div class="tool">
-  <span>一张图大屏 · 领导展示 · 演示数据</span>
-  <a href="../index.html">入口</a>
-  <a href="pc_wall_command_screen.html?from=%E6%A6%82%E8%A7%88">概览总览</a>
-  <button type="button" id="btnPresent">汇报全屏</button>
-</div>
 <div class="stage">
-  <div class="wall">
-
-    <header class="shrink-0 h-[7%] px-5 flex items-center justify-between border-b border-[rgba(14,116,240,.28)]" style="background:linear-gradient(90deg,#080c20,#0d1a3a,#080c20)">
-      <div class="w-[260px]">
-        <div class="text-[14px] font-bold text-[#e8f4fa]">海南金牌港</div>
-        <div class="text-[11px] text-[#b4c7e7] mt-0.5">数字孪生指挥中心 · v1.0.0</div>
-      </div>
-      <div class="text-center">
-        <div class="flex gap-1 justify-center mb-1" id="theme-top"></div>
-        <div class="text-[11px] text-[#637f99]">演示态：概览一张图 · 点选POI</div>
-      </div>
-      <div class="w-[320px] text-right">
-        <div class="inline-flex items-center gap-1.5 text-[11px]"><span class="px-1.5 py-0.5 rounded border border-[rgba(0,196,140,.35)] text-[#00c48c] bg-[rgba(0,196,140,.1)]">系统正常</span><span class="text-[#b4c7e7]" id="hd-asof">--</span></div>
-        <div class="mt-1 flex justify-end gap-1 text-[9px] text-[#b4c7e7]">
-          <span class="px-1.5 py-0.5 rounded border border-[rgba(0,228,255,.45)] bg-[rgba(0,228,255,.1)]">在泊 2</span>
-          <span class="px-1.5 py-0.5 rounded border border-[rgba(14,116,240,.2)] bg-[rgba(14,116,240,.06)]">待泊 3</span>
-          <span class="px-1.5 py-0.5 rounded border border-[rgba(14,116,240,.2)] bg-[rgba(14,116,240,.06)]">在港车 46</span>
-          <span class="px-1.5 py-0.5 rounded border border-[rgba(255,170,0,.35)] bg-[rgba(255,170,0,.08)] text-[#ffaa00]">未闭环 3</span>
-        </div>
-      </div>
-    </header>
-    <div class="flex-1 min-h-0 grid gap-2.5 px-3 py-2.5" style="grid-template-columns:19% minmax(0,1fr) 19%">
-      <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
-        <div class="card shrink-0">
-          <div class="flex items-center gap-2 mb-2"><span class="mark" style="background:#0e74f0"></span><span class="text-[13px] font-bold text-[#36bffa]">吞吐量</span><span class="chip ml-auto">年 / 季 / 月 万吨</span></div>
-          <div class="grid grid-cols-3 gap-1 text-center">
-            <div class="flex flex-col items-center"><div class="size-[88px] rounded-full border border-[rgba(0,228,255,.42)] shadow-[0_0_10px_rgba(14,116,240,.18)] flex flex-col items-center justify-center"><div class="text-[18px] font-extrabold text-[#00e4ff]">186</div><div class="text-[9px] text-[#b4c7e7]">年</div><div class="text-[10px] font-bold text-[#7dffc8]">26.6%</div><div class="text-[8px] text-[rgba(180,199,231,.65)]">目标700</div></div></div>
-            <div class="flex flex-col items-center"><div class="size-[88px] rounded-full border border-[rgba(0,228,255,.42)] shadow-[0_0_10px_rgba(14,116,240,.18)] flex flex-col items-center justify-center"><div class="text-[18px] font-extrabold text-[#00e4ff]">48.5</div><div class="text-[9px] text-[#b4c7e7]">季</div><div class="text-[10px] font-bold text-[#7dffc8]">27.7%</div><div class="text-[8px] text-[rgba(180,199,231,.65)]">目标175</div></div></div>
-            <div class="flex flex-col items-center"><div class="size-[88px] rounded-full border border-[rgba(0,228,255,.42)] shadow-[0_0_10px_rgba(14,116,240,.18)] flex flex-col items-center justify-center"><div class="text-[18px] font-extrabold text-[#00e4ff]">15.2</div><div class="text-[9px] text-[#b4c7e7]">月</div><div class="text-[10px] font-bold text-[#7dffc8]">26.1%</div><div class="text-[8px] text-[rgba(180,199,231,.65)]">目标58.3</div></div></div>
-          </div>
-        </div>
-        <div class="card shrink-0">
-          <div class="flex items-center gap-2 mb-2"><span class="mark" style="background:#0e74f0"></span><span class="text-[13px] font-bold text-[#36bffa]">当年货类分布</span><span class="chip ml-auto">标准货类</span></div>
-          <div class="flex gap-2">
-            <div id="chart-cargo" class="w-[100px] h-[110px]"></div>
-            <div class="flex-1 space-y-1 text-[11px]">
-              <div class="flex justify-between"><span class="text-[#b4c7e7]"><i class="inline-block w-1.5 h-1.5 rounded-sm bg-[#00e4ff] mr-1"></i>水泥熟料</span><b>98.0</b></div>
-              <div class="flex justify-between"><span class="text-[#b4c7e7]"><i class="inline-block w-1.5 h-1.5 rounded-sm bg-[#0e74f0] mr-1"></i>矿粉</span><b>42.0</b></div>
-              <div class="flex justify-between"><span class="text-[#b4c7e7]"><i class="inline-block w-1.5 h-1.5 rounded-sm bg-[#36bffa] mr-1"></i>钢材</span><b>28.0</b></div>
-              <div class="flex justify-between"><span class="text-[#b4c7e7]"><i class="inline-block w-1.5 h-1.5 rounded-sm bg-[#00c48c] mr-1"></i>其他</span><b>18.0</b></div>
-              <div class="text-[10px] text-[#637f99] pt-1">总计 186.0万吨 · 水泥熟料为主</div>
-            </div>
-          </div>
-        </div>
-        <div class="card flex-1 min-h-0">
-          <div class="flex items-center gap-2 mb-2"><span class="mark" style="background:#0e74f0"></span><span class="text-[13px] font-bold text-[#36bffa]">客户 Top5</span><span class="chip ml-auto">万吨</span></div>
-          <div class="space-y-2 text-[11px]">
-            <div><div class="flex justify-between"><span>海南建材集团</span><b class="text-[#00e4ff]">52.0</b></div><div class="bar mt-1"><i style="width:100%"></i></div></div>
-            <div><div class="flex justify-between"><span>金港物流</span><b class="text-[#00e4ff]">38.0</b></div><div class="bar mt-1"><i style="width:73%"></i></div></div>
-            <div><div class="flex justify-between"><span>南海钢铁</span><b class="text-[#00e4ff]">31.0</b></div><div class="bar mt-1"><i style="width:60%"></i></div></div>
-            <div><div class="flex justify-between"><span>琼海贸易</span><b class="text-[#00e4ff]">24.0</b></div><div class="bar mt-1"><i style="width:46%"></i></div></div>
-            <div><div class="flex justify-between"><span>其他客户</span><b class="text-[#00e4ff]">41.0</b></div><div class="bar mt-1"><i style="width:79%"></i></div></div>
-          </div>
-        </div>
-        <div class="card shrink-0">
-          <div class="flex items-center gap-2 mb-2"><span class="mark" style="background:#0e74f0"></span><span class="text-[13px] font-bold text-[#36bffa]">资源占用</span><span class="chip ml-auto">车辆 · 船舶 · 堆场</span></div>
-          <div class="grid grid-cols-3 gap-1.5 text-[11px] text-center">
-            <div class="rounded p-2 bg-[rgba(14,116,240,.08)]"><div class="text-[#637f99]">在港车</div><div class="text-[18px] font-extrabold text-[#00e4ff]">46</div></div>
-            <div class="rounded p-2 bg-[rgba(14,116,240,.08)]"><div class="text-[#637f99]">待泊船舶</div><div class="text-[18px] font-extrabold text-[#00e4ff]">3</div></div>
-            <div class="rounded p-2 bg-[rgba(14,116,240,.08)]"><div class="text-[#637f99]">锚地船舶</div><div class="text-[18px] font-extrabold text-[#00e4ff]">2</div></div>
-          </div>
-          <div class="mt-2 space-y-1 text-[10px]">
-            <div class="flex justify-between"><span class="text-[#b4c7e7]">散货堆场</span><span class="text-[#ffaa00] font-bold">关注</span></div>
-            <div class="flex justify-between"><span class="text-[#b4c7e7]">件杂堆场</span><span class="text-[#00c48c] font-bold">正常</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="min-h-0 flex flex-col overflow-hidden">
-        <div class="card flex-1 min-h-0 relative p-0">
-          <div class="absolute left-3 top-3 z-10 text-[11px] px-2 py-1 rounded bg-[rgba(8,28,62,.9)] border border-[rgba(14,116,240,.35)] text-[#00e4ff]">三维港区 · POI态势总览</div>
-          <div class="absolute right-3 top-3 z-10 flex gap-1 text-[10px]">
-            <button type="button" class="px-2 py-0.5 rounded bg-[rgba(14,116,240,.35)] border border-[#00e4ff] text-[#00e4ff]">泊位</button>
-            <button type="button" class="px-2 py-0.5 rounded bg-[rgba(8,28,62,.9)] border border-[rgba(14,116,240,.28)]" onclick="toast('筛选：堆场')">堆场</button>
-            <button type="button" class="px-2 py-0.5 rounded bg-[rgba(8,28,62,.9)] border border-[rgba(14,116,240,.28)]" onclick="toast('筛选：设备')">设备</button>
-            <button type="button" class="px-2 py-0.5 rounded bg-[rgba(8,28,62,.9)] border border-[rgba(14,116,240,.28)]" onclick="toast('筛选：告警')">告警</button>
-          </div>
-          <img src="../assets/figma/ov-map.png" alt="港区" class="absolute inset-0 w-full h-full object-cover opacity-65">
-          <div class="absolute inset-0" style="background:linear-gradient(180deg,rgba(7,20,39,.12),rgba(7,20,39,.42))"></div>
-          <button type="button" class="absolute left-[36%] top-[42%] px-2.5 py-1 rounded text-[12px] font-bold bg-[rgba(8,28,62,.9)] border border-[rgba(0,228,255,.45)] text-[#00e4ff]" onclick="toast('1# 泊位 · 作业中 · 水泥熟料')">1# 泊位</button>
-          <button type="button" class="absolute left-[50%] top-[48%] px-2.5 py-1 rounded text-[12px] font-bold bg-[rgba(8,28,62,.9)] border border-[rgba(0,228,255,.45)] text-[#00e4ff]" onclick="toast('2# 泊位 · 待装')">2# 泊位</button>
-          <button type="button" class="absolute left-[28%] top-[58%] px-2 py-0.5 rounded text-[10px] bg-[rgba(8,28,62,.9)] border border-[rgba(0,196,140,.4)] text-[#00c48c]" onclick="toast('堆场仓库')">堆场仓库</button>
-          <button type="button" class="absolute left-[62%] top-[40%] px-2 py-0.5 rounded text-[10px] bg-[rgba(8,28,62,.9)] border border-[rgba(255,170,0,.4)] text-[#ffaa00]" onclick="toast('闸口 G01')">G01 闸口</button>
-          <div class="absolute left-3 bottom-3 text-[10px] text-[#637f99]">原港区三维底图 · 分类POI定位</div>
-        </div>
-      </div>
-      <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
-        <div class="card shrink-0">
-          <div class="flex items-center gap-2 mb-2"><span class="mark" style="background:#0e74f0"></span><span class="text-[13px] font-bold text-[#36bffa]">正在作业</span></div>
-          <div class="space-y-1.5 text-[11px]">
-            <div class="rounded px-2.5 py-2 bg-[rgba(14,116,240,.08)] border border-[rgba(14,116,240,.16)]"><div class="flex justify-between"><b>1# 泊位</b><span class="text-[#00c48c]">作业中</span></div><div class="text-[#b4c7e7] mt-1">水泥熟料 · 进度 66%</div></div>
-            <div class="rounded px-2.5 py-2 bg-[rgba(14,116,240,.06)] border border-[rgba(14,116,240,.14)]"><div class="flex justify-between"><b>2# 泊位</b><span class="text-[#b4c7e7]">待装</span></div><div class="text-[#b4c7e7] mt-1">待船舶靠泊</div></div>
-          </div>
-        </div>
-        <div class="card shrink-0">
-          <div class="flex items-center gap-2 mb-2"><span class="mark" style="background:#0e74f0"></span><span class="text-[13px] font-bold text-[#36bffa]">环境监测</span></div>
-          <div class="grid grid-cols-2 gap-1.5 text-[11px]">
-            <div class="rounded p-2 bg-[rgba(14,116,240,.08)] border border-[rgba(14,116,240,.16)]"><div class="text-[10px] text-[#637f99]">1#水深</div><div class="text-[16px] font-extrabold text-[#00e4ff]">13.8<span class="text-[10px] ml-0.5">m</span></div><div class="text-[9px] text-[#00c48c] mt-0.5">可作业</div></div>
-            <div class="rounded p-2 bg-[rgba(14,116,240,.08)] border border-[rgba(14,116,240,.16)]"><div class="text-[10px] text-[#637f99]">2#水深</div><div class="text-[16px] font-extrabold text-[#00e4ff]">14.1<span class="text-[10px] ml-0.5">m</span></div><div class="text-[9px] text-[#00c48c] mt-0.5">可作业</div></div>
-          </div>
-        </div>
-        <div class="card flex-1 min-h-0 overflow-auto">
-          <div class="flex items-center gap-2 mb-2"><span class="mark" style="background:#0e74f0"></span><span class="text-[13px] font-bold text-[#36bffa]">安全告警</span><span class="chip ml-auto">连续安全运营</span></div>
-          <div class="text-[10px] text-[#b4c7e7] mb-2">连续安全运营 · 无一般及以上事故</div>
-          <div class="space-y-2 text-[11px]">
-            <div class="rounded border border-[rgba(255,170,0,.35)] bg-[rgba(255,170,0,.08)] p-2 cursor-pointer" onclick="toast('设备 A001')"><div class="flex justify-between"><span class="text-[#ffaa00]">设备 · A001</span><span>处理中</span></div><div class="mt-1 font-bold">T2输送驱动轴承温升</div></div>
-            <div class="rounded border border-[rgba(14,116,240,.28)] bg-[rgba(14,116,240,.06)] p-2 cursor-pointer" onclick="toast('堆场告警')"><div class="flex justify-between"><span class="text-[#ffaa00]">环境 · 堆场</span><span>在办</span></div><div class="mt-1 font-bold">散货堆场堆垛越界</div></div>
-            <div class="rounded border border-[rgba(14,116,240,.28)] bg-[rgba(14,116,240,.06)] p-2 cursor-pointer" onclick="toast('交通 T001')"><div class="flex justify-between"><span class="text-[#ffaa00]">交通 · T001</span><span>处置中</span></div><div class="mt-1 font-bold">地磅前区积压</div></div>
-          </div>
-        </div>
-      </div>
+  <div class="wall" aria-label="港区概览一张图 · Figma 1:1">
+    <img class="shot" src="../assets/figma/ov-screen.png" alt="海南金牌港数字孪生指挥中心 Figma 原稿">
+    <div class="chrome">
+      <a href="../index.html">入口</a>
+      <button type="button" id="btnPresent">汇报全屏</button>
     </div>
-    <footer class="shrink-0 h-[5.5%] border-t border-[rgba(14,116,240,.28)] flex items-center justify-center relative bg-[#0a1228]">
-      <div id="theme-foot" class="flex gap-2"></div>
-      <div class="absolute left-4 text-[11px] text-[#637f99]">一张图大屏 · 领导展示 · 演示数据</div>
-    </footer>
+    <div class="badge">v1.0.0 · Figma 视觉 1:1 · 概览</div>
+    <div id="figma-top-tabs"></div>
+    <div id="figma-nav"></div>
     <div id="themes"></div>
-
   </div>
 </div>
 <script src="wall_domain.js"></script>
 <script src="wall_theme_nav.js"></script>
+<script src="wall_figma_1to1.js"></script>
 <script>
-const THEME_LABEL={'概览':'港区概览','生产':'生产一张图','交通':'港区交通','设备':'设备设施','经营':'经营分析','调度':'智慧调度'};
-function renderThemes(){
-  const el=document.getElementById('theme-foot');
-  if(!el) return;
-  el.innerHTML=Object.keys(THEME_PAGES).map(k=>{
-    const label=THEME_LABEL[k]||k;
-    if(THEME_DISABLED.includes(k)) return `<span class="theme" style="opacity:.4">${label}</span>`;
-    if(k==='概览') return `<button type="button" class="theme on">${label}</button>`;
-    const href=k==='概览'?THEME_PAGES[k]+'?from='+encodeURIComponent('概览'):THEME_PAGES[k];
-    return `<a class="theme" href="${href}">${label}</a>`;
-  }).join('');
-}
-renderThemes();
-initWallTheme('概览');
-document.getElementById('btnPresent').onclick=()=>{document.body.classList.add('present');toast('汇报全屏 · Esc 退出')};
-document.addEventListener('keydown',e=>{if(e.key==='Escape') document.body.classList.remove('present')});
-
-(function(){
-  const top=document.getElementById('theme-top');
-  if(top){
-    top.innerHTML=Object.keys(THEME_PAGES).map(k=>{
-      const label=THEME_LABEL[k]||k;
-      if(THEME_DISABLED.includes(k)) return `<span class="px-2 py-0.5 rounded text-[10px] opacity-40 border border-[rgba(14,116,240,.28)]">${label}</span>`;
-      if(k==='概览') return `<span class="px-2 py-0.5 rounded text-[10px] bg-[#0e74f0] border border-[#0e74f0]">${label}</span>`;
-      return `<a class="px-2 py-0.5 rounded text-[10px] bg-[rgba(8,28,62,.9)] border border-[rgba(14,116,240,.28)] text-[#b4c7e7] no-underline" href="${THEME_PAGES[k]}">${label}</a>`;
-    }).join('');
-  }
-  const el=document.getElementById('chart-cargo');
-  if(window.echarts&&el){
-    const c=echarts.init(el);
-    c.setOption({
-      series:[{type:'pie',radius:['48%','78%'],label:{show:false},
-        data:[
-          {value:98,name:'水泥熟料',itemStyle:{color:'#00e4ff'}},
-          {value:42,name:'矿粉',itemStyle:{color:'#0e74f0'}},
-          {value:28,name:'钢材',itemStyle:{color:'#36bffa'}},
-          {value:18,name:'其他',itemStyle:{color:'#00c48c'}}
-        ]}]
-    });
-    window.addEventListener('resize',()=>c.resize());
-  }
-})();
-
+initFigmaScreen('概览', {
+  topTabs: true,
+  bottom: { start: 25.9, itemW: 7.6, gap: 0.52, top: 95.3, h: 3.7 }
+});
 </script>
 </body>
 </html>
