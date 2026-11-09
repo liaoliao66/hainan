@@ -51,31 +51,34 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
     <div class="flex-1 min-h-0 grid gap-2.5 px-3 py-2.5" style="grid-template-columns:20% minmax(0,1fr) 22%">
       <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
         <div class="card shrink-0">
-          <div class="flex items-center gap-2 mb-2"><span class="mark" style="background:#0e74f0"></span><span class="text-[13px] font-bold text-[#36bffa]">车辆通行统计</span></div>
+          <div class="flex items-center gap-2 mb-2"><span class="mark" style="background:#0e74f0"></span><span class="text-[13px] font-bold text-[#36bffa]">车辆通行统计</span><span class="chip ml-auto">车次 / 在港辆</span></div>
           <div class="grid grid-cols-3 gap-1.5 mb-2">
-            <div class="rounded p-2 bg-[rgba(14,116,240,.08)] border border-[rgba(14,116,240,.16)]"><div class="text-[10px] text-[#b4c7e7]">今日进港</div><div class="text-[20px] font-extrabold text-[#00e4ff] mt-1">186</div></div>
-            <div class="rounded p-2 bg-[rgba(14,116,240,.08)] border border-[rgba(14,116,240,.16)]"><div class="text-[10px] text-[#b4c7e7]">今日出港</div><div class="text-[20px] font-extrabold text-[#00e4ff] mt-1">172</div></div>
-            <div class="rounded p-2 bg-[rgba(14,116,240,.08)] border border-[rgba(14,116,240,.16)]"><div class="text-[10px] text-[#b4c7e7]">在港车辆</div><div class="text-[20px] font-extrabold text-[#00e4ff] mt-1">48</div></div>
+            <div class="rounded p-2 bg-[rgba(14,116,240,.08)] border border-[rgba(14,116,240,.16)]"><div class="text-[9px] text-[#b4c7e7]">今日进港</div><div class="text-[22px] font-extrabold text-[#00e4ff] mt-1">128</div></div>
+            <div class="rounded p-2 bg-[rgba(14,116,240,.08)] border border-[rgba(14,116,240,.16)]"><div class="text-[9px] text-[#b4c7e7]">今日出港</div><div class="text-[22px] font-extrabold text-[#00e4ff] mt-1">116</div></div>
+            <div class="rounded p-2 bg-[rgba(14,116,240,.08)] border border-[rgba(14,116,240,.16)]"><div class="text-[9px] text-[#b4c7e7]">当前在港</div><div class="text-[22px] font-extrabold text-[#00e4ff] mt-1">46</div></div>
           </div>
-          <div id="chart-flow" class="h-[140px]"></div>
+          <div id="chart-flow" class="h-[120px]"></div>
+          <div class="text-[8px] text-[rgba(180,199,231,.55)] mt-1">分时为已完成小时窗口；车次与在港辆不同口径</div>
         </div>
         <div class="card flex-1 min-h-0">
           <div class="flex items-center gap-2 mb-2"><span class="mark" style="background:#0e74f0"></span><span class="text-[13px] font-bold text-[#36bffa]">在港车辆结构</span>
-            <div class="ml-auto flex gap-1 text-[9px]"><span class="px-1.5 py-0.5 rounded bg-[rgba(14,116,240,.45)] border border-[rgba(0,228,255,.4)]">车辆类型</span></div>
+            <div class="ml-auto flex gap-1 text-[9px]"><span class="px-1.5 py-0.5 rounded bg-[rgba(14,116,240,.45)] border border-[rgba(0,228,255,.4)]">作业状态</span><span class="px-1.5 py-0.5 rounded bg-[rgba(14,116,240,.12)] border border-[rgba(14,116,240,.28)]">车辆类型</span></div>
           </div>
           <div class="space-y-2 text-[11px]">
-            <div><div class="flex justify-between font-bold"><span>散货运输车</span><span class="text-[#00e4ff]">28</span></div><div class="bar mt-1"><i style="width:58%"></i></div></div>
-            <div><div class="flex justify-between font-bold"><span>钢材运输车</span><span class="text-[#ffaa00]">10</span></div><div class="bar mt-1"><i style="width:100%;background:#ffaa00"></i></div></div>
-            <div><div class="flex justify-between font-bold"><span>集装箱拖车</span><span class="text-[#0e74f0]">6</span></div><div class="bar mt-1"><i style="width:100%"></i></div></div>
-            <div><div class="flex justify-between font-bold"><span>危化运输车</span><span class="text-[#00c48c]">2</span></div><div class="bar mt-1"><i style="width:40%;background:#00c48c"></i></div></div>
-            <div><div class="flex justify-between font-bold"><span>其他</span><span class="text-[#f53f3f]">2</span></div><div class="bar mt-1"><i style="width:20%;background:#f53f3f"></i></div></div>
+            <div><div class="flex justify-between font-bold text-[9px]"><span class="text-[#dff1ff]">行驶</span><span class="text-[#00e4ff]">12 辆</span></div><div class="bar mt-1"><i style="width:26%"></i></div></div>
+            <div><div class="flex justify-between font-bold text-[9px]"><span class="text-[#dff1ff]">排队</span><span class="text-[#00e4ff]">14 辆</span></div><div class="bar mt-1"><i style="width:100%;background:#ffaa00"></i></div></div>
+            <div><div class="flex justify-between font-bold text-[9px]"><span class="text-[#dff1ff]">装卸作业</span><span class="text-[#00e4ff]">14 辆</span></div><div class="bar mt-1"><i style="width:100%;background:#0e74f0"></i></div></div>
+            <div><div class="flex justify-between font-bold text-[9px]"><span class="text-[#dff1ff]">待离港</span><span class="text-[#00e4ff]">4 辆</span></div><div class="bar mt-1"><i style="width:40%;background:#00c48c"></i></div></div>
+            <div><div class="flex justify-between font-bold text-[9px]"><span class="text-[#dff1ff]">待核实</span><span class="text-[#00e4ff]">2 辆</span></div><div class="bar mt-1"><i style="width:20%;background:#f53f3f"></i></div></div>
           </div>
+          <div class="text-[8px] text-[rgba(180,199,231,.55)] mt-2">互斥合计 46 辆 · 与在港存量同一时点</div>
         </div>
         <div class="card shrink-0">
-          <div class="flex items-center gap-2 mb-2"><span class="mark" style="background:#0e74f0"></span><span class="text-[13px] font-bold text-[#36bffa]">闸口 / 地磅等待</span></div>
-          <div class="grid grid-cols-2 gap-2 text-[12px]">
-            <div class="rounded p-2 bg-[rgba(14,116,240,.08)] border border-[rgba(14,116,240,.16)]"><div class="text-[10px] text-[#b4c7e7]">闸口平均等待</div><div class="text-[22px] font-extrabold text-[#00e4ff] mt-1">6.8<span class="text-[11px] ml-1">分钟</span></div></div>
-            <div class="rounded p-2 bg-[rgba(255,170,0,.08)] border border-[rgba(255,170,0,.28)]"><div class="text-[10px] text-[#b4c7e7]">地磅平均等待</div><div class="text-[22px] font-extrabold text-[#ffaa00] mt-1">14.2<span class="text-[11px] ml-1">分钟</span></div></div>
+          <div class="flex items-center gap-2 mb-2"><span class="mark" style="background:#0e74f0"></span><span class="text-[13px] font-bold text-[#36bffa]">集疏运效率</span></div>
+          <div class="space-y-1.5 text-[12px]">
+            <div class="flex justify-between items-center rounded px-3 py-2 bg-[rgba(14,116,240,.08)] border border-[rgba(14,116,240,.16)]"><span class="text-[#b4c7e7] text-[11px]">平均在港周转</span><b class="text-[#00e4ff]">43 分钟</b></div>
+            <div class="flex justify-between items-center rounded px-3 py-2 bg-[rgba(14,116,240,.08)] border border-[rgba(14,116,240,.16)]"><span class="text-[#b4c7e7] text-[11px]">闸口平均等待</span><b class="text-[#00e4ff]">6.8 分钟</b></div>
+            <div class="flex justify-between items-center rounded px-3 py-2 bg-[rgba(255,170,0,.08)] border border-[rgba(255,170,0,.28)]"><span class="text-[#b4c7e7] text-[11px]">地磅平均等待</span><b class="text-[#ffaa00]">14.2 分钟</b></div>
           </div>
         </div>
       </div>
@@ -83,19 +86,19 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
         <div class="card flex-1 min-h-0 relative p-0">
           <div class="absolute left-3 top-3 z-10 text-[11px] px-2 py-1 rounded bg-[rgba(8,28,62,.9)] border border-[rgba(0,228,255,.4)] text-[#00e4ff]">港区车辆与路况</div>
           <div class="absolute right-3 top-3 z-10 text-[10px] px-2 py-1 rounded bg-[rgba(255,170,0,.15)] border border-[rgba(255,170,0,.4)] text-[#ffaa00]">进港通道 缓行</div>
-          <img src="../assets/port-aerial.jpg?v=traf" alt="交通" class="absolute inset-0 w-full h-full object-cover opacity-50">
-          <div class="absolute inset-0" style="background:linear-gradient(180deg,rgba(7,20,39,.25),rgba(7,20,39,.55))"></div>
+          <img src="../assets/figma/traf-map.png" alt="交通" class="absolute inset-0 w-full h-full object-cover opacity-65">
+          <div class="absolute inset-0" style="background:linear-gradient(180deg,rgba(7,20,39,.2),rgba(7,20,39,.45))"></div>
           <button type="button" class="absolute left-[22%] top-[58%] px-2 py-1 rounded text-[11px] font-bold bg-[rgba(8,28,62,.9)] border border-[rgba(0,228,255,.4)] text-[#00e4ff]" onclick="toast('G01 进港闸口')">G01 进港闸口</button>
           <button type="button" class="absolute left-[68%] top-[55%] px-2 py-1 rounded text-[11px] font-bold bg-[rgba(8,28,62,.9)] border border-[rgba(0,228,255,.4)] text-[#00e4ff]" onclick="toast('G02 出港闸口')">G02 出港闸口</button>
           <button type="button" class="absolute left-[48%] top-[48%] px-2 py-1 rounded text-[11px] font-bold bg-[rgba(8,28,62,.9)] border border-[rgba(245,63,63,.5)] text-[#ff8f8f]" onclick="toast('W01 地磅区拥堵')">W01 地磅区 · 拥堵</button>
           <button type="button" class="absolute left-[40%] top-[36%] px-2 py-0.5 rounded text-[10px] bg-[rgba(8,28,62,.9)] border border-[rgba(14,116,240,.35)] text-[#b4c7e7]" onclick="toast('仓库道路')">仓库道路</button>
         </div>
         <div class="card shrink-0">
-          <div class="flex items-center gap-2 mb-2"><span class="mark" style="background:#0e74f0"></span><span class="text-[12px] font-bold text-[#36bffa]">重点交通节点视频</span></div>
+          <div class="flex items-center gap-2 mb-2"><span class="mark" style="background:#0e74f0"></span><span class="text-[12px] font-bold text-[#36bffa]">重点交通节点视频</span><span class="chip ml-auto">三路</span></div>
           <div class="flex gap-2">
-            <div class="flex-1 h-16 rounded border border-[rgba(14,116,240,.28)] bg-[rgba(8,28,62,.8)] relative"><span class="absolute left-1.5 bottom-1 text-[9px]">G01｜进港闸口</span></div>
-            <div class="flex-1 h-16 rounded border border-[rgba(255,170,0,.45)] bg-[rgba(8,28,62,.8)] relative"><span class="absolute right-1 top-1 text-[8px] text-[#ffaa00]">拥堵</span><span class="absolute left-1.5 bottom-1 text-[9px]">W01｜地磅前区</span></div>
-            <div class="flex-1 h-16 rounded border border-[rgba(14,116,240,.28)] bg-[rgba(8,28,62,.8)] relative"><span class="absolute left-1.5 bottom-1 text-[9px]">G02｜出港闸口</span></div>
+            <div class="flex-1 h-20 rounded border border-[rgba(14,116,240,.28)] relative overflow-hidden"><img src="../assets/figma/traf-cam1.png" class="absolute inset-0 w-full h-full object-cover opacity-85" alt=""><span class="absolute left-1.5 bottom-1 text-[9px] z-10 font-bold">G01｜进港闸口</span></div>
+            <div class="flex-1 h-20 rounded border border-[rgba(255,170,0,.45)] relative overflow-hidden"><img src="../assets/figma/traf-cam2.png" class="absolute inset-0 w-full h-full object-cover opacity-85" alt=""><span class="absolute right-1 top-1 text-[8px] text-[#ffaa00] z-10">拥堵</span><span class="absolute left-1.5 bottom-1 text-[9px] z-10 font-bold">W01｜地磅前区</span></div>
+            <div class="flex-1 h-20 rounded border border-[rgba(14,116,240,.28)] relative overflow-hidden"><img src="../assets/figma/traf-cam3.png" class="absolute inset-0 w-full h-full object-cover opacity-85" alt=""><span class="absolute left-1.5 bottom-1 text-[9px] z-10 font-bold">G02｜出港闸口</span></div>
           </div>
         </div>
       </div>

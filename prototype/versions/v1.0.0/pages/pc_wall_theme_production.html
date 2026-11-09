@@ -47,7 +47,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
       </div>
       <div class="text-center">
         <h1 class="m-0 text-[22px] font-extrabold tracking-[3px] text-[#00e4ff]">海南金牌港 · 生产运行一张图</h1>
-        <p class="m-0 mt-1 text-[11px] text-[#b4c7e7]">码头前沿作业 · 泊位任务与待泊计划</p>
+        <p class="m-0 mt-1 text-[11px] text-[#b4c7e7]">看清下一步安排 · 发现异常并定位责任岗位</p>
       </div>
       <div class="w-[300px] text-right text-[12px] text-[#b4c7e7]"><div id="hd-asof">--</div><div class="mt-1 text-[#637f99]">演示数据</div></div>
     </header>
@@ -89,11 +89,12 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
           </div>
         </div>
         <div class="card shrink-0">
-          <div class="flex items-center gap-2 mb-2"><span class="mark" style="background:#0e74f0"></span><span class="text-[13px] font-bold text-[#36bffa]">待进港预约车辆</span></div>
+          <div class="flex items-center gap-2 mb-2"><span class="mark" style="background:#0e74f0"></span><span class="text-[13px] font-bold text-[#36bffa]">待进港预约车辆</span><span class="chip ml-auto">36 辆</span></div>
           <div class="text-[10px]">
             <div class="flex bg-[rgba(14,116,240,.14)] text-[#36bffa] font-bold py-1 text-center"><span class="flex-1">车牌</span><span class="flex-1">预约</span><span class="flex-[1.2]">作业去向</span><span class="flex-1">状态</span></div>
-            <div class="flex border-b border-[rgba(14,116,240,.08)] py-1.5 items-center text-center"><span class="flex-1">琼A·D8123</span><span class="flex-1">14:20</span><span class="flex-[1.2]">1#仓库</span><span class="flex-1"><span class="px-1.5 py-0.5 rounded-full bg-[rgba(14,116,240,.22)] text-[#36bffa]">候场</span></span></div>
-            <div class="flex border-b border-[rgba(14,116,240,.08)] py-1.5 items-center text-center"><span class="flex-1">琼B·F3310</span><span class="flex-1">14:45</span><span class="flex-[1.2]">地磅W01</span><span class="flex-1"><span class="px-1.5 py-0.5 rounded-full bg-[rgba(255,170,0,.18)] text-[#ffaa00]">排队</span></span></div>
+            <div class="flex border-b border-[rgba(14,116,240,.08)] py-1.5 items-center text-center"><span class="flex-1">示例车01</span><span class="flex-1">14:00</span><span class="flex-[1.2]">1#散货仓库</span><span class="flex-1"><span class="px-1.5 py-0.5 rounded-full bg-[rgba(14,116,240,.22)] text-[#36bffa]">待叫号</span></span></div>
+            <div class="flex border-b border-[rgba(14,116,240,.08)] py-1.5 items-center text-center bg-[rgba(255,170,0,.06)]"><span class="flex-1">示例车02</span><span class="flex-1">14:00</span><span class="flex-[1.2]">3#杂货仓库</span><span class="flex-1"><span class="px-1.5 py-0.5 rounded-full bg-[rgba(255,170,0,.18)] text-[#ffaa00]">核验超时</span></span></div>
+            <div class="flex border-b border-[rgba(14,116,240,.08)] py-1.5 items-center text-center"><span class="flex-1">示例车03</span><span class="flex-1">14:30</span><span class="flex-[1.2]">1#散货仓库</span><span class="flex-1"><span class="px-1.5 py-0.5 rounded-full bg-[rgba(180,199,231,.14)] text-[#b4c7e7]">未到场</span></span></div>
           </div>
         </div>
       </div>
@@ -102,69 +103,73 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
           <div class="absolute left-3 top-3 z-10 text-[11px] px-2 py-1 rounded bg-[rgba(8,28,62,.9)] border border-[rgba(0,228,255,.4)] text-[#00e4ff]">码头前沿作业视图</div>
           <div class="absolute right-3 top-3 z-10 flex gap-1 text-[10px]">
             <span class="px-2 py-0.5 rounded bg-[rgba(8,28,62,.9)] border border-[rgba(14,116,240,.35)]">泊位</span>
+            <span class="px-2 py-0.5 rounded bg-[rgba(8,28,62,.9)] border border-[rgba(14,116,240,.35)]">告警</span>
             <span class="px-2 py-0.5 rounded bg-[rgba(8,28,62,.9)] border border-[rgba(14,116,240,.35)]">作业</span>
-            <span class="px-2 py-0.5 rounded bg-[rgba(8,28,62,.9)] border border-[rgba(14,116,240,.35)]">设备</span>
           </div>
-          <img src="../assets/port-aerial.jpg?v=prod" alt="码头" class="absolute inset-0 w-full h-full object-cover opacity-50">
-          <div class="absolute inset-0" style="background:linear-gradient(180deg,rgba(7,20,39,.2),rgba(7,20,39,.55))"></div>
+          <img src="../assets/figma/prod-map.png" alt="码头" class="absolute inset-0 w-full h-full object-cover opacity-65">
+          <div class="absolute inset-0" style="background:linear-gradient(180deg,rgba(7,20,39,.15),rgba(7,20,39,.45))"></div>
           <button type="button" class="absolute left-[36%] top-[42%] px-2 py-1 rounded text-[11px] font-bold bg-[rgba(8,28,62,.9)] border border-[rgba(0,228,255,.4)] text-[#00e4ff]" onclick="toast('1#泊位 · 作业中')">1# 作业中</button>
           <button type="button" class="absolute left-[48%] top-[48%] px-2 py-1 rounded text-[11px] font-bold bg-[rgba(8,28,62,.9)] border border-[rgba(0,228,255,.4)] text-[#00e4ff]" onclick="toast('2#泊位 · 待装')">2# 待装</button>
           <button type="button" class="absolute left-[30%] top-[58%] px-2 py-0.5 rounded text-[10px] bg-[rgba(8,28,62,.9)] border border-[rgba(0,196,140,.4)] text-[#00c48c]" onclick="toast('CAM-01')">CAM-01 · 1#泊位</button>
           <button type="button" class="absolute left-[55%] top-[62%] px-2 py-0.5 rounded text-[10px] bg-[rgba(8,28,62,.9)] border border-[rgba(245,63,63,.4)] text-[#ff8f8f]" onclick="toast('CAM-03 离线')">CAM-03 · 离线</button>
         </div>
-        <div class="card shrink-0 grid grid-cols-2 gap-2 !p-2">
-          <div>
-            <div class="flex items-center gap-2 mb-1.5"><span class="mark" style="background:#0e74f0"></span><span class="text-[12px] font-bold text-[#36bffa]">作业设备状态监测</span></div>
-            <div class="space-y-1 text-[11px]">
-              <div class="flex justify-between rounded px-2 py-1.5 bg-[rgba(14,116,240,.08)]"><span>SC-01</span><span class="text-[#00c48c]">运行 · 负载72%</span></div>
-              <div class="flex justify-between rounded px-2 py-1.5 bg-[rgba(14,116,240,.08)]"><span>BM-01</span><span class="text-[#00c48c]">运行 · 2.5m/s</span></div>
-              <div class="flex justify-between rounded px-2 py-1.5 bg-[rgba(255,170,0,.1)] border border-[rgba(255,170,0,.3)]"><span>T2驱动</span><span class="text-[#ffaa00]">预警 · 78℃</span></div>
-            </div>
-          </div>
-          <div>
-            <div class="flex items-center gap-2 mb-1.5"><span class="mark" style="background:#0e74f0"></span><span class="text-[12px] font-bold text-[#36bffa]">作业环境监测</span></div>
-            <div class="grid grid-cols-2 gap-1 text-[11px]">
-              <div class="rounded px-2 py-1.5 bg-[rgba(14,116,240,.08)]"><div class="text-[#637f99]">1#水深</div><div class="text-[#00e4ff] font-bold">11.2 m</div></div>
-              <div class="rounded px-2 py-1.5 bg-[rgba(14,116,240,.08)]"><div class="text-[#637f99]">2#水深</div><div class="text-[#00e4ff] font-bold">11.0 m</div></div>
-              <div class="rounded px-2 py-1.5 bg-[rgba(14,116,240,.08)] col-span-2"><div class="text-[#637f99]">风速 W01</div><div class="text-[#00e4ff] font-bold">4.6 m/s · 东北</div></div>
-            </div>
-            <div class="text-[9px] text-[#637f99] mt-1">水深分泊位；风速为码头前沿中部 W01</div>
+        <div class="card shrink-0 !px-3 !py-2.5">
+          <div class="flex items-center gap-2 mb-1.5"><span class="mark" style="background:#0e74f0"></span><span class="text-[12px] font-bold text-[#36bffa]">关联视频监控</span><span class="chip ml-auto">六路</span></div>
+          <div class="grid grid-cols-6 gap-1.5">
+            <div class="relative h-[72px] rounded border border-[rgba(14,116,240,.32)] overflow-hidden"><img src="../assets/figma/cam01.png" class="absolute inset-0 w-full h-full object-cover" alt=""><span class="absolute left-1 bottom-1 text-[8px] font-bold text-white drop-shadow">CAM-01 · 1#泊位</span></div>
+            <div class="relative h-[72px] rounded border border-[rgba(255,170,0,.45)] overflow-hidden"><img src="../assets/figma/cam02.png" class="absolute inset-0 w-full h-full object-cover" alt=""><span class="absolute right-1 top-1 text-[7px] px-1 rounded bg-[rgba(255,170,0,.25)] text-[#ffaa00]">A001</span><span class="absolute left-1 bottom-1 text-[8px] font-bold text-white drop-shadow">CAM-02 · T2</span></div>
+            <div class="relative h-[72px] rounded border border-[rgba(245,63,63,.45)] overflow-hidden bg-[#0a1228] flex items-center justify-center"><span class="text-[10px] text-[#ff8f8f] font-bold">离线</span><span class="absolute left-1 bottom-1 text-[8px] font-bold text-[#ff8f8f]">CAM-03 · 2#</span></div>
+            <div class="relative h-[72px] rounded border border-[rgba(14,116,240,.32)] overflow-hidden"><img src="../assets/figma/cam04.png" class="absolute inset-0 w-full h-full object-cover" alt=""><span class="absolute left-1 bottom-1 text-[8px] font-bold text-white drop-shadow">CAM-04 · 仓库</span></div>
+            <div class="relative h-[72px] rounded border border-[rgba(14,116,240,.32)] overflow-hidden"><img src="../assets/figma/cam05.png" class="absolute inset-0 w-full h-full object-cover" alt=""><span class="absolute left-1 bottom-1 text-[8px] font-bold text-white drop-shadow">CAM-05 · 闸口</span></div>
+            <div class="relative h-[72px] rounded border border-[rgba(14,116,240,.32)] overflow-hidden"><img src="../assets/figma/cam06.png" class="absolute inset-0 w-full h-full object-cover" alt=""><span class="absolute left-1 bottom-1 text-[8px] font-bold text-white drop-shadow">CAM-06 · 前沿</span></div>
           </div>
         </div>
       </div>
       <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
-        <div class="card flex-1 min-h-0 overflow-auto">
-          <div class="flex items-center gap-2 mb-2"><span class="mark" style="background:#0e74f0"></span><span class="text-[13px] font-bold text-[#36bffa]">作业风险与报警</span><span class="chip ml-auto">未闭环</span></div>
-          <div class="space-y-2 text-[12px]">
-            <div class="rounded border border-[rgba(255,170,0,.35)] bg-[rgba(255,170,0,.08)] p-2 cursor-pointer" onclick="toast('A001')">
-              <div class="flex justify-between text-[10px]"><span class="text-[#ffaa00]">A001 · 13:42</span><span class="text-[#00e4ff]">处理中</span></div>
-              <div class="font-bold mt-1">T2输送驱动轴承温升</div>
-              <div class="text-[10px] text-[#b4c7e7] mt-1">关联 1#作业 · 影响待评估</div>
+        <div class="card shrink-0 overflow-auto max-h-[46%]">
+          <div class="flex items-center gap-2 mb-2"><span class="mark" style="background:#0e74f0"></span><span class="text-[12px] font-bold text-[#36bffa]">报警中心</span><span class="chip ml-auto">未闭环唯一汇总</span></div>
+          <div class="flex items-center gap-1.5 text-[10px] rounded px-2.5 py-1.5 mb-2 bg-[rgba(245,63,63,.06)] border border-[rgba(245,63,63,.18)]"><span class="text-[#b4c7e7]">未闭环</span><b class="text-[#ff8f8f] text-[14px]">3</b><span class="text-[#b4c7e7]">· 待响应</span><b class="text-[#fcd34d] text-[14px]">2</b><span class="text-[#b4c7e7]">· 处理中</span><b class="text-[#7dd3fc] text-[14px]">1</b></div>
+          <div class="space-y-1.5 text-[11px]">
+            <div class="rounded border border-[rgba(245,63,63,.35)] bg-[rgba(245,63,63,.1)] p-2">
+              <div class="flex justify-between text-[10px]"><span class="text-[#ffc9c9] font-mono font-bold">A001 · 13:42</span><span class="px-1.5 py-0.5 rounded-full bg-[rgba(14,116,240,.22)] text-[#7eb6ff] text-[9px]">处理中</span></div>
+              <div class="text-[#b4c7e7] mt-1">T2输送驱动 · 轴承温升</div>
+              <div class="flex justify-between items-center mt-1.5"><span class="px-1.5 py-0.5 rounded-full bg-[rgba(180,199,231,.14)] text-[9px] text-[#b4c7e7]">设备运维</span><span class="flex gap-1"><button type="button" class="px-1.5 py-0.5 rounded text-[9px] border border-[rgba(14,116,240,.35)] bg-[rgba(14,116,240,.22)] text-[#36bffa]" onclick="toast('定位 A001 · T2')">定位</button><button type="button" class="px-1.5 py-0.5 rounded text-[9px] border border-[rgba(14,116,240,.35)] bg-[rgba(14,116,240,.22)] text-[#36bffa]" onclick="toast('视频 CAM-02')">视频</button></span></div>
             </div>
-            <div class="rounded border border-[rgba(14,116,240,.28)] bg-[rgba(14,116,240,.06)] p-2 cursor-pointer" onclick="toast('A002')">
-              <div class="flex justify-between text-[10px]"><span class="text-[#f53f3f]">A002 · 12:18</span><span class="text-[#ffaa00]">待响应</span></div>
-              <div class="font-bold mt-1">SC-02驱动故障</div>
-              <div class="text-[10px] text-[#b4c7e7] mt-1">卸船环节受限 · 预计16:30恢复</div>
+            <div class="rounded border border-[#f53f3f] border-l-2 bg-[rgba(14,116,240,.06)] p-2">
+              <div class="flex justify-between text-[10px]"><span class="text-[#ffc9c9] font-mono font-bold">A002 · 13:55</span><span class="px-1.5 py-0.5 rounded-full bg-[rgba(255,170,0,.18)] text-[#ffaa00] text-[9px]">待响应</span></div>
+              <div class="text-[#b4c7e7] mt-1">示例车02 · 预约核验超时</div>
+              <div class="flex justify-between items-center mt-1.5"><span class="px-1.5 py-0.5 rounded-full bg-[rgba(180,199,231,.14)] text-[9px] text-[#b4c7e7]">闸口值班</span><span class="flex gap-1"><button type="button" class="px-1.5 py-0.5 rounded text-[9px] border border-[rgba(14,116,240,.35)] bg-[rgba(14,116,240,.22)] text-[#36bffa]" onclick="toast('定位 A002')">定位</button><button type="button" class="px-1.5 py-0.5 rounded text-[9px] border border-[rgba(14,116,240,.35)] bg-[rgba(14,116,240,.22)] text-[#36bffa]" onclick="toast('视频 G01')">视频</button></span></div>
             </div>
-            <div class="rounded border border-[rgba(14,116,240,.28)] bg-[rgba(14,116,240,.06)] p-2 cursor-pointer" onclick="toast('CAM-03')">
-              <div class="flex justify-between text-[10px]"><span class="text-[#f53f3f]">CAM-03</span><span class="text-[#ffaa00]">离线</span></div>
-              <div class="font-bold mt-1">CAM-03 · 离线，关联2#泊位</div>
-              <div class="text-[10px] text-[#b4c7e7] mt-1">视频点恢复待评估</div>
+            <div class="rounded border border-[#f53f3f] border-l-2 bg-[rgba(14,116,240,.06)] p-2">
+              <div class="flex justify-between text-[10px]"><span class="text-[#ffc9c9] font-mono font-bold">A003 · 13:28</span><span class="px-1.5 py-0.5 rounded-full bg-[rgba(255,170,0,.18)] text-[#ffaa00] text-[9px]">待响应</span></div>
+              <div class="text-[#b4c7e7] mt-1">CAM-03离线 · 关联2#泊位</div>
+              <div class="flex justify-between items-center mt-1.5"><span class="px-1.5 py-0.5 rounded-full bg-[rgba(180,199,231,.14)] text-[9px] text-[#b4c7e7]">通信维护</span><span class="flex gap-1"><button type="button" class="px-1.5 py-0.5 rounded text-[9px] border border-[rgba(14,116,240,.35)] bg-[rgba(14,116,240,.22)] text-[#36bffa]" onclick="toast('定位 CAM-03')">定位</button><button type="button" class="px-1.5 py-0.5 rounded text-[9px] border border-[rgba(14,116,240,.35)] bg-[rgba(14,116,240,.22)] text-[#36bffa]" onclick="toast('视频 CAM-03')">视频</button></span></div>
             </div>
           </div>
         </div>
         <div class="card shrink-0">
-          <div class="flex items-center gap-2 mb-2"><span class="mark" style="background:#0e74f0"></span><span class="text-[13px] font-bold text-[#36bffa]">当日关键节点</span></div>
-          <div class="space-y-1.5 text-[11px] text-[#b4c7e7]">
-            <div class="flex justify-between"><span>1#完工预计</span><b class="text-[#00e4ff]">15:40</b></div>
-            <div class="flex justify-between"><span>下一艘靠泊</span><b class="text-[#00e4ff]">14:30 · 2#</b></div>
-            <div class="flex justify-between"><span>地磅排队</span><b class="text-[#ffaa00]">8 车</b></div>
+          <div class="flex items-center gap-2 mb-2"><span class="mark" style="background:#0e74f0"></span><span class="text-[12px] font-bold text-[#36bffa]">作业环境监测</span><span class="chip ml-auto">具名测点</span></div>
+          <div class="space-y-1 text-[10px]">
+            <div class="flex items-center gap-1.5 rounded px-2 py-1.5 bg-[rgba(14,116,240,.07)] border border-[rgba(14,116,240,.14)]"><span class="px-1 py-0.5 rounded text-[9px] text-[#00e4ff] border border-[rgba(0,228,255,.2)] bg-[rgba(0,228,255,.08)]">D01</span><span class="flex-1"><b class="text-[#e8f6ff]">水深</b><span class="text-[9px] text-[#b4c7e7]/72 block">1#泊位前沿</span></span><b class="text-[#00e4ff]">13.8 米</b></div>
+            <div class="flex items-center gap-1.5 rounded px-2 py-1.5 bg-[rgba(14,116,240,.07)] border border-[rgba(14,116,240,.14)]"><span class="px-1 py-0.5 rounded text-[9px] text-[#00e4ff] border border-[rgba(0,228,255,.2)] bg-[rgba(0,228,255,.08)]">D02</span><span class="flex-1"><b class="text-[#e8f6ff]">水深</b><span class="text-[9px] text-[#b4c7e7]/72 block">2#泊位前沿</span></span><b class="text-[#00e4ff]">14.1 米</b></div>
+            <div class="flex items-center gap-1.5 rounded px-2 py-1.5 bg-[rgba(14,116,240,.07)] border border-[rgba(14,116,240,.14)]"><span class="px-1 py-0.5 rounded text-[9px] text-[#00e4ff] border border-[rgba(0,228,255,.2)] bg-[rgba(0,228,255,.08)]">W01</span><span class="flex-1"><b class="text-[#e8f6ff]">风速</b><span class="text-[9px] text-[#b4c7e7]/72 block">码头前沿中部</span></span><b class="text-[#00e4ff]">7.2 米/秒</b></div>
+            <div class="flex items-center gap-1.5 rounded px-2 py-1.5 bg-[rgba(14,116,240,.07)] border border-[rgba(14,116,240,.14)]"><span class="px-1 py-0.5 rounded text-[9px] text-[#00e4ff] border border-[rgba(0,228,255,.2)] bg-[rgba(0,228,255,.08)]">V01</span><span class="flex-1"><b class="text-[#e8f6ff]">能见度</b><span class="text-[9px] text-[#b4c7e7]/72 block">航道口</span></span><b class="text-[#00e4ff]">6.5 千米</b></div>
+            <div class="flex items-center gap-1.5 rounded px-2 py-1.5 bg-[rgba(14,116,240,.07)] border border-[rgba(14,116,240,.14)]"><span class="px-1 py-0.5 rounded text-[9px] text-[#00e4ff] border border-[rgba(0,228,255,.2)] bg-[rgba(0,228,255,.08)]">P01</span><span class="flex-1"><b class="text-[#e8f6ff]">粉尘PM10</b><span class="text-[9px] text-[#b4c7e7]/72 block">1#仓库东侧</span></span><b class="text-[#00e4ff]">85 μg/m³</b></div>
+          </div>
+        </div>
+        <div class="card shrink-0">
+          <div class="flex items-center gap-2 mb-2"><span class="mark" style="background:#0e74f0"></span><span class="text-[12px] font-bold text-[#36bffa]">仓储接收能力</span><span class="chip ml-auto">占用率唯一出处</span></div>
+          <div class="space-y-2 text-[10px]">
+            <div><div class="flex justify-between font-bold"><span class="text-[#dff1ff]">1#散货仓库</span><span class="text-[#00e4ff]">64%</span></div><div class="bar mt-1"><i style="width:64%"></i></div></div>
+            <div><div class="flex justify-between font-bold"><span class="text-[#dff1ff]">2#散货仓库</span><span class="text-[#00e4ff]">58%</span></div><div class="bar mt-1"><i style="width:58%"></i></div></div>
+            <div><div class="flex justify-between font-bold"><span class="text-[#dff1ff]">3#杂货仓库</span><span class="text-[#00e4ff]">49%</span></div><div class="bar mt-1"><i style="width:49%"></i></div></div>
           </div>
         </div>
       </div>
     </div>
     <footer class="shrink-0 h-[5.5%] border-t border-[rgba(14,116,240,.28)] flex items-center justify-center relative bg-[#0a1228]">
       <div id="theme-foot" class="flex gap-2"></div>
+      <div class="absolute left-4 text-[11px] text-[#637f99]">金牌港智慧运营指挥中心</div>
       <div class="absolute right-4 text-[11px] text-[#637f99]">生产运行 / 码头前沿作业视图</div>
     </footer>
     <div id="themes"></div>

@@ -105,8 +105,8 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
               <button type="button" class="px-3 py-1 rounded text-[12px] border border-[#23435f] text-[#91abc4] bg-[#0a1729]" onclick="toast('筛选：异常设备')">异常</button>
             </div>
           </div>
-          <img src="../assets/port-aerial.jpg?v=eq" alt="港区" class="absolute inset-0 w-full h-full object-cover opacity-55">
-          <div class="absolute inset-0" style="background:linear-gradient(180deg,rgba(5,32,68,.25),rgba(5,14,28,.55))"></div>
+          <img src="../assets/figma/eq-map.png" alt="港区BIM" class="absolute inset-0 w-full h-full object-cover opacity-70">
+          <div class="absolute inset-0" style="background:linear-gradient(180deg,rgba(5,32,68,.2),rgba(5,14,28,.45))"></div>
           <button type="button" class="absolute left-[24%] top-[28%] px-2 py-1 rounded text-[11px] font-bold bg-[rgba(7,24,46,.95)] border border-[#37d5b2] text-[#37d5b2]" onclick="toast('定位：L01 正常')">L01 正常</button>
           <button type="button" class="absolute left-[48%] top-[42%] px-2 py-1 rounded text-[11px] font-bold bg-[rgba(7,24,46,.95)] border border-[#ffba5a] text-[#ffba5a]" onclick="toast('定位：L02 受限')">L02 受限</button>
           <button type="button" class="absolute left-[28%] top-[38%] px-2 py-1 rounded text-[11px] font-bold bg-[rgba(7,24,46,.95)] border border-[#37d5b2] text-[#37d5b2]" onclick="toast('定位：SC-01')">SC-01 运行</button>
@@ -118,9 +118,9 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
         <div class="card shrink-0">
           <div class="flex items-center gap-2.5 mb-2"><span class="mark"></span><span class="text-[14px] font-bold text-[#e5f2ff]">重点设备监控视频</span><span class="chip ml-auto">横滑演示</span></div>
           <div class="flex gap-3 overflow-x-auto pb-1">
-            <div class="shrink-0 w-[32%] h-24 rounded border border-[#23435f] bg-[#0a1729] relative"><span class="absolute left-1.5 bottom-1 text-[10px] text-[#e5f2ff]">CAM-01｜1#泊位</span></div>
-            <div class="shrink-0 w-[32%] h-24 rounded border border-[#ffba5a] bg-[#0a1729] relative"><span class="absolute right-1.5 top-1 text-[9px] text-[#ffba5a] bg-[rgba(16,34,55,.93)] px-1 rounded">关联 A001</span><span class="absolute left-1.5 bottom-1 text-[10px] text-[#e5f2ff]">CAM-02｜T2转运</span></div>
-            <div class="shrink-0 w-[32%] h-24 rounded border border-[#23435f] bg-[#0a1729] relative"><span class="absolute left-1.5 bottom-1 text-[10px] text-[#e5f2ff]">CAM-04｜岸电区</span></div>
+            <div class="shrink-0 w-[32%] h-24 rounded border border-[#23435f] bg-[#0a1729] relative overflow-hidden"><img src="../assets/figma/eq-cam1.png" class="absolute inset-0 w-full h-full object-cover opacity-80" alt=""><span class="absolute left-1.5 bottom-1 text-[10px] text-[#e5f2ff] z-10">CAM-01｜1#泊位</span></div>
+            <div class="shrink-0 w-[32%] h-24 rounded border border-[#ffba5a] bg-[#0a1729] relative overflow-hidden"><img src="../assets/figma/eq-cam2.png" class="absolute inset-0 w-full h-full object-cover opacity-80" alt=""><span class="absolute right-1.5 top-1 text-[9px] text-[#ffba5a] bg-[rgba(16,34,55,.93)] px-1 rounded z-10">关联 A001</span><span class="absolute left-1.5 bottom-1 text-[10px] text-[#e5f2ff] z-10">CAM-02｜T2转运</span></div>
+            <div class="shrink-0 w-[32%] h-24 rounded border border-[#23435f] bg-[#0a1729] relative overflow-hidden"><img src="../assets/figma/eq-cam3.png" class="absolute inset-0 w-full h-full object-cover opacity-80" alt=""><span class="absolute left-1.5 bottom-1 text-[10px] text-[#e5f2ff] z-10">CAM-04｜岸电区</span></div>
           </div>
         </div>
       </div>
