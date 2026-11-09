@@ -6,6 +6,7 @@
 <title>设备设施一张图 · 海南金牌港 · v1.0.0</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="../vendor/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="wall_scrollbar.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;600&display=swap');
 *{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;box-sizing:border-box}
@@ -22,7 +23,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 .tool-btn:hover{border-color:#54d8ff;color:#54d8ff}
 .theme{min-width:146px;height:40px;display:inline-flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;border-radius:5px;text-decoration:none;cursor:pointer;border:1px solid #23435f;background:#0a1729;color:#91abc4}
 .theme.on{color:#06202a;background:linear-gradient(180deg,#7ee7f0,#54d8ff);border-color:#54d8ff;font-weight:800}
-.toast{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);background:rgba(8,28,62,.95);border:1px solid #23435f;padding:8px 14px;border-radius:8px;font-size:12px;opacity:0;transition:.2s;z-index:40}
+.toast{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);background:rgba(8,28,62,.95);border:1px solid #23435f;padding:8px 14px;border-radius:8px;font-size:12px;opacity:0;transition:.2s;z-index:80}
 .toast.show{opacity:1}
 #themes{display:none}
 .tag{position:absolute;padding:5px 8px;border-radius:3px;font-size:12px;font-weight:700;background:rgba(7,24,46,.95);cursor:pointer;white-space:nowrap;z-index:3}
@@ -33,6 +34,71 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 .dot{width:6px;height:6px;border-radius:50%;display:inline-block}
 .filter-on{border-color:#54d8ff;color:#54d8ff;background:#112b45}
 .filter-off{border-color:#23435f;color:#91abc4;background:#0a1729}
+.tag.on{box-shadow:0 0 0 2px rgba(84,216,255,.55);background:rgba(16,54,88,.96)}
+.ledger-row{cursor:pointer}.ledger-row:hover{background:rgba(84,216,255,.08)}
+.mon-hit{cursor:pointer;transition:border-color .15s}.mon-hit:hover,.mon-hit.on{border-color:#54d8ff!important}
+.util-hit{cursor:pointer}.util-hit:hover{outline:1px solid rgba(84,216,255,.45)}
+.maint-hit{cursor:pointer}.maint-hit:hover{border-color:#54d8ff!important}
+.vid-hit{cursor:pointer}.vid-hit:hover{border-color:#54d8ff!important}
+:root{--blue:#0E74F0;--blue-light:#36BFFA;--cyan:#00E4FF;--red:#F53F3F;--yellow:#FFAA00;--green:#00C48C;--gray:#B4C7E7;--muted:rgba(180,199,231,.72);--line:rgba(14,116,240,.18)}
+.pill{display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;border:1px solid transparent;white-space:nowrap}
+.pill.g{color:#00c48c;background:rgba(0,196,140,.12);border-color:rgba(0,196,140,.35)}
+.pill.y{color:#ffba5a;background:rgba(255,170,0,.12);border-color:rgba(255,170,0,.35)}
+.pill.r{color:#ff8f8f;background:rgba(245,63,63,.12);border-color:rgba(245,63,63,.35)}
+.pill.b{color:#54d8ff;background:rgba(84,216,255,.1);border-color:rgba(84,216,255,.3)}
+.pill.m{color:#b4c7e7;background:rgba(180,199,231,.1);border-color:rgba(180,199,231,.25)}
+.eq-modal-mask{display:none;position:fixed;inset:0;z-index:70;background:rgba(2,8,20,.62);align-items:center;justify-content:center;padding:1.5vmin}
+.eq-modal-mask.show{display:flex}
+.eq-modal{width:min(94vw,1180px);height:min(82vh,760px);display:flex;flex-direction:column;overflow:hidden;border-radius:10px;background:linear-gradient(165deg,rgba(8,28,62,.98),rgba(6,18,42,.98));border:1px solid rgba(0,228,255,.35);box-shadow:0 0 40px rgba(0,0,0,.55)}
+.eqm-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--line);flex-shrink:0;background:rgba(8,28,62,.96)}
+.eqm-hd .left{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+.eqm-hd h4{margin:0;font-size:15px;color:var(--cyan);font-weight:800;letter-spacing:.04em}
+.eqm-hd .acts{display:flex;align-items:center;gap:6px}
+.eqm-hd .acts button,.eqm-hd .acts .x{font-size:12px;padding:5px 10px;border-radius:4px;cursor:pointer;font-weight:600;border:1px solid rgba(14,116,240,.4);background:rgba(14,116,240,.2);color:var(--blue-light)}
+.eqm-hd .x{width:30px;padding:0;font-size:16px;line-height:28px;text-align:center;color:#e8f6ff}
+.eqm-tabs{display:flex;gap:4px;padding:8px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap;flex-shrink:0}
+.eqm-tabs button{font-size:12px;padding:5px 12px;border-radius:4px;cursor:pointer;font-weight:700;border:1px solid transparent;background:transparent;color:var(--gray)}
+.eqm-tabs button.on{background:rgba(14,116,240,.45);border-color:rgba(0,228,255,.4);color:#fff}
+.eqm-bd{padding:12px 16px 14px;flex:1;min-height:0;overflow:auto}
+.eqm-grid{display:grid;grid-template-columns:.9fr 1.2fr;gap:10px}
+.eqm-col{display:flex;flex-direction:column;gap:10px;min-width:0}
+.eqm-card{border:1px solid rgba(14,116,240,.22);border-radius:6px;padding:10px 12px;background:rgba(14,116,240,.06)}
+.eqm-card h5{margin:0 0 8px;font-size:13px;color:var(--blue-light);font-weight:700;border-left:3px solid var(--blue);padding-left:7px}
+.eqm-kv{display:flex;justify-content:space-between;gap:10px;padding:3px 0;border-bottom:1px solid rgba(14,116,240,.08);font-size:12px}
+.eqm-kv .k{color:var(--muted)}.eqm-kv .v{color:#e8f6ff;font-weight:600;text-align:right}
+.eqm-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.eqm-metric{text-align:center;padding:8px 4px;border-radius:5px;background:rgba(14,116,240,.1);border:1px solid rgba(14,116,240,.2)}
+.eqm-metric .lab{font-size:11px;color:var(--gray)}
+.eqm-metric .val{font-size:18px;font-weight:800;color:var(--cyan);margin-top:3px;font-variant-numeric:tabular-nums}
+.eqm-metric .val small{font-size:11px;color:var(--muted);margin-left:2px;font-weight:600}
+.eqm-metric.y .val,.eqm-metric.y{border-color:rgba(255,170,0,.35)}
+.eqm-metric.y .val{color:var(--yellow)}
+.eqm-metric.r .val{color:#ff8f8f}
+.eqm-tip{font-size:11px;color:rgba(180,199,231,.6);margin-top:6px}
+.eqm-alert{padding:7px 9px;border-radius:4px;font-size:12px;font-weight:700;margin-bottom:6px}
+.eqm-alert.ok{background:rgba(0,196,140,.12);color:var(--green);border:1px solid rgba(0,196,140,.3)}
+.eqm-alert.y{background:rgba(255,170,0,.12);color:var(--yellow);border:1px solid rgba(255,170,0,.35)}
+.eqm-alert.r{background:rgba(245,63,63,.12);color:#ff8f8f;border:1px solid rgba(245,63,63,.35)}
+.eqm-btns{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.eqm-btns button{font-size:11px;padding:4px 9px;border-radius:3px;cursor:pointer;font-weight:600;border:1px solid rgba(14,116,240,.35);background:rgba(14,116,240,.2);color:var(--blue-light)}
+.eqm-video{position:relative;aspect-ratio:16/9;border-radius:5px;overflow:hidden;border:1px solid rgba(14,116,240,.3);background:linear-gradient(160deg,#0c1929,#132337)}
+.eqm-video .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;color:var(--cyan);font-size:13px;gap:6px;text-align:center;padding:10px}
+.eqm-video .ph i{font-size:22px;opacity:.85}
+.eqm-video .badge{position:absolute;left:8px;top:8px;z-index:1;font-size:10px;padding:2px 6px;border-radius:2px;background:rgba(255,170,0,.22);color:var(--yellow);font-weight:700;border:1px solid rgba(255,170,0,.35)}
+.eqm-video .rec{position:absolute;right:8px;top:8px;z-index:1;font-size:10px;color:var(--red);font-weight:800}
+.eqm-video .cap{position:absolute;left:8px;right:8px;bottom:8px;font-size:11px;color:#e8f6ff;font-weight:600;text-shadow:0 1px 3px #000}
+.eqm-video.offline .ph{color:#ff8f8f}.eqm-video.none .ph{color:var(--gray)}
+.eqm-work-title{font-size:13px;font-weight:800;color:#e8f6ff;margin-bottom:6px}
+.eqm-line{font-size:12px;color:var(--gray);margin-top:3px;line-height:1.4}
+.eqm-prog .t{display:flex;justify-content:space-between;font-size:12px;color:var(--gray);margin-bottom:4px}
+.eqm-prog .t b{color:var(--cyan)}
+.eqm-prog .b{height:5px;background:rgba(14,116,240,.15);border-radius:99px;overflow:hidden}
+.eqm-prog .b i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--blue),var(--cyan))}
+.eqm-tbl{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.eqm-tbl th{text-align:left;color:var(--blue-light);padding:4px;background:rgba(14,116,240,.14)}
+.eqm-tbl td{padding:4px;border-bottom:1px solid rgba(14,116,240,.1);color:var(--gray)}
+.eqm-ft{padding:0 16px 12px;font-size:11px;color:rgba(180,199,231,.55);flex-shrink:0}
+@media (max-width:1000px){.eqm-grid{grid-template-columns:1fr}.eqm-metrics{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -52,23 +118,21 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
           <a class="tool-btn" href="../index.html">入口</a>
           <a class="tool-btn" href="pc_wall_command_screen.html?from=%E8%AE%BE%E5%A4%87">概览总览</a>
           <button type="button" class="tool-btn" id="btnPresent">汇报全屏</button>
+          <span class="text-[12px] text-[#91abc4]">时效 <b class="mono text-[#54d8ff]" id="hd-lag">29s</b></span>
           <button type="button" class="tool-btn" onclick="toast('已刷新演示数据')">刷新数据</button>
           <button type="button" class="tool-btn" onclick="toast('模拟降级：关键链路演示')">模拟降级</button>
         </div>
       </div>
       <div class="flex-1 min-h-0 flex items-center justify-between px-7 border-b border-[#23435f]" style="background:linear-gradient(90deg,#0b1c31,#14304a,#0b1c31)">
-        <div class="w-[20.3%]">
-          <div class="text-[14px] text-[#e5f2ff]">一期 · 装卸输送核心设备</div>
-          <div class="text-[13px] text-[#91abc4] mt-1">台账演示 <span class="mono text-[#54d8ff]">144</span> 台套</div>
+        <div class="w-[260px] flex flex-col justify-center">
+          <div class="text-[13px] text-[#54d8ff] leading-tight" id="hd-date">--</div>
+          <div class="mono text-[18px] text-[#e5f2ff] leading-none mt-0.5" id="hd-time">--</div>
         </div>
-        <div class="text-center">
+        <div class="text-center flex-1 flex flex-col items-center justify-center">
           <h1 class="m-0 text-[30px] font-bold tracking-[3px] text-[#e5f2ff] leading-none">海南金牌港 · 设备设施一张图</h1>
           <p class="m-0 mt-1.5 text-[12px] tracking-[3px] text-[#54d8ff]">看清设备状态 · 定位故障与维保责任</p>
         </div>
-        <div class="w-[20.3%] text-right">
-          <div class="mono text-[19px] text-[#e5f2ff]" id="hd-clock">--</div>
-          <div class="text-[12px] text-[#91abc4] mt-1">演示数据  /  时效 <span class="mono text-[#54d8ff]" id="hd-lag">29s</span></div>
-        </div>
+        <div class="w-[260px] flex items-center justify-end" data-weather="today"></div>
       </div>
     </header>
 
@@ -110,12 +174,12 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
           </div>
           <div class="text-[12px] flex-1 min-h-0 overflow-auto">
             <div class="flex bg-[#112b45] border-b border-[#23435f] px-2.5 h-[30px] items-center text-[#91abc4]"><span class="flex-1">类别</span><span class="w-[53px] text-right">总数</span><span class="w-[53px] text-right">在线</span><span class="w-[53px] text-right">离线</span></div>
-            <div class="flex border-b border-[#23435f] px-2.5 h-[33px] items-center"><span class="flex-1 text-[14px] text-[#e5f2ff]">卸船机</span><span class="mono w-[53px] text-right text-[15px] text-[#e5f2ff]">2</span><span class="mono w-[53px] text-right text-[15px] text-[#54d8ff]">2</span><span class="mono w-[53px] text-right text-[15px] text-[#e5f2ff]">0</span></div>
-            <div class="flex border-b border-[#23435f] px-2.5 h-[33px] items-center"><span class="flex-1 text-[14px] text-[#e5f2ff]">输送系统</span><span class="mono w-[53px] text-right text-[15px] text-[#e5f2ff]">12</span><span class="mono w-[53px] text-right text-[15px] text-[#54d8ff]">12</span><span class="mono w-[53px] text-right text-[15px] text-[#e5f2ff]">0</span></div>
-            <div class="flex border-b border-[#23435f] px-2.5 h-[33px] items-center"><span class="flex-1 text-[14px] text-[#e5f2ff]">供配电及岸电</span><span class="mono w-[53px] text-right text-[15px] text-[#e5f2ff]">18</span><span class="mono w-[53px] text-right text-[15px] text-[#54d8ff]">18</span><span class="mono w-[53px] text-right text-[15px] text-[#e5f2ff]">0</span></div>
-            <div class="flex border-b border-[#23435f] px-2.5 h-[33px] items-center"><span class="flex-1 text-[14px] text-[#e5f2ff]">闸口与地磅</span><span class="mono w-[53px] text-right text-[15px] text-[#e5f2ff]">8</span><span class="mono w-[53px] text-right text-[15px] text-[#54d8ff]">8</span><span class="mono w-[53px] text-right text-[15px] text-[#e5f2ff]">0</span></div>
-            <div class="flex border-b border-[#23435f] px-2.5 h-[33px] items-center"><span class="flex-1 text-[14px] text-[#e5f2ff]">监控与通信</span><span class="mono w-[53px] text-right text-[15px] text-[#e5f2ff]">80</span><span class="mono w-[53px] text-right text-[15px] text-[#54d8ff]">79</span><span class="mono w-[53px] text-right text-[15px] text-[#ffba5a]">1</span></div>
-            <div class="flex border-b border-[#23435f] px-2.5 h-[33px] items-center"><span class="flex-1 text-[14px] text-[#e5f2ff]">照明与充电</span><span class="mono w-[53px] text-right text-[15px] text-[#e5f2ff]">24</span><span class="mono w-[53px] text-right text-[15px] text-[#54d8ff]">23</span><span class="mono w-[53px] text-right text-[15px] text-[#ffba5a]">1</span></div>
+            <div class="ledger-row flex border-b border-[#23435f] px-2.5 h-[33px] items-center" data-eq="卸船机"><span class="flex-1 text-[14px] text-[#e5f2ff]">卸船机</span><span class="mono w-[53px] text-right text-[15px] text-[#e5f2ff]">2</span><span class="mono w-[53px] text-right text-[15px] text-[#54d8ff]">2</span><span class="mono w-[53px] text-right text-[15px] text-[#e5f2ff]">0</span></div>
+            <div class="ledger-row flex border-b border-[#23435f] px-2.5 h-[33px] items-center" data-eq="输送系统"><span class="flex-1 text-[14px] text-[#e5f2ff]">输送系统</span><span class="mono w-[53px] text-right text-[15px] text-[#e5f2ff]">12</span><span class="mono w-[53px] text-right text-[15px] text-[#54d8ff]">12</span><span class="mono w-[53px] text-right text-[15px] text-[#e5f2ff]">0</span></div>
+            <div class="ledger-row flex border-b border-[#23435f] px-2.5 h-[33px] items-center" data-eq="供配电及岸电"><span class="flex-1 text-[14px] text-[#e5f2ff]">供配电及岸电</span><span class="mono w-[53px] text-right text-[15px] text-[#e5f2ff]">18</span><span class="mono w-[53px] text-right text-[15px] text-[#54d8ff]">18</span><span class="mono w-[53px] text-right text-[15px] text-[#e5f2ff]">0</span></div>
+            <div class="ledger-row flex border-b border-[#23435f] px-2.5 h-[33px] items-center" data-eq="闸口与地磅"><span class="flex-1 text-[14px] text-[#e5f2ff]">闸口与地磅</span><span class="mono w-[53px] text-right text-[15px] text-[#e5f2ff]">8</span><span class="mono w-[53px] text-right text-[15px] text-[#54d8ff]">8</span><span class="mono w-[53px] text-right text-[15px] text-[#e5f2ff]">0</span></div>
+            <div class="ledger-row flex border-b border-[#23435f] px-2.5 h-[33px] items-center" data-eq="监控与通信"><span class="flex-1 text-[14px] text-[#e5f2ff]">监控与通信</span><span class="mono w-[53px] text-right text-[15px] text-[#e5f2ff]">80</span><span class="mono w-[53px] text-right text-[15px] text-[#54d8ff]">79</span><span class="mono w-[53px] text-right text-[15px] text-[#ffba5a]">1</span></div>
+            <div class="ledger-row flex border-b border-[#23435f] px-2.5 h-[33px] items-center" data-eq="照明与充电"><span class="flex-1 text-[14px] text-[#e5f2ff]">照明与充电</span><span class="mono w-[53px] text-right text-[15px] text-[#e5f2ff]">24</span><span class="mono w-[53px] text-right text-[15px] text-[#54d8ff]">23</span><span class="mono w-[53px] text-right text-[15px] text-[#ffba5a]">1</span></div>
             <div class="flex bg-[#112b45] border-b border-[#23435f] px-2.5 h-[33px] items-center font-bold"><span class="flex-1 text-[14px] text-[#e5f2ff]">合计</span><span class="mono w-[53px] text-right text-[15px] text-[#e5f2ff]">144</span><span class="mono w-[53px] text-right text-[15px] text-[#54d8ff]">142</span><span class="mono w-[53px] text-right text-[15px] text-[#ffba5a]">2</span></div>
           </div>
           <div class="flex justify-between text-[12px] text-[#91abc4] mt-2 shrink-0"><span>在线 <b class="mono text-[#54d8ff]">142</b></span><span>离线 <b class="mono text-[#ffba5a]">2</b></span></div>
@@ -160,24 +224,24 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
           <div class="relative flex-1 min-h-0 bg-[#0a1729] overflow-hidden" id="mapBox">
             <img src="../assets/figma/eq-map.png" alt="港区BIM底图" class="absolute inset-0 w-full h-full object-cover opacity-80">
             <div class="absolute inset-0" style="background:rgba(5,32,68,.22)"></div>
-            <div class="absolute left-[1.8%] top-[3.6%] z-10 px-3 py-1.5 rounded border border-[#ffba5a] bg-[rgba(7,24,46,.92)] text-[12px] text-[#ffba5a]">已选中 A001 · T2驱动温升核查</div>
+            <div class="absolute left-[1.8%] top-[3.6%] z-10 px-3 py-1.5 rounded border border-[#ffba5a] bg-[rgba(7,24,46,.92)] text-[12px] text-[#ffba5a]" id="mapHint">点击设备标签查看详情</div>
 
-            <button type="button" class="tag ok" style="left:24.8%;top:26.2%" data-state="ok" onclick="toast('定位：L01 正常')">L01 正常</button>
-            <button type="button" class="tag warn" style="left:52.2%;top:44.4%" data-state="abn" onclick="toast('定位：L02 受限')">L02 受限</button>
-            <button type="button" class="tag ok" style="left:26.6%;top:39.6%" data-state="ok" onclick="toast('定位：SC-01 运行')">SC-01 运行</button>
-            <button type="button" class="tag err" style="left:47.4%;top:54.2%" data-state="abn" onclick="toast('定位：SC-02 故障')">SC-02 故障</button>
-            <button type="button" class="tag ok" style="left:34.4%;top:58.6%" data-state="ok" onclick="toast('定位：BM-01 运行')">BM-01 运行</button>
-            <button type="button" class="tag warn" style="left:55.1%;top:30.2%" data-state="abn" onclick="toast('定位：T2 驱动 预警')">T2 驱动 预警</button>
-            <button type="button" class="tag err" style="left:59.2%;top:13%" data-state="abn" onclick="toast('定位：CAM-03 离线')">CAM-03 离线</button>
-            <button type="button" class="tag warn" style="left:73%;top:61.2%" data-state="abn" onclick="toast('定位：GL-07 维护')">GL-07 维护</button>
-            <button type="button" class="tag ok" style="left:11.6%;top:59%" data-state="ok" onclick="toast('定位：PD-01')">PD-01</button>
-            <button type="button" class="tag ok" style="left:22.4%;top:15.4%" data-state="ok" onclick="toast('定位：AD-01')">AD-01</button>
-            <button type="button" class="tag ok" style="left:79%;top:25.6%" data-state="ok" onclick="toast('定位：GT-01')">GT-01</button>
-            <button type="button" class="tag warn" style="left:71.8%;top:51%" data-state="abn" onclick="toast('定位：WB-01')">WB-01</button>
-            <button type="button" class="tag ok" style="left:5.2%;top:37.6%" data-state="ok" onclick="toast('定位：NET-01')">NET-01</button>
-            <button type="button" class="tag ok" style="left:80.3%;top:72.6%" data-state="ok" onclick="toast('定位：CH-01')">CH-01</button>
-            <button type="button" class="tag ok" style="left:43.9%;top:18.8%" data-state="ok" onclick="toast('定位：DC-01')">DC-01</button>
-            <button type="button" class="tag ok" style="left:5.3%;top:75%" data-state="ok" onclick="toast('定位：DP-01')">DP-01</button>
+            <button type="button" class="tag ok" style="left:24.8%;top:26.2%" data-state="ok" data-eq="L01">L01 正常</button>
+            <button type="button" class="tag warn" style="left:52.2%;top:44.4%" data-state="abn" data-eq="L02">L02 受限</button>
+            <button type="button" class="tag ok" style="left:26.6%;top:39.6%" data-state="ok" data-eq="SC-01">SC-01 运行</button>
+            <button type="button" class="tag err" style="left:47.4%;top:54.2%" data-state="abn" data-eq="SC-02">SC-02 故障</button>
+            <button type="button" class="tag ok" style="left:34.4%;top:58.6%" data-state="ok" data-eq="BM-01">BM-01 运行</button>
+            <button type="button" class="tag warn" style="left:55.1%;top:30.2%" data-state="abn" data-eq="T2-DRV">T2 驱动 预警</button>
+            <button type="button" class="tag err" style="left:59.2%;top:13%" data-state="abn" data-eq="CAM-03">CAM-03 离线</button>
+            <button type="button" class="tag warn" style="left:73%;top:61.2%" data-state="abn" data-eq="GL-07">GL-07 维护</button>
+            <button type="button" class="tag ok" style="left:11.6%;top:59%" data-state="ok" data-eq="PD-01">PD-01</button>
+            <button type="button" class="tag ok" style="left:22.4%;top:15.4%" data-state="ok" data-eq="AD-01">AD-01</button>
+            <button type="button" class="tag ok" style="left:79%;top:25.6%" data-state="ok" data-eq="GT-01">GT-01</button>
+            <button type="button" class="tag warn" style="left:71.8%;top:51%" data-state="abn" data-eq="WB-01">WB-01</button>
+            <button type="button" class="tag ok" style="left:5.2%;top:37.6%" data-state="ok" data-eq="NET-01">NET-01</button>
+            <button type="button" class="tag ok" style="left:80.3%;top:72.6%" data-state="ok" data-eq="CH-01">CH-01</button>
+            <button type="button" class="tag ok" style="left:43.9%;top:18.8%" data-state="ok" data-eq="DC-01">DC-01</button>
+            <button type="button" class="tag ok" style="left:5.3%;top:75%" data-state="ok" data-eq="DP-01">DP-01</button>
 
             <span class="wh" style="left:22.1%;top:66.4%">1#散货仓库</span>
             <span class="wh" style="left:38%;top:71.8%">2#散货仓库</span>
@@ -201,14 +265,14 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
             <span class="chip ml-auto">3路 · 全部为模拟画面，非现场证据</span>
           </div>
           <div class="grid grid-cols-3 gap-3">
-            <div class="rounded border border-[#23435f] overflow-hidden bg-[#0a1729]">
+            <div class="vid-hit rounded border border-[#23435f] overflow-hidden bg-[#0a1729]" data-eq="CAM-01">
               <div class="relative h-[9.5vh] min-h-[96px]">
                 <img src="../assets/figma/eq-cam1.png" alt="CAM-01" class="absolute inset-0 w-full h-full object-cover">
                 <span class="absolute left-2 top-2 text-[11px] font-bold text-[#ffba5a] bg-[rgba(16,34,55,.93)] border border-[#ffba5a] px-1.5 py-1 rounded">模拟画面</span>
               </div>
               <div class="h-[38px] px-2.5 flex items-center text-[13px] font-medium text-[#e5f2ff]">CAM-01｜1#泊位卸船机</div>
             </div>
-            <div class="rounded border border-[#ffba5a] overflow-hidden bg-[#0a1729]">
+            <div class="vid-hit rounded border border-[#ffba5a] overflow-hidden bg-[#0a1729]" data-eq="CAM-02">
               <div class="relative h-[9.5vh] min-h-[96px]">
                 <img src="../assets/figma/eq-cam2.png" alt="CAM-02" class="absolute inset-0 w-full h-full object-cover">
                 <span class="absolute left-2 top-2 text-[11px] font-bold text-[#ffba5a] bg-[rgba(16,34,55,.93)] border border-[#ffba5a] px-1.5 py-1 rounded">模拟画面</span>
@@ -216,7 +280,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
               </div>
               <div class="h-[38px] px-2.5 flex items-center text-[13px] font-medium text-[#e5f2ff]">CAM-02｜T2转运站</div>
             </div>
-            <div class="rounded border border-[#23435f] overflow-hidden bg-[#0a1729]">
+            <div class="vid-hit rounded border border-[#23435f] overflow-hidden bg-[#0a1729]" data-eq="CAM-04">
               <div class="relative h-[9.5vh] min-h-[96px]">
                 <img src="../assets/figma/eq-cam3.png" alt="CAM-04" class="absolute inset-0 w-full h-full object-cover">
                 <span class="absolute left-2 top-2 text-[11px] font-bold text-[#ffba5a] bg-[rgba(16,34,55,.93)] border border-[#ffba5a] px-1.5 py-1 rounded">模拟画面</span>
@@ -236,24 +300,24 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
             <span class="chip ml-auto">读数单一出处</span>
           </div>
           <div class="space-y-2.5 text-[12px]">
-            <div class="rounded px-3 py-2 bg-[#0a1729] border border-[#23435f]">
+            <div class="mon-hit rounded px-3 py-2 bg-[#0a1729] border border-[#23435f]" data-eq="SC-01">
               <div class="flex justify-between"><span class="font-bold text-[14px] text-[#e5f2ff]">卸船机 SC-01</span><span class="text-[#37d5b2]">● 运行</span></div>
               <div class="text-[#54d8ff] mt-1">负载 72%　电流 180A</div>
             </div>
-            <div class="rounded px-3 py-2 bg-[#0a1729] border border-[#23435f]">
+            <div class="mon-hit rounded px-3 py-2 bg-[#0a1729] border border-[#23435f]" data-eq="BM-01">
               <div class="flex justify-between"><span class="font-bold text-[14px] text-[#e5f2ff]">主皮带 BM-01</span><span class="text-[#37d5b2]">● 运行</span></div>
               <div class="text-[#54d8ff] mt-1">带速 2.5m/s　输送 900吨/时</div>
             </div>
-            <div class="rounded px-3 py-2 bg-[#302a24] border border-[#84623a]">
+            <div class="mon-hit rounded px-3 py-2 bg-[#302a24] border border-[#84623a]" data-eq="T2-DRV">
               <div class="flex justify-between"><span class="font-bold text-[14px] text-[#e5f2ff]">T2 输送驱动</span><span class="text-[#ffba5a]">● 预警</span></div>
               <div class="text-[#ffba5a] mt-1">轴承 78℃　振动 3.2mm/s</div>
             </div>
           </div>
           <div class="grid grid-cols-4 gap-1.5 mt-3 text-[12px]">
-            <div class="bg-[#112b45] rounded py-2 text-center"><span class="text-[#91abc4]">供电</span> <b class="text-[#37d5b2]">正常</b></div>
-            <div class="bg-[#112b45] rounded py-2 text-center"><span class="text-[#91abc4]">岸电</span> <b class="text-[#37d5b2]">就绪</b></div>
-            <div class="bg-[#112b45] rounded py-2 text-center"><span class="text-[#91abc4]">除尘</span> <b class="text-[#37d5b2]">运行</b></div>
-            <div class="bg-[#112b45] rounded py-2 text-center"><span class="text-[#91abc4]">排水</span> <b class="text-[#54d8ff]">备用</b></div>
+            <div class="util-hit bg-[#112b45] rounded py-2 text-center" data-eq="PD-01"><span class="text-[#91abc4]">供电</span> <b class="text-[#37d5b2]">正常</b></div>
+            <div class="util-hit bg-[#112b45] rounded py-2 text-center" data-eq="AD-01"><span class="text-[#91abc4]">岸电</span> <b class="text-[#37d5b2]">就绪</b></div>
+            <div class="util-hit bg-[#112b45] rounded py-2 text-center" data-eq="DC-01"><span class="text-[#91abc4]">除尘</span> <b class="text-[#37d5b2]">运行</b></div>
+            <div class="util-hit bg-[#112b45] rounded py-2 text-center" data-eq="DP-01"><span class="text-[#91abc4]">排水</span> <b class="text-[#54d8ff]">备用</b></div>
           </div>
         </div>
 
@@ -267,8 +331,8 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
             <span>待响应 <b class="text-[#ffba5a] text-[17px]">2</b></span>
             <span>处理中 <b class="text-[#54d8ff] text-[17px]">1</b></span>
           </div>
-          <div class="space-y-2">
-            <div class="flex rounded overflow-hidden border border-[#8f6c38] bg-[#28291f] cursor-pointer" onclick="toast('报警 A001 · 已联动地图')">
+          <div class="space-y-2" id="alarm-list">
+            <div class="alarm flex rounded overflow-hidden border border-[#8f6c38] bg-[#28291f] cursor-pointer" data-id="A001" data-eq="T2-DRV">
               <div class="w-1 bg-[#ffba5a]"></div>
               <div class="flex-1 p-2">
                 <div class="flex justify-between text-[11px]"><span class="text-[#ffba5a]">A001 · 13:42</span><span class="text-[#54d8ff]">处理中</span></div>
@@ -276,7 +340,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
                 <div class="flex justify-between text-[11px] text-[#91abc4] mt-1"><span>关联 L01 · 当前运行 · 风险核查</span><span class="text-[#ffba5a]">解除待评估</span></div>
               </div>
             </div>
-            <div class="flex rounded overflow-hidden border border-[#23435f] bg-[#0a1729] cursor-pointer" onclick="toast('报警 A002')">
+            <div class="alarm flex rounded overflow-hidden border border-[#23435f] bg-[#0a1729] cursor-pointer" data-id="A002" data-eq="SC-02">
               <div class="w-1 bg-[#ff6c73]"></div>
               <div class="flex-1 p-2">
                 <div class="flex justify-between text-[11px]"><span class="text-[#ff6c73]">A002 · 12:18</span><span class="text-[#ffba5a]">待响应</span></div>
@@ -284,7 +348,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
                 <div class="flex justify-between text-[11px] text-[#91abc4] mt-1"><span>关联 L02 · 卸船环节受限</span><span class="text-[#ff6c73]">预计16:30恢复</span></div>
               </div>
             </div>
-            <div class="flex rounded overflow-hidden border border-[#23435f] bg-[#0a1729] cursor-pointer" onclick="toast('报警 A003')">
+            <div class="alarm flex rounded overflow-hidden border border-[#23435f] bg-[#0a1729] cursor-pointer" data-id="A003" data-eq="CAM-03">
               <div class="w-1 bg-[#ff6c73]"></div>
               <div class="flex-1 p-2">
                 <div class="flex justify-between text-[11px]"><span class="text-[#ff6c73]">A003 · 11:05</span><span class="text-[#ffba5a]">待响应</span></div>
@@ -301,13 +365,13 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
             <span class="text-[18px] font-bold text-[#e5f2ff]">维保设备列表</span>
             <span class="chip ml-auto">预计完成，非已恢复</span>
           </div>
-          <div class="space-y-2 text-[12px]">
-            <div class="flex justify-between items-center rounded px-2.5 h-9 bg-[#0a1729] border border-[#23435f]">
+          <div class="space-y-2 text-[12px]" id="maint-list">
+            <div class="maint-hit flex justify-between items-center rounded px-2.5 h-9 bg-[#0a1729] border border-[#23435f]" data-eq="SC-02">
               <span class="text-[#e5f2ff]">SC-02 卸船机</span>
               <span class="text-[#91abc4]">维修 · 待备件</span>
               <span class="mono text-[#54d8ff]">16:30</span>
             </div>
-            <div class="flex justify-between items-center rounded px-2.5 h-9 bg-[#0a1729] border border-[#23435f]">
+            <div class="maint-hit flex justify-between items-center rounded px-2.5 h-9 bg-[#0a1729] border border-[#23435f]" data-eq="GL-07">
               <span class="text-[#e5f2ff]">GL-07 高杆灯</span>
               <span class="text-[#91abc4]">保养 · 进行中</span>
               <span class="mono text-[#54d8ff]">15:00</span>
@@ -330,8 +394,29 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
   </div>
 </div>
 
+<div class="eq-modal-mask" id="eq-modal" role="dialog" aria-modal="true">
+  <div class="eq-modal">
+    <div class="eqm-hd">
+      <div class="left">
+        <h4 id="eqm-title">设备详情</h4>
+        <span class="pill g" id="eqm-status">—</span>
+        <span class="pill b" id="eqm-area">—</span>
+        <span class="pill m">演示数据</span>
+      </div>
+      <div class="acts">
+        <button type="button" id="eqm-locate"><i class="fa-solid fa-location-crosshairs"></i> 定位设备</button>
+        <button type="button" class="x" id="eqm-close" aria-label="关闭">×</button>
+      </div>
+    </div>
+    <div class="eqm-tabs" id="eqm-tabs"></div>
+    <div class="eqm-bd" id="eqm-body"></div>
+    <div class="eqm-ft">设备档案、测点、视频与任务均为演示；正式数据以系统接入为准。关闭后恢复原视角与筛选。</div>
+  </div>
+</div>
+
 <script src="wall_domain.js"></script>
 <script src="wall_theme_nav.js"></script>
+<script src="wall_eq_detail.js"></script>
 <script>
 const THEME_LABEL={'概览':'港区概览','生产':'生产运行','交通':'港区交通','设备':'设备设施','经营':'经营分析','调度':'智慧调度'};
 function renderThemes(){
@@ -349,19 +434,21 @@ renderThemes();
 initWallTheme('设备');
 
 document.getElementById('btnPresent').onclick=()=>{document.body.classList.add('present');toast('汇报全屏 · Esc 退出')};
-document.addEventListener('keydown',e=>{if(e.key==='Escape') document.body.classList.remove('present')});
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Escape') return;
+  if(document.getElementById('eq-modal')?.classList.contains('show')) return;
+  document.body.classList.remove('present');
+});
 
 function pad(n){return String(n).padStart(2,'0')}
-function tick(){
+function tickFooter(){
   const n=new Date();
   const clock=`${n.getFullYear()}-${pad(n.getMonth()+1)}-${pad(n.getDate())} ${pad(n.getHours())}:${pad(n.getMinutes())}`;
-  const el=document.getElementById('hd-clock');
   const el2=document.getElementById('hd-asof2');
-  if(el) el.textContent=clock;
   if(el2) el2.textContent=clock;
 }
-tick();
-setInterval(tick,1000);
+tickFooter();
+setInterval(tickFooter,1000);
 
 const fltAll=document.getElementById('fltAll');
 const fltAbn=document.getElementById('fltAbn');
@@ -377,6 +464,49 @@ function setFilter(mode){
 }
 fltAll.onclick=()=>setFilter('all');
 fltAbn.onclick=()=>setFilter('abn');
+
+function focusEqOnMap(eqId){
+  const id=EqDetail.resolveId(eqId)||eqId;
+  const hint=document.getElementById('mapHint');
+  document.querySelectorAll('#mapBox .tag').forEach(el=>{
+    const hit=el.getAttribute('data-eq')===id || EqDetail.resolveId(el.getAttribute('data-eq'))===id;
+    el.classList.toggle('on',hit);
+    if(hit) el.scrollIntoView({block:'nearest',inline:'nearest'});
+  });
+  document.querySelectorAll('.mon-hit').forEach(el=>{
+    el.classList.toggle('on', EqDetail.resolveId(el.getAttribute('data-eq'))===id || el.getAttribute('data-eq')===id);
+  });
+  if(hint) hint.textContent='已定位 '+id+' · 点击标签可再开详情';
+  toast('已定位：'+id);
+}
+
+function openEq(raw, entry){
+  const opened=EqDetail.open(raw, entry||'bim');
+  if(opened){
+    const id=EqDetail.resolveId(raw)||raw;
+    focusEqOnMap(id);
+  }
+  return opened;
+}
+
+EqDetail.bind();
+EqDetail.setLocateHandler(focusEqOnMap);
+
+document.querySelector('.wall').addEventListener('click',e=>{
+  const alarm=e.target.closest('.alarm');
+  if(alarm){
+    openEq(alarm.getAttribute('data-eq'),'alarm');
+    return;
+  }
+  const maint=e.target.closest('#maint-list [data-eq]');
+  if(maint){
+    openEq(maint.getAttribute('data-eq'),'maint');
+    return;
+  }
+  const hit=e.target.closest('[data-eq]');
+  if(!hit || hit.closest('#eq-modal')) return;
+  openEq(hit.getAttribute('data-eq'),'bim');
+});
 </script>
 </body>
 </html>

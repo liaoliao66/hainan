@@ -6,6 +6,7 @@
 <title>港区交通一张图 · 海南金牌港 · v1.0.0</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="../vendor/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="wall_scrollbar.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;600&display=swap');
 *{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;box-sizing:border-box}
@@ -69,18 +70,15 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
         </div>
       </div>
       <div class="flex-1 min-h-0 flex items-center justify-between px-6 border-b" style="border-color:rgba(14,116,240,.28);background:linear-gradient(90deg,#080c20,#0d1a3a,#080c20)">
-        <div class="w-[16.7%] text-[11px] text-[rgba(180,199,231,.72)] leading-relaxed">
-          <div>陆侧车辆交通专题</div>
-          <div>闸口 · 地磅 · 通道保障</div>
+        <div class="w-[260px] flex flex-col justify-center">
+          <div class="text-[13px] text-[#00e4ff] leading-tight" id="hd-date">--</div>
+          <div class="mono text-[18px] text-[#00e4ff] leading-none mt-0.5" id="hd-time">--</div>
         </div>
-        <div class="text-center">
+        <div class="text-center flex-1 flex flex-col items-center justify-center">
           <h1 class="m-0 text-[22px] font-bold tracking-[3px] text-[#00e4ff] leading-none">海南金牌港 · 港区交通一张图</h1>
           <p class="m-0 mt-1 text-[11px] tracking-[1px] text-[#b4c7e7]">看清进出规模 · 车辆状态 · 通道与处置进展</p>
         </div>
-        <div class="w-[16.7%] text-right">
-          <div class="mono text-[16px] text-[#00e4ff]" id="hd-clock">--</div>
-          <div class="text-[11px] text-[rgba(180,199,231,.72)] mt-0.5">演示数据不可作交通指挥依据</div>
-        </div>
+        <div class="w-[260px] flex items-center justify-end" data-weather="today"></div>
       </div>
     </header>
 
@@ -392,16 +390,14 @@ document.getElementById('btnPresent').onclick=()=>{document.body.classList.add('
 document.addEventListener('keydown',e=>{if(e.key==='Escape') document.body.classList.remove('present')});
 
 function pad(n){return String(n).padStart(2,'0')}
-function tick(){
+function tickFooter(){
   const n=new Date();
   const clock=`${n.getFullYear()}-${pad(n.getMonth()+1)}-${pad(n.getDate())} ${pad(n.getHours())}:${pad(n.getMinutes())}`;
-  const el=document.getElementById('hd-clock');
   const el2=document.getElementById('hd-asof2');
-  if(el) el.textContent=clock;
   if(el2) el2.textContent=clock;
 }
-tick();
-setInterval(tick,1000);
+tickFooter();
+setInterval(tickFooter,1000);
 
 const jobHtml=`
   <div><div class="flex justify-between text-[11px] mb-1"><span class="text-[#b4c7e7]">行驶</span><span class="text-[#b4c7e7]">12 辆</span></div><div class="bar-track"><i style="width:62%"></i></div></div>

@@ -1,4 +1,11 @@
 *{margin:0;padding:0;box-sizing:border-box}
+/* 大屏滚动条 · 禁止系统白条 */
+*{scrollbar-width:thin;scrollbar-color:rgba(0,228,255,.35) rgba(8,28,62,.45)}
+*::-webkit-scrollbar{width:6px;height:6px}
+*::-webkit-scrollbar-track{background:rgba(8,28,62,.45);border-radius:99px}
+*::-webkit-scrollbar-thumb{background:linear-gradient(180deg,rgba(0,228,255,.4),rgba(14,116,240,.35));border-radius:99px;border:1px solid rgba(14,116,240,.25)}
+*::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,rgba(0,228,255,.55),rgba(14,116,240,.5))}
+*::-webkit-scrollbar-corner{background:transparent}
 html,body{width:100%;height:100%;overflow:hidden;font-family:'Source Han Sans SC','Microsoft YaHei',sans-serif;background:#030712;color:#fff}
 :root{
   --blue:#0E74F0;--blue-light:#36BFFA;--cyan:#00E4FF;--red:#F53F3F;--yellow:#FFAA00;--green:#00C48C;--gray:#B4C7E7;
@@ -32,6 +39,14 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 
 /* 顶栏通航气象 · 7日（对齐 Display_Wall screen2） */
 .wx{display:flex;flex-direction:column;gap:3px;padding:4px 6px;border:1px solid rgba(14,116,240,.22);border-radius:4px;background:rgba(10,20,50,.92);min-width:28vmin;max-width:48vmin;box-shadow:inset 0 0 12px rgba(14,116,240,.06)}
+.wx-today{display:inline-flex;align-items:center;gap:.65vmin;min-width:0;height:3.6vmin;padding:0 .85vmin;border-radius:4px;border:1px solid rgba(0,228,255,.32);background:linear-gradient(180deg,rgba(0,228,255,.12),rgba(14,116,240,.06));box-sizing:border-box}
+.wx-today-icon{font-size:1.35vmin;color:#dff6ff;line-height:1;flex-shrink:0}
+.wx-today-meta{display:flex;flex-direction:column;justify-content:center;gap:1px;min-width:0;line-height:1.15}
+.wx-today-desc{font-size:.85vmin;color:var(--gray);white-space:nowrap}
+.wx-today-temp{font-size:1.05vmin;line-height:1.1;font-variant-numeric:tabular-nums}
+.wx-today-temp b{color:var(--cyan);font-weight:700}
+.wx-today-temp span{color:rgba(180,199,231,.7)}
+[data-weather]{display:flex;align-items:center;justify-content:flex-end;height:100%}
 .wx7-hd{display:flex;align-items:center;justify-content:space-between;gap:6px}
 .wx7-title{font-size:.82vmin;font-weight:700;color:var(--blue-light);display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
 .wx7-title i{color:var(--cyan)}
@@ -207,6 +222,12 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .vtiles{display:flex;flex-direction:column}
 .vtile{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid rgba(226,232,240,.08);font-size:12px}
 .vtile span{color:#8ea0b8}.vtile b{color:#f4f7fb}
+.vtile b.g{color:#8ee0c2}.vtile b.y{color:#f0cc74}.vtile b.r{color:#f3b4b4}.vtile b.b,.vtile b.m{color:#9ec5ff}
+.vring{position:relative;width:72px;height:72px;margin:4px auto 2px;color:#00E4FF}
+.vring svg{display:block;width:100%;height:100%}
+.vring-val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:18px;font-weight:800;line-height:1;color:#f4f7fb}
+.vring-val small{font-size:11px;font-weight:600;color:#8ea0b8;margin-left:1px}
+.vring-val em{display:block;margin-top:2px;font-style:normal;font-size:10px;font-weight:600;color:#8ea0b8}
 .yg-head{display:flex;align-items:center;justify-content:space-between;gap:6px}
 .vnote{font-size:11px;color:#8ea0b8}
 .vstatus{font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px}
@@ -229,6 +250,29 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .ypill.r{color:#f3b4b4;background:rgba(226,75,75,.16)}
 .ypill.m{color:#d5deea;background:rgba(226,232,240,.08)}
 .yg-empty{padding:12px;text-align:center;color:#8ea0b8;font-size:12px;border:1px dashed rgba(226,232,240,.16);border-radius:8px}
+.vtick{position:absolute;top:-3px;width:1px;height:10px;background:rgba(226,232,240,.45)}
+.vtick b{position:absolute;top:-12px;left:50%;transform:translateX(-50%);font-size:9px;color:#8ea0b8;font-weight:600}
+.vtick.hot{background:#e0a106}
+.yg-alert{margin-top:8px;padding:7px 9px;border-radius:6px;font-size:12px;font-weight:700;color:#f3b4b4;background:rgba(226,75,75,.12);border:1px solid rgba(226,75,75,.35)}
+.yg-event{margin-top:8px;padding:8px 10px;border-radius:6px;border:1px solid rgba(226,232,240,.12);background:rgba(255,255,255,.02)}
+.yg-event.r{border-color:rgba(226,75,75,.35);background:rgba(226,75,75,.08)}
+.yg-event.y{border-color:rgba(224,161,6,.35);background:rgba(224,161,6,.08)}
+.yg-event-top{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.yg-event-top b{color:#f4f7fb;font-size:12px}
+.yg-event-meta{display:flex;gap:12px;margin-top:4px;font-size:11px;color:#8ea0b8}
+.yg-event-note{margin-top:4px;font-size:11px;color:#c5d0de;line-height:1.4}
+.yg-progress{margin-top:8px}
+.yg-progbar{height:5px;border-radius:99px;background:rgba(226,232,240,.12);overflow:hidden;margin:6px 0}
+.yg-progbar>i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#0E74F0,#00E4FF)}
+.yg-pct{color:#00E4FF;font-weight:700}
+.yg-tip{font-size:11px;color:#8ea0b8;margin-top:4px}
+.tag.g,.tag.ok{color:#00c48c}.tag.r{color:#ff8f8f}.tag.y{color:#fa0}
+.code{font-family:ui-monospace,monospace;color:#9ec5ff}
+.yslot{display:inline-block;padding:1px 6px;border-radius:3px;background:rgba(0,228,255,.1);color:#00E4FF;font-size:10px;font-weight:700}
+.yg-table.spec th{width:38%}
+.yg-table.compact td.num{text-align:right;font-variant-numeric:tabular-nums}
+.yg-table tr.hit td,.yg-table tr.on td{background:rgba(0,228,255,.06)}
+.yg-table td.cargo{font-weight:650;color:#f4f7fb}
 
 /* 作业环境 · 对齐 screen2 消防/气象格子 */
 .env-board-wrap{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column}

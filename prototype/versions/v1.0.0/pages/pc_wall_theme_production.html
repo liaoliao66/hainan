@@ -6,6 +6,7 @@
 <title>生产运行一张图 · 海南金牌港 · v1.0.0</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="../vendor/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="wall_scrollbar.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;600&display=swap');
 *{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;box-sizing:border-box}
@@ -41,6 +42,31 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 .bar>i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#0e74f0,#00e4ff)}
 .mini-act{height:17px;padding:0 7px;border:1px solid rgba(14,116,240,.28);background:rgba(14,116,240,.12);border-radius:3px;color:#b4c7e7;font-size:11px;cursor:pointer}
 .mini-act:hover{border-color:#00e4ff;color:#00e4ff}
+.prod-right{min-height:0;display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;gap:6px;overflow:hidden}
+.prod-right .card{overflow:hidden;min-height:0}
+.alarm-compact{display:flex;flex-direction:column;gap:4px}
+.alarm-row{display:grid;grid-template-columns:64px 1fr auto;gap:6px;align-items:center;padding:5px 7px;border-radius:4px;cursor:pointer;border:1px solid rgba(14,116,240,.2);background:rgba(8,28,62,.6)}
+.alarm-row.hot{border-color:rgba(143,108,56,.6);background:rgba(40,41,31,.9)}
+.alarm-row .id{font-size:10px;font-weight:700;color:#fa0;white-space:nowrap}
+.alarm-row.hot .id{color:#fa0}
+.alarm-row .ttl{font-size:11px;font-weight:700;color:#e8f6ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.eq-compact{display:flex;flex-direction:column;gap:3px}
+.eq-row{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:4px 7px;border-radius:4px;background:rgba(14,116,240,.08);border:1px solid rgba(14,116,240,.16)}
+.eq-row.warn{background:rgba(48,42,36,.85);border-color:rgba(132,98,58,.7)}
+.eq-row .nm{font-size:11px;font-weight:700;color:#e8f6ff}
+.eq-row .sub{font-size:9px;color:#91abc4;margin-left:6px}
+.env-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.env-cell{display:flex;flex-direction:column;gap:1px;padding:4px 6px;border-radius:4px;background:rgba(14,116,240,.06);border:1px solid rgba(14,116,240,.14);min-width:0}
+.env-cell .code{align-self:flex-start;padding:0 4px;border-radius:2px;font-size:9px;color:#00e4ff;background:rgba(14,116,240,.2);font-weight:700}
+.env-cell .name{font-size:11px;font-weight:700;color:#e8f6ff;line-height:1.15}
+.env-cell .place{font-size:9px;color:#91abc4;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.env-cell .val{margin-top:1px;font-size:12px;font-weight:800;color:#00e4ff;font-variant-numeric:tabular-nums}
+.env-cell.wide{grid-column:1 / -1;flex-direction:row;align-items:center;gap:8px}
+.env-cell.wide .meta{flex:1;min-width:0}
+.yard-compact{display:flex;flex-direction:column;gap:6px}
+.yard-row .lab{display:flex;justify-content:space-between;margin-bottom:3px;font-size:11px}
+.yard-row .track{height:4px;border-radius:99px;background:rgba(14,116,240,.15);overflow:hidden}
+.yard-row .track>i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#0e74f0,#00e4ff)}
 </style>
 </head>
 <body>
@@ -61,18 +87,15 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
         </div>
       </div>
       <div class="flex-1 min-h-0 flex items-center justify-between px-6 border-b" style="border-color:rgba(14,116,240,.28);background:linear-gradient(90deg,#080c20,#0d1a3a,#080c20)">
-        <div class="w-[16.7%]">
-          <div class="text-[11px] text-[rgba(180,199,231,.72)]">一期 · 2×7万吨级通用泊位 年设计吞吐 700 万吨</div>
-          <span class="inline-flex mt-1 px-2 py-0.5 rounded-full text-[10px] font-bold text-[#b4c7e7]" style="background:rgba(180,199,231,.14)">演示数据</span>
+        <div class="w-[260px] flex flex-col justify-center">
+          <div class="text-[13px] text-[#00e4ff] leading-tight" id="hd-date">--</div>
+          <div class="mono text-[18px] text-[#00e4ff] leading-none mt-0.5" id="hd-time">--</div>
         </div>
-        <div class="text-center">
+        <div class="text-center flex-1 flex flex-col items-center justify-center">
           <h1 class="m-0 text-[22px] font-bold tracking-[3px] text-[#00e4ff] leading-none">海南金牌港 · 生产运行一张图</h1>
           <p class="m-0 mt-1 text-[11px] tracking-[1px] text-[#b4c7e7]">看清下一步安排 · 发现异常并定位责任岗位</p>
         </div>
-        <div class="w-[16.7%] text-right">
-          <div class="mono text-[16px] text-[#00e4ff]" id="hd-clock">--</div>
-          <div class="text-[11px] text-[rgba(180,199,231,.72)] mt-0.5">演示数据不可作调度依据</div>
-        </div>
+        <div class="w-[260px] flex items-center justify-end" data-weather="today"></div>
       </div>
     </header>
 
@@ -275,122 +298,105 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
       </div>
 
       <!-- 右列 -->
-      <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
-        <div class="card shrink-0 p-3">
-          <div class="flex items-center gap-1.5 mb-2">
+      <div class="prod-right">
+        <div class="card p-2">
+          <div class="flex items-center gap-1.5 mb-1">
             <span class="mark"></span>
             <span class="text-[12px] font-bold text-[#36bffa]">报警中心</span>
-            <span class="chip ml-auto">未闭环唯一汇总</span>
+            <span class="chip ml-auto">未闭环 3 · 待响应 2 · 处理中 1</span>
           </div>
-          <div class="rounded px-2.5 h-7 flex items-center gap-1 text-[12px] text-[#b4c7e7] mb-2" style="background:rgba(50,37,46,.65)">
-            <span>未闭环</span><b class="text-[#fa0] text-[15px]">3</b>
-            <span>· 待响应</span><b class="text-[#fa0] text-[15px]">2</b>
-            <span>· 处理中</span><b class="text-[#00e4ff] text-[15px]">1</b>
-          </div>
-          <div class="space-y-2">
-            <div class="rounded p-2 cursor-pointer" style="background:rgba(40,41,31,.9);border:1px solid rgba(143,108,56,.6)" onclick="toast('报警 A001 · 已联动地图')">
-              <div class="flex justify-between text-[11px]"><span class="text-[#fa0]">A001 · 13:42</span><span class="pill b">处理中</span></div>
-              <div class="text-[12px] font-bold text-[#e8f6ff] mt-1">T2输送驱动 · 轴承温升</div>
-              <div class="flex justify-between items-center mt-1.5">
-                <span class="pill n">设备运维</span>
-                <span class="flex gap-1"><button type="button" class="mini-act" onclick="event.stopPropagation();toast('定位 A001')">定位</button><button type="button" class="mini-act" onclick="event.stopPropagation();toast('调取 CAM-02')">视频</button></span>
-              </div>
+          <div class="alarm-compact">
+            <div class="alarm-row hot" onclick="toast('报警 A001 · 已联动地图')">
+              <span class="id">A001 13:42</span>
+              <span class="ttl" title="T2输送驱动 · 轴承温升">T2输送驱动 · 轴承温升</span>
+              <span class="pill b">处理中</span>
             </div>
-            <div class="rounded p-2 cursor-pointer" style="background:rgba(8,28,62,.6);border:1px solid rgba(14,116,240,.2)" onclick="toast('报警 A002')">
-              <div class="flex justify-between text-[11px]"><span class="text-[#ff9a9a]">A002 · 13:55</span><span class="pill w">待响应</span></div>
-              <div class="text-[12px] font-bold text-[#e8f6ff] mt-1">示例车02 · 预约核验超时</div>
-              <div class="flex justify-between items-center mt-1.5">
-                <span class="pill n">闸口值班</span>
-                <span class="flex gap-1"><button type="button" class="mini-act" onclick="event.stopPropagation();toast('定位 A002')">定位</button><button type="button" class="mini-act" onclick="event.stopPropagation();toast('调取闸口视频')">视频</button></span>
-              </div>
+            <div class="alarm-row" onclick="toast('报警 A002')">
+              <span class="id" style="color:#ff9a9a">A002 13:55</span>
+              <span class="ttl" title="示例车02 · 预约核验超时">示例车02 · 预约核验超时</span>
+              <span class="pill w">待响应</span>
             </div>
-            <div class="rounded p-2 cursor-pointer" style="background:rgba(8,28,62,.6);border:1px solid rgba(14,116,240,.2)" onclick="toast('报警 A003')">
-              <div class="flex justify-between text-[11px]"><span class="text-[#ff9a9a]">A003 · 13:28</span><span class="pill w">待响应</span></div>
-              <div class="text-[12px] font-bold text-[#e8f6ff] mt-1">CAM-03 · 离线，关联2#泊位</div>
-              <div class="flex justify-between items-center mt-1.5">
-                <span class="pill n">通信维护</span>
-                <span class="flex gap-1"><button type="button" class="mini-act" onclick="event.stopPropagation();toast('定位 A003')">定位</button><button type="button" class="mini-act" onclick="event.stopPropagation();toast('CAM-03 离线')">视频</button></span>
-              </div>
+            <div class="alarm-row" onclick="toast('报警 A003')">
+              <span class="id" style="color:#ff9a9a">A003 13:28</span>
+              <span class="ttl" title="CAM-03 · 离线">CAM-03 · 离线</span>
+              <span class="pill w">待响应</span>
             </div>
           </div>
         </div>
 
-        <div class="card shrink-0 p-3">
-          <div class="flex items-center gap-1.5 mb-2">
+        <div class="card p-2">
+          <div class="flex items-center gap-1.5 mb-1">
             <span class="mark"></span>
             <span class="text-[12px] font-bold text-[#36bffa]">作业设备状态监测</span>
             <span class="chip ml-auto">读数与状态</span>
           </div>
-          <div class="space-y-1.5">
-            <div class="rounded px-2 py-1.5 flex items-center justify-between" style="background:rgba(14,116,240,.08);border:1px solid rgba(14,116,240,.16)">
-              <div><div class="text-[12px] font-bold text-[#e8f6ff]">卸船机01</div><div class="text-[9px] text-[#b4c7e7]">负载 72%</div></div>
-              <span class="text-[12px] text-[#00c48c] font-bold">运行</span>
-            </div>
-            <div class="rounded px-2 py-1.5 flex items-center justify-between" style="background:rgba(14,116,240,.08);border:1px solid rgba(14,116,240,.16)">
-              <div><div class="text-[12px] font-bold text-[#e8f6ff]">主皮带输送</div><div class="text-[9px] text-[#b4c7e7]">带速 2.5 m/s</div></div>
-              <span class="text-[12px] text-[#00c48c] font-bold">运行</span>
-            </div>
-            <div class="rounded px-2 py-1.5 flex items-center justify-between" style="background:rgba(48,42,36,.85);border:1px solid rgba(132,98,58,.7)">
-              <div><div class="text-[12px] font-bold text-[#e8f6ff]">T2输送驱动</div><div class="text-[9px] text-[#fa0]">轴承 78℃</div></div>
-              <span class="text-[12px] text-[#fa0] font-bold">预警</span>
-            </div>
+          <div class="eq-compact">
+            <div class="eq-row"><div><span class="nm">卸船机01</span><span class="sub">负载 72%</span></div><span class="text-[11px] text-[#00c48c] font-bold">运行</span></div>
+            <div class="eq-row"><div><span class="nm">主皮带输送</span><span class="sub">2.5 m/s</span></div><span class="text-[11px] text-[#00c48c] font-bold">运行</span></div>
+            <div class="eq-row warn"><div><span class="nm">T2输送驱动</span><span class="sub">轴承 78℃</span></div><span class="text-[11px] text-[#fa0] font-bold">预警</span></div>
           </div>
         </div>
 
-        <div class="card flex-1 min-h-0 overflow-auto p-3">
-          <div class="flex items-center gap-1.5 mb-2">
+        <div class="card p-2">
+          <div class="flex items-center gap-1.5 mb-1">
             <span class="mark"></span>
             <span class="text-[12px] font-bold text-[#36bffa]">作业环境监测</span>
             <span class="chip ml-auto">具名测点</span>
           </div>
-          <div class="space-y-1.5 text-[12px]">
-            <div class="rounded px-2 py-1.5 flex items-center gap-2" style="background:rgba(14,116,240,.06);border:1px solid rgba(14,116,240,.14)">
-              <span class="px-1.5 py-0.5 rounded text-[9px] text-[#00e4ff]" style="background:rgba(14,116,240,.2)">D01</span>
-              <div class="flex-1"><div class="text-[#e8f6ff]">水深</div><div class="text-[9px] text-[#b4c7e7]">1#泊位前沿</div></div>
-              <b class="mono text-[#00e4ff]">13.8 米</b>
+          <div class="env-grid">
+            <div class="env-cell">
+              <span class="code">D01</span>
+              <span class="name">水深</span>
+              <span class="place">1#泊位前沿</span>
+              <span class="val mono">13.8 米</span>
             </div>
-            <div class="rounded px-2 py-1.5 flex items-center gap-2" style="background:rgba(14,116,240,.06);border:1px solid rgba(14,116,240,.14)">
-              <span class="px-1.5 py-0.5 rounded text-[9px] text-[#00e4ff]" style="background:rgba(14,116,240,.2)">D02</span>
-              <div class="flex-1"><div class="text-[#e8f6ff]">水深</div><div class="text-[9px] text-[#b4c7e7]">2#泊位前沿</div></div>
-              <b class="mono text-[#00e4ff]">14.1 米</b>
+            <div class="env-cell">
+              <span class="code">D02</span>
+              <span class="name">水深</span>
+              <span class="place">2#泊位前沿</span>
+              <span class="val mono">14.1 米</span>
             </div>
-            <div class="rounded px-2 py-1.5 flex items-center gap-2" style="background:rgba(14,116,240,.06);border:1px solid rgba(14,116,240,.14)">
-              <span class="px-1.5 py-0.5 rounded text-[9px] text-[#00e4ff]" style="background:rgba(14,116,240,.2)">W01</span>
-              <div class="flex-1"><div class="text-[#e8f6ff]">风速</div><div class="text-[9px] text-[#b4c7e7]">码头前沿中部</div></div>
-              <b class="mono text-[#00e4ff]">7.2 米/秒</b>
+            <div class="env-cell">
+              <span class="code">W01</span>
+              <span class="name">风速</span>
+              <span class="place">码头前沿中部</span>
+              <span class="val mono">7.2 米/秒</span>
             </div>
-            <div class="rounded px-2 py-1.5 flex items-center gap-2" style="background:rgba(14,116,240,.06);border:1px solid rgba(14,116,240,.14)">
-              <span class="px-1.5 py-0.5 rounded text-[9px] text-[#00e4ff]" style="background:rgba(14,116,240,.2)">V01</span>
-              <div class="flex-1"><div class="text-[#e8f6ff]">能见度</div><div class="text-[9px] text-[#b4c7e7]">航道口</div></div>
-              <b class="mono text-[#00e4ff]">6.5 千米</b>
+            <div class="env-cell">
+              <span class="code">V01</span>
+              <span class="name">能见度</span>
+              <span class="place">航道口</span>
+              <span class="val mono">6.5 千米</span>
             </div>
-            <div class="rounded px-2 py-1.5 flex items-center gap-2" style="background:rgba(14,116,240,.06);border:1px solid rgba(14,116,240,.14)">
-              <span class="px-1.5 py-0.5 rounded text-[9px] text-[#00e4ff]" style="background:rgba(14,116,240,.2)">P01</span>
-              <div class="flex-1"><div class="text-[#e8f6ff]">粉尘PM10</div><div class="text-[9px] text-[#b4c7e7]">1#仓库东侧</div></div>
-              <b class="mono text-[#00e4ff]">85 μg/m³</b>
+            <div class="env-cell wide">
+              <span class="code">P01</span>
+              <div class="meta">
+                <div class="name">粉尘 PM10</div>
+                <div class="place">1#仓库东侧</div>
+              </div>
+              <span class="val mono">85 μg/m³</span>
             </div>
           </div>
-          <div class="text-[9px] text-[rgba(180,199,231,.55)] mt-2">水深分泊位；风速为码头前沿中部 W01</div>
         </div>
 
-        <div class="card shrink-0 p-3">
-          <div class="flex items-center gap-1.5 mb-2">
+        <div class="card p-2">
+          <div class="flex items-center gap-1.5 mb-1">
             <span class="mark"></span>
             <span class="text-[12px] font-bold text-[#36bffa]">仓储接收能力</span>
             <span class="chip ml-auto">占用率唯一出处</span>
           </div>
-          <div class="space-y-2.5 text-[12px]">
-            <div>
-              <div class="flex justify-between mb-1"><span class="text-[#e8f6ff]">1#散货仓库</span><b class="mono text-[#00e4ff]">64%</b></div>
-              <div class="h-[5px] rounded bg-[rgba(14,116,240,.15)] overflow-hidden"><div class="h-full rounded" style="width:64%;background:linear-gradient(90deg,#0e74f0,#00e4ff)"></div></div>
+          <div class="yard-compact">
+            <div class="yard-row">
+              <div class="lab"><span class="text-[#e8f6ff]">1#散货仓库</span><b class="mono text-[#00e4ff]">64%</b></div>
+              <div class="track"><i style="width:64%"></i></div>
             </div>
-            <div>
-              <div class="flex justify-between mb-1"><span class="text-[#e8f6ff]">2#散货仓库</span><b class="mono text-[#00e4ff]">58%</b></div>
-              <div class="h-[5px] rounded bg-[rgba(14,116,240,.15)] overflow-hidden"><div class="h-full rounded" style="width:58%;background:linear-gradient(90deg,#0e74f0,#00e4ff)"></div></div>
+            <div class="yard-row">
+              <div class="lab"><span class="text-[#e8f6ff]">2#散货仓库</span><b class="mono text-[#00e4ff]">58%</b></div>
+              <div class="track"><i style="width:58%"></i></div>
             </div>
-            <div>
-              <div class="flex justify-between mb-1"><span class="text-[#e8f6ff]">3#杂货仓库</span><b class="mono text-[#00e4ff]">49%</b></div>
-              <div class="h-[5px] rounded bg-[rgba(14,116,240,.15)] overflow-hidden"><div class="h-full rounded" style="width:49%;background:linear-gradient(90deg,#0e74f0,#00e4ff)"></div></div>
+            <div class="yard-row">
+              <div class="lab"><span class="text-[#e8f6ff]">3#杂货仓库</span><b class="mono text-[#00e4ff]">49%</b></div>
+              <div class="track"><i style="width:49%"></i></div>
             </div>
           </div>
         </div>
@@ -431,16 +437,14 @@ document.getElementById('btnPresent').onclick=()=>{document.body.classList.add('
 document.addEventListener('keydown',e=>{if(e.key==='Escape') document.body.classList.remove('present')});
 
 function pad(n){return String(n).padStart(2,'0')}
-function tick(){
+function tickFooter(){
   const n=new Date();
   const clock=`${n.getFullYear()}-${pad(n.getMonth()+1)}-${pad(n.getDate())} ${pad(n.getHours())}:${pad(n.getMinutes())}`;
-  const el=document.getElementById('hd-clock');
   const el2=document.getElementById('hd-asof2');
-  if(el) el.textContent=clock;
   if(el2) el2.textContent=clock;
 }
-tick();
-setInterval(tick,1000);
+tickFooter();
+setInterval(tickFooter,1000);
 
 document.querySelectorAll('[data-flt]').forEach(btn=>{
   btn.onclick=()=>{

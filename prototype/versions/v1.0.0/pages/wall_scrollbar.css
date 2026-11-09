@@ -1,0 +1,19 @@
+/* 大屏滚动条 · 禁止系统白条，统一暗色细条 */
+*{
+  scrollbar-width:thin;
+  scrollbar-color:rgba(0,228,255,.35) rgba(8,28,62,.45);
+}
+*::-webkit-scrollbar{width:6px;height:6px}
+*::-webkit-scrollbar-track{
+  background:rgba(8,28,62,.45);
+  border-radius:99px;
+}
+*::-webkit-scrollbar-thumb{
+  background:linear-gradient(180deg,rgba(0,228,255,.4),rgba(14,116,240,.35));
+  border-radius:99px;
+  border:1px solid rgba(14,116,240,.25);
+}
+*::-webkit-scrollbar-thumb:hover{
+  background:linear-gradient(180deg,rgba(0,228,255,.55),rgba(14,116,240,.5));
+}
+*::-webkit-scrollbar-corner{background:transparent}

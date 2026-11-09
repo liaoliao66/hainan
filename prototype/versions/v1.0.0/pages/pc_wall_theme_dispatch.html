@@ -3,103 +3,579 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>调度主题整屏 · 海南金牌港 · v1.0.0</title>
-<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
-<link rel="stylesheet" href="wall_common.css">
-<script src="../vendor/echarts.min.js"></script>
+<title>智慧调度一张图 · 海南金牌港 · v1.0.0</title>
+<script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="../vendor/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="wall_scrollbar.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;600&display=swap');
+*{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;box-sizing:border-box}
+.mono{font-family:'Roboto Mono',ui-monospace,monospace}
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#030712;color:#fff}
+body{display:flex;flex-direction:column}
+.stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
+.wall{position:relative;aspect-ratio:16/9;width:min(98vw,calc(98vh*16/9));height:min(98vh,calc(98vw*9/16));display:flex;flex-direction:column;overflow:hidden;border:1px solid rgba(14,116,240,.35);box-shadow:0 0 40px rgba(0,0,0,.55);background:#030712}
+body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
+.card{position:relative;border:1px solid rgba(14,116,240,.28);border-radius:6px;background:rgba(8,28,62,.92);box-shadow:inset 0 0 12px rgba(14,116,240,.04);overflow:hidden}
+.mark{width:2px;height:14px;background:#0e74f0;flex-shrink:0}
+.chip{font-size:10px;color:#b4c7e7}
+.tool-btn{height:22px;padding:0 10px;border:1px solid #334155;background:#1e293b;border-radius:4px;color:#e2e8f0;font-size:11px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;white-space:nowrap}
+.tool-btn:hover,.tool-btn.on{border-color:#00e4ff;color:#00e4ff}
+.theme{min-width:120px;height:36px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;border-radius:5px;text-decoration:none;cursor:pointer;border:1px solid rgba(14,116,240,.28);background:#0a1220;color:#b4c7e7}
+.theme.on{color:#06202a;background:linear-gradient(180deg,#7ee7f0,#00e4ff);border-color:#00e4ff;font-weight:800}
+.toast{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);background:rgba(8,28,62,.95);border:1px solid rgba(14,116,240,.28);padding:8px 14px;border-radius:8px;font-size:12px;opacity:0;transition:.2s;z-index:95}
+.toast.show{opacity:1}
+.pill{display:inline-flex;align-items:center;padding:2px 7px;border-radius:99px;font-size:10px;font-weight:700;border:1px solid transparent;white-space:nowrap}
+.pill.g{color:#00c48c;background:rgba(0,196,140,.12);border-color:rgba(0,196,140,.35)}
+.pill.y{color:#fa0;background:rgba(255,170,0,.12);border-color:rgba(255,170,0,.35)}
+.pill.r{color:#ff8f8f;background:rgba(245,63,63,.12);border-color:rgba(245,63,63,.35)}
+.pill.b{color:#7eb6ff;background:rgba(14,116,240,.18);border-color:rgba(14,116,240,.35)}
+.pill.m{color:#b4c7e7;background:rgba(180,199,231,.1);border-color:rgba(180,199,231,.25)}
+.seg{height:8px;border-radius:99px;background:rgba(14,116,240,.16);overflow:hidden;display:flex}
+.seg i{display:block;height:100%}
+.seg .done{background:linear-gradient(90deg,#0e74f0,#00e4ff)}
+.seg .open{background:linear-gradient(90deg,#fa0,#ffba5a)}
+.hit{cursor:pointer;transition:border-color .15s,background .15s}
+.hit:hover{border-color:rgba(0,228,255,.45)!important;background:rgba(14,116,240,.14)!important}
+.view{display:none;flex:1;min-height:0}
+.view.on{display:flex;flex-direction:column}
+.map-box{position:relative;flex:1;min-height:0;overflow:hidden;border-radius:6px;border:1px solid rgba(14,116,240,.28)}
+.map-box img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.map-mask{position:absolute;inset:0;background:linear-gradient(180deg,rgba(3,7,18,.12),rgba(3,7,18,.35));pointer-events:none}
+.poi{position:absolute;transform:translate(-50%,-50%);z-index:3;padding:2px 6px;border-radius:3px;font-size:10px;font-weight:700;border:1px solid rgba(0,228,255,.45);color:#00e4ff;background:rgba(8,28,62,.9);cursor:pointer;white-space:nowrap}
+.poi.z{border-style:dashed;color:#7eb6ff;border-color:rgba(126,182,255,.55)}
+.poi.r{border-color:rgba(0,196,140,.5);color:#00c48c}
+.poi.cam{border-color:rgba(255,170,0,.5);color:#fa0}
+.poi.evt{border-color:rgba(245,63,63,.65);color:#ff9a9a}
+.legend-flat{position:absolute;left:10px;right:10px;bottom:8px;z-index:6;display:flex;align-items:center;gap:14px;padding:4px 10px;border:1px solid rgba(14,116,240,.28);border-radius:4px;background:rgba(6,16,34,.72);pointer-events:none}
+.legend-flat b{font-size:11px;color:#00e4ff;margin-right:auto}
+.legend-flat span{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#b4c7e7}
+.legend-flat .d{width:8px;height:8px;border-radius:50%;border:1px solid rgba(255,255,255,.2)}
+.legend-flat .line{width:14px;height:0;border-top:2px dashed #e879f9}
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.res-cell{padding:7px 8px;border-radius:4px;background:rgba(14,116,240,.06);border:1px solid rgba(14,116,240,.14)}
+.res-cell .k{font-size:10px;color:#91abc4}
+.res-cell .v{font-size:16px;font-weight:800;color:#00e4ff;margin-top:2px}
+.res-cell .v small{font-size:10px;color:#91abc4;font-weight:600;margin-left:2px}
+.cam-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.cam-card{border:1px solid rgba(14,116,240,.28);border-radius:4px;overflow:hidden;background:#0a1220}
+.cam-card .ph{position:relative;aspect-ratio:16/9;background:#071422}
+.cam-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cam-card .cap{padding:5px 8px;font-size:11px;color:#e8f6ff}
+.tbl{width:100%;border-collapse:collapse;font-size:11px}
+.tbl th{text-align:left;color:#7eb6ff;font-weight:600;padding:3px 4px;background:rgba(14,116,240,.12)}
+.tbl td{padding:4px;border-bottom:1px solid rgba(14,116,240,.1);color:#b4c7e7}
+.tbl td.num{text-align:right;color:#e8f6ff;font-variant-numeric:tabular-nums}
+.kv{display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px solid rgba(14,116,240,.08);font-size:12px}
+.kv .k{color:#91abc4}.kv .v{color:#e8f6ff;font-weight:600;text-align:right}
+.plan-item{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:7px 8px;border-radius:4px;border:1px solid rgba(14,116,240,.16);background:rgba(14,116,240,.05);margin-bottom:6px}
+.plan-item .t{font-size:12px;font-weight:700;color:#e8f6ff}
+.plan-item .s{font-size:10px;color:#91abc4;margin-top:2px}
+.inset-2d{position:absolute;left:10px;bottom:40px;z-index:5;width:28%;aspect-ratio:16/10;border:1px solid rgba(0,228,255,.35);border-radius:4px;overflow:hidden;background:rgba(6,16,34,.9)}
+.inset-2d img{width:100%;height:100%;object-fit:cover;opacity:.85}
+.inset-2d .lab{position:absolute;left:6px;top:4px;font-size:10px;color:#00e4ff;font-weight:700}
+.review-mask{display:none;position:fixed;inset:0;z-index:90;background:rgba(2,8,20,.72);align-items:center;justify-content:center;padding:2vmin}
+.review-mask.show{display:flex}
+.review-modal{width:min(94vw,1280px);height:min(86vh,820px);display:flex;flex-direction:column;overflow:hidden;border-radius:10px;background:linear-gradient(165deg,rgba(8,28,62,.98),rgba(6,18,42,.98));border:1px solid rgba(0,228,255,.35);box-shadow:0 0 40px rgba(0,0,0,.55)}
+.rv-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;border-bottom:1px solid rgba(14,116,240,.22);flex-shrink:0}
+.rv-bd{flex:1;min-height:0;display:grid;grid-template-columns:1.1fr 1fr .9fr;gap:10px;padding:12px 16px}
+.rv-ft{flex-shrink:0;padding:10px 16px 14px;border-top:1px solid rgba(14,116,240,.18)}
+.timeline{display:flex;align-items:flex-start;gap:0;overflow:hidden}
+.tl-node{flex:1;min-width:0;text-align:center;cursor:pointer;position:relative;padding-top:14px}
+.tl-node::before{content:'';position:absolute;left:0;right:0;top:5px;height:2px;background:rgba(14,116,240,.35)}
+.tl-node:first-child::before{left:50%}.tl-node:last-child::before{right:50%}
+.tl-node i.dot{position:relative;z-index:1;display:inline-block;width:10px;height:10px;border-radius:50%;background:#334155;border:2px solid #00e4ff}
+.tl-node.on i.dot{background:#fa0;border-color:#fa0;box-shadow:0 0 8px rgba(255,170,0,.45)}
+.tl-node.done i.dot{background:#00e4ff}
+.tl-node .tm{display:block;font-size:10px;color:#7eb6ff;margin-top:4px}
+.tl-node .lb{display:block;font-size:10px;color:#b4c7e7;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl-node.on .lb{color:#fa0;font-weight:700}
+.doc{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:6px 8px;border-radius:4px;border:1px solid rgba(14,116,240,.14);background:rgba(14,116,240,.04);margin-bottom:5px;font-size:11px;cursor:pointer}
+.doc.on{border-color:rgba(0,228,255,.45);background:rgba(0,228,255,.08)}
+.doc .n{color:#e8f6ff;font-weight:600}
+.doc .m{color:#91abc4;font-size:10px}
+#themes{display:none}
+</style>
 </head>
 <body>
-<div class="tool"><span>调度主题 · 告警定位 · 通关状态 · 环境/人员/广播为模拟 · 墙上不能喊话</span><a href="../index.html">入口</a><a href="pc_wall_command_screen.html?from=%E8%B0%83%E5%BA%A6">概览整屏</a></div>
-<div class="stage"><div class="wall">
-  <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
-  <div class="corner corner-bl"></div><div class="corner corner-br"></div>
-  <div class="top-line"></div>
-  <header class="header">
-    <div class="hd-left"><div class="date" id="hd-date">--</div><div><span id="hd-week">--</span> · <span id="hd-time">--</span></div></div>
-    <div class="hd-center"><div class="main">金牌港 · 智慧调度一张图</div><div class="sub">未闭环告警 · 在港船通关 · 视频在右上 · <span id="hd-asof">--</span></div></div>
-    <div class="hd-right"><div data-weather></div></div>
-  </header>
-  <div class="body">
-    <div class="col">
-      <div class="card"><div class="card-title"><i class="fa-solid fa-bell"></i> 事件 KPI</div>
-        <div class="kpi-grid">
-          <div class="kpi"><div class="v r">2</div><div class="l">未闭环</div></div>
-          <div class="kpi"><div class="v y">2</div><div class="l">处置中</div></div>
-          <div class="kpi"><div class="v g">4</div><div class="l">已处置</div></div>
-          <div class="kpi"><div class="v">66.7%</div><div class="l">处置率</div></div>
+<div class="stage">
+  <div class="wall">
+    <header class="shrink-0 flex flex-col" style="height:9.2%">
+      <div class="flex items-center justify-between px-4 border-b border-[#1e293b] bg-[#0a1220]" style="height:38%">
+        <div class="text-[11px] text-[#94a3b8]">智慧调度一张图 · 演练只读 · 演示数据不可作正式调度依据</div>
+        <div class="flex items-center gap-1.5">
+          <button type="button" class="tool-btn" onclick="toast('操控席 · 领导席（演示）')">操控席 领导⌄</button>
+          <a class="tool-btn" href="../index.html">入口</a>
+          <a class="tool-btn" href="pc_wall_command_screen.html?from=%E8%B0%83%E5%BA%A6">概览总览</a>
+          <button type="button" class="tool-btn" id="btnPresent">汇报全屏</button>
+          <button type="button" class="tool-btn" onclick="toast('已刷新演练数据')">刷新</button>
         </div>
-        <div class="chip-row"><span class="chip on">查验未告警</span><span class="chip">异常进二级</span><span class="chip">广播只看状态</span></div>
       </div>
-      <div class="card flex1"><div class="card-title"><i class="fa-solid fa-list"></i> 事件列表</div>
-        <div class="alert" data-n="散货堆场越界"><span>散货堆场越界</span><span class="tag r">一级·未闭环</span></div>
-        <div class="alert" data-n="琼海9"><span>琼海9通关异常</span><span class="tag y">二级·未闭环</span></div>
-        <div class="alert" data-n="卸船机#1"><span>卸船机#1振动偏高</span><span class="tag y">二级·处置中</span></div>
-        <div class="alert" data-n="金港5"><span>金港5查验</span><span class="tag y">查验·不告警</span></div>
-        <div class="chart" id="c-evt" style="margin-top:6px"></div>
+      <div class="flex-1 min-h-0 flex items-center justify-between px-5 border-b" style="border-color:rgba(14,116,240,.28);background:linear-gradient(90deg,#080c20,#0d1a3a,#080c20)">
+        <div class="w-[280px] flex flex-col justify-center">
+          <div class="text-[12px] text-[#00e4ff] font-bold">海南金牌港</div>
+          <div class="text-[10px] text-[#91abc4]">数字孪生平台 / 应急指挥 · <span id="hd-clock">--</span></div>
+        </div>
+        <div class="text-center flex-1">
+          <h1 class="m-0 text-[20px] font-extrabold tracking-[2px] text-[#00e4ff]">海南金牌港 · 智慧调度一张图</h1>
+          <p class="m-0 mt-0.5 text-[11px] text-[#b4c7e7]">应急指挥 / 一期港区 · 演练场景</p>
+        </div>
+        <div class="w-[280px] flex items-center justify-end gap-2">
+          <span class="pill y">演练场景</span>
+          <button type="button" class="tool-btn view-tab on" data-view="overview">常态总览</button>
+          <button type="button" class="tool-btn view-tab" data-view="command">事件指挥</button>
+        </div>
       </div>
-    </div>
-    <div class="col">
-      <div class="card flex1" style="padding:1%"><div class="card-title"><i class="fa-solid fa-location-dot"></i> 事件定位主视</div>
-        <div class="map">
-          <img src="../assets/port-aerial.jpg?v=plan" alt="港区">
-          <div class="map-mask"></div>
-          <div class="map-tools">
-            <button data-layer="复位">复位</button>
-            <button data-layer="全部" class="on">全部</button>
-            <button data-layer="事件">事件</button>
-            <button data-layer="环境">环境</button>
-            <button data-layer="人员">人员</button>
-            <button data-layer="海关">海关</button>
-            <button data-layer="告警">告警</button>
-          </div>
-          <button class="poi bad" style="left:57%;top:36%" data-n="散货堆场越界" data-t="事件" data-layer="事件" data-s="一级处置中"></button>
-          <button class="poi warn" style="left:46%;top:48%" data-n="卸船机#1" data-t="事件" data-layer="事件" data-s="二级·振动偏高"></button>
-          <button class="poi warn" style="left:54%;top:42%" data-n="堆场粉尘#1" data-t="环境" data-layer="环境" data-s="关注"></button>
-          <button class="poi" style="left:40%;top:20%" data-n="港区气象站" data-t="环境" data-layer="环境" data-s="在线"></button>
-          <button class="poi" style="left:28%;top:62%" data-n="门机风速#1" data-t="环境" data-layer="环境" data-s="可作业"></button>
-          <button class="poi person" style="left:58%;top:44%" data-n="前沿在岗" data-t="人员" data-layer="人员" data-s="12人"></button>
-          <button class="poi customs" style="left:76%;top:46%" data-n="琼海9" data-t="通关" data-layer="海关" data-s="异常·二级"></button>
-          <div class="map-label">环境点位可点 · 人员只显示区域人数</div>
-          <div id="drill">
-            <div class="drill-hd">
-              <span class="d-mark"><i id="d-icon" class="fa-solid fa-location-dot"></i></span>
-              <div class="d-titles"><div class="d-kicker" id="d-kicker">对象</div><h5 id="d-title">对象详情</h5></div>
-              <span class="d-pill" id="d-pill"></span>
-              <button type="button" id="d-close" aria-label="关闭">×</button>
+    </header>
+
+    <!-- ===== 01 常态总览 ===== -->
+    <div class="view on px-3 pt-2 pb-2 gap-2" id="view-overview">
+      <div class="flex-1 min-h-0 grid gap-2.5" style="grid-template-columns:22% minmax(0,1fr) 22.5%">
+        <!-- 左 -->
+        <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
+          <div class="card shrink-0 p-2.5">
+            <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[12px] font-bold text-[#36bffa]">调度业务</span><span class="chip ml-auto">11月截至演练时点</span></div>
+            <div class="grid grid-cols-3 gap-1.5 text-center mb-2">
+              <div class="rounded py-1.5 bg-[rgba(14,116,240,.08)]"><div class="text-[18px] font-extrabold text-[#00e4ff] mono">36</div><div class="text-[10px] text-[#91abc4]">受理</div></div>
+              <div class="rounded py-1.5 bg-[rgba(14,116,240,.08)]"><div class="text-[18px] font-extrabold text-[#00c48c] mono">28</div><div class="text-[10px] text-[#91abc4]">闭环</div></div>
+              <div class="rounded py-1.5 bg-[rgba(14,116,240,.08)]"><div class="text-[18px] font-extrabold text-[#fa0] mono">8</div><div class="text-[10px] text-[#91abc4]">在办</div></div>
             </div>
-            <div id="d-dims"></div>
+            <div class="seg mb-1.5"><i class="done" style="width:77.8%"></i><i class="open" style="width:22.2%"></i></div>
+            <div class="flex justify-between text-[10px] text-[#91abc4] mb-2"><span>闭环 77.8%</span><span>在办 22.2%</span></div>
+            <div class="grid grid-cols-2 gap-2 text-[11px]">
+              <div class="rounded px-2 py-1.5 border border-[rgba(14,116,240,.16)] bg-[rgba(14,116,240,.05)]"><div class="text-[#91abc4]">首响中位数</div><div class="text-[#00e4ff] font-bold mono mt-0.5">3分20秒</div></div>
+              <div class="rounded px-2 py-1.5 border border-[rgba(14,116,240,.16)] bg-[rgba(14,116,240,.05)]"><div class="text-[#91abc4]">按时响应率</div><div class="text-[#00e4ff] font-bold mono mt-0.5">94.1%</div></div>
+            </div>
+          </div>
+          <div class="card shrink-0 p-2.5">
+            <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[12px] font-bold text-[#36bffa]">值守与响应</span><span class="chip ml-auto">当班 2／2 岗</span></div>
+            <div class="space-y-1.5 text-[11px]">
+              <div class="flex items-center justify-between rounded px-2 py-1.5 border border-[rgba(0,196,140,.3)] bg-[rgba(0,196,140,.08)]"><span class="text-[#e8f6ff]">水侧 · 海务值班组</span><span class="pill g">在岗</span></div>
+              <div class="flex items-center justify-between rounded px-2 py-1.5 border border-[rgba(0,196,140,.3)] bg-[rgba(0,196,140,.08)]"><span class="text-[#e8f6ff]">岸侧 · 港区保障组</span><span class="pill g">在岗</span></div>
+            </div>
+            <button type="button" class="tool-btn mt-2 w-full justify-center" onclick="toast('周边可调资源 · 内部授权端演示')">周边可调资源</button>
+          </div>
+          <div class="card flex-1 min-h-0 p-2.5 overflow-hidden flex flex-col">
+            <div class="flex items-center gap-1.5 mb-2 shrink-0"><span class="mark"></span><span class="text-[12px] font-bold text-[#36bffa]">事件回顾</span><span class="chip ml-auto">已闭环 · 点选打开</span></div>
+            <div class="space-y-1.5 flex-1 min-h-0 overflow-hidden">
+              <div class="hit rounded px-2 py-1.5 border border-[rgba(14,116,240,.2)] bg-[rgba(14,116,240,.06)]" data-review="H021">
+                <div class="flex justify-between text-[10px]"><span class="text-[#7eb6ff]">H021 · 11/07</span><span class="pill g">已闭环</span></div>
+                <div class="text-[12px] font-bold text-[#e8f6ff] mt-0.5">联络道车辆剐蹭</div>
+                <div class="text-[10px] text-[#91abc4] mt-0.5">历时 25 分钟 · 点击回顾</div>
+              </div>
+              <div class="hit rounded px-2 py-1.5 border border-[rgba(14,116,240,.2)] bg-[rgba(14,116,240,.06)]" data-review="H020">
+                <div class="flex justify-between text-[10px]"><span class="text-[#7eb6ff]">H020 · 11/06</span><span class="pill g">已闭环</span></div>
+                <div class="text-[12px] font-bold text-[#e8f6ff] mt-0.5">输送设备临时停机</div>
+                <div class="text-[10px] text-[#91abc4] mt-0.5">历时 18 分钟 · 点击回顾</div>
+              </div>
+              <div class="hit rounded px-2 py-1.5 border border-[rgba(14,116,240,.2)] bg-[rgba(14,116,240,.06)]" data-review="H019">
+                <div class="flex justify-between text-[10px]"><span class="text-[#7eb6ff]">H019 · 11/05</span><span class="pill g">已闭环</span></div>
+                <div class="text-[12px] font-bold text-[#e8f6ff] mt-0.5">卡口车辆滞留处置</div>
+                <div class="text-[10px] text-[#91abc4] mt-0.5">历时 12 分钟 · 点击回顾</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 中 -->
+        <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
+          <div class="card flex-1 min-h-0 p-0 overflow-hidden flex flex-col">
+            <div class="shrink-0 h-8 px-2.5 flex items-center gap-2 border-b border-[rgba(14,116,240,.22)] bg-[rgba(8,28,62,.92)]">
+              <span class="text-[12px] font-bold text-[#36bffa]">危险区域与资源分布</span>
+              <span class="chip ml-auto">三维示意 · 可切二维</span>
+              <button type="button" class="tool-btn" id="btnDim" onclick="toast('二维 / 三维切换（演示）')">二维</button>
+            </div>
+            <div class="map-box flex-1" id="ovMap">
+              <img class="bg" src="../assets/dispatch/map_overview.jpg" alt="港区态势">
+              <div class="map-mask"></div>
+              <button type="button" class="poi z" style="left:22%;top:58%" onclick="toast('Z01 临水作业')">Z01 临水</button>
+              <button type="button" class="poi z" style="left:38%;top:48%" onclick="toast('Z02 输送设备')">Z02 输送</button>
+              <button type="button" class="poi z" style="left:58%;top:42%" onclick="toast('Z03 堆场限制')">Z03 堆场</button>
+              <button type="button" class="poi z" style="left:78%;top:55%" onclick="toast('Z04 仓储关注')">Z04 仓储</button>
+              <button type="button" class="poi r" style="left:30%;top:70%" onclick="toast('R01 综合保障区')">R01</button>
+              <button type="button" class="poi r" style="left:62%;top:72%" onclick="toast('R02 物资库')">R02</button>
+              <button type="button" class="poi r" style="left:48%;top:78%" onclick="toast('R03 岸侧保障点')">R03</button>
+              <button type="button" class="poi cam" style="left:26%;top:62%" onclick="toast('机位 01')">01</button>
+              <button type="button" class="poi cam" style="left:44%;top:68%" onclick="toast('机位 02')">02</button>
+              <button type="button" class="poi cam" style="left:72%;top:60%" onclick="toast('机位 03')">03</button>
+              <div class="legend-flat">
+                <b>图例</b>
+                <span><i class="d" style="background:transparent;border:1px dashed #7eb6ff;border-radius:2px"></i>危险区域</span>
+                <span><i class="d" style="background:#00c48c"></i>资源存放点</span>
+                <span><i class="d" style="background:#fa0"></i>视频机位</span>
+              </div>
+            </div>
+          </div>
+          <div class="card shrink-0 p-2">
+            <div class="flex items-center gap-1.5 mb-1.5"><span class="mark"></span><span class="text-[12px] font-bold text-[#36bffa]">安全监控</span><span class="chip ml-auto">三路模拟画面</span></div>
+            <div class="cam-row">
+              <div class="cam-card"><div class="ph"><img src="../assets/dispatch/cam01.jpg" alt="01"></div><div class="cap">01 · 泊位前沿</div></div>
+              <div class="cam-card"><div class="ph"><img src="../assets/dispatch/cam02.jpg" alt="02"></div><div class="cap">02 · 陆侧联络道</div></div>
+              <div class="cam-card"><div class="ph"><img src="../assets/dispatch/cam03.jpg" alt="03"></div><div class="cap">03 · 1#仓库外侧</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右 -->
+        <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
+          <div class="card shrink-0 p-2.5">
+            <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[12px] font-bold text-[#36bffa]">应急资源台账</span><span class="chip ml-auto">八类 · 按单位汇总</span></div>
+            <div class="res-grid">
+              <div class="res-cell"><div class="k">应急人员</div><div class="v">8<small>人</small></div></div>
+              <div class="res-cell"><div class="k">救援车辆</div><div class="v">2<small>辆</small></div></div>
+              <div class="res-cell"><div class="k">抢修装备</div><div class="v">3<small>套</small></div></div>
+              <div class="res-cell"><div class="k">消防设施</div><div class="v">6<small>处</small></div></div>
+              <div class="res-cell"><div class="k">防汛物资</div><div class="v">4<small>组</small></div></div>
+              <div class="res-cell"><div class="k">医疗急救</div><div class="v">3<small>箱</small></div></div>
+              <div class="res-cell"><div class="k">通信设备</div><div class="v">6<small>台</small></div></div>
+              <div class="res-cell"><div class="k">其他保障</div><div class="v">5<small>项</small></div></div>
+            </div>
+            <div class="legend-flat" style="position:static;margin-top:8px;pointer-events:auto;justify-content:flex-start;gap:10px">
+              <b style="margin-right:0">状态</b>
+              <span><i class="d" style="background:#00c48c"></i>在岗</span>
+              <span><i class="d" style="background:#00e4ff"></i>可用</span>
+              <span><i class="d" style="background:#fa0"></i>接令</span>
+              <span><i class="d" style="background:#7eb6ff"></i>在途</span>
+              <span><i class="d" style="background:#64748b"></i>维护</span>
+              <span><i class="d" style="background:#f53f3f"></i>不可用</span>
+            </div>
+          </div>
+          <div class="card shrink-0 p-2.5">
+            <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[12px] font-bold text-[#36bffa]">资源存放点</span><span class="chip ml-auto">关联地图 R01–R03</span></div>
+            <div class="space-y-1.5 text-[11px]">
+              <div class="hit rounded px-2 py-1.5 border border-[rgba(14,116,240,.16)]" onclick="toast('定位 R01')"><b class="text-[#00c48c]">R01</b> <span class="text-[#e8f6ff]">综合保障区</span><span class="text-[#91abc4] float-right">人员/医疗/通信</span></div>
+              <div class="hit rounded px-2 py-1.5 border border-[rgba(14,116,240,.16)]" onclick="toast('定位 R02')"><b class="text-[#00c48c]">R02</b> <span class="text-[#e8f6ff]">物资库</span><span class="text-[#91abc4] float-right">防汛/抢修</span></div>
+              <div class="hit rounded px-2 py-1.5 border border-[rgba(14,116,240,.16)]" onclick="toast('定位 R03')"><b class="text-[#00c48c]">R03</b> <span class="text-[#e8f6ff]">岸侧保障点</span><span class="text-[#91abc4] float-right">救援车/水侧物资</span></div>
+            </div>
+          </div>
+          <div class="card flex-1 min-h-0 p-2.5 overflow-hidden">
+            <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[12px] font-bold text-[#36bffa]">重点事件监控</span><span class="chip ml-auto">在办 · 点选进指挥</span></div>
+            <div class="space-y-1.5">
+              <div class="hit rounded px-2 py-1.5 border border-[rgba(255,170,0,.4)] bg-[rgba(255,170,0,.08)]" data-cmd="S004">
+                <div class="flex justify-between text-[10px]"><span class="text-[#fa0]">S004 · 机位 01</span><span class="pill y">核验中</span></div>
+                <div class="text-[12px] font-bold text-[#e8f6ff] mt-0.5">2#泊位前沿疑似油污</div>
+                <div class="text-[10px] text-[#91abc4] mt-0.5">现场核验中 · 点击进入事件指挥</div>
+              </div>
+              <div class="hit rounded px-2 py-1.5 border border-[rgba(14,116,240,.2)] bg-[rgba(14,116,240,.06)]" data-cmd="S001">
+                <div class="flex justify-between text-[10px]"><span class="text-[#7eb6ff]">S001 · 机位 03</span><span class="pill y">核验中</span></div>
+                <div class="text-[12px] font-bold text-[#e8f6ff] mt-0.5">1#仓库烟感告警</div>
+                <div class="text-[10px] text-[#91abc4] mt-0.5">关联仓储关注区 · 演示</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="col">
-      <div class="card flex1"><div class="card-title"><i class="fa-solid fa-leaf"></i> 作业环境<div class="meta">对装卸影响</div></div>
-        <div class="env-board-wrap" data-env-board="full"></div>
+
+    <!-- ===== 02 事件指挥 ===== -->
+    <div class="view px-3 pt-2 pb-2 gap-2" id="view-command">
+      <div class="shrink-0 flex items-center gap-2 px-1">
+        <span class="pill y"><i class="fa-solid fa-triangle-exclamation mr-1"></i>S004 · 2#泊位前沿疑似油污</span>
+        <span class="pill b">现场核验中</span>
+        <span class="chip">研判窗 14:08–14:10 · 发生时刻待核实</span>
+        <button type="button" class="tool-btn ml-auto" data-view="overview">返回常态总览</button>
       </div>
-      <div class="card flex1"><div class="card-title"><i class="fa-solid fa-tower-broadcast"></i> 人员 / 广播<div class="meta">模拟</div></div>
-        <table class="tbl"><thead><tr><th>分区</th><th>人数</th><th>广播</th></tr></thead>
-          <tbody>
-            <tr><td class="hl">前沿</td><td>12</td><td>空闲</td></tr>
-            <tr><td class="hl">廊道</td><td>6</td><td><span class="tag y">播报中</span></td></tr>
-            <tr><td class="hl">堆场</td><td>9</td><td>空闲</td></tr>
-            <tr><td class="hl">卡口</td><td>4</td><td>空闲</td></tr>
-            <tr><td class="hl">综合楼</td><td>18</td><td>空闲</td></tr>
-          </tbody>
-        </table>
+      <div class="flex-1 min-h-0 grid gap-2.5" style="grid-template-columns:22% minmax(0,1fr) 22.5%">
+        <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
+          <div class="card shrink-0 p-2.5">
+            <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[12px] font-bold text-[#36bffa]">时空定位</span></div>
+            <div class="kv"><span class="k">研判窗</span><span class="v mono">14:08–14:10</span></div>
+            <div class="kv"><span class="k">发生时刻</span><span class="v">待核实</span></div>
+            <div class="kv"><span class="k">位置</span><span class="v">2#泊位前沿水域</span></div>
+            <div class="kv"><span class="k">关联机位</span><span class="v">01 · 02</span></div>
+          </div>
+          <div class="card shrink-0 p-2.5">
+            <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[12px] font-bold text-[#36bffa]">伤害与影响</span></div>
+            <div class="kv"><span class="k">人员伤害</span><span class="v"><span class="pill m">待核实</span></span></div>
+            <div class="kv"><span class="k">环境影响</span><span class="v"><span class="pill y">待评估</span></span></div>
+            <div class="kv"><span class="k">设备财产</span><span class="v"><span class="pill m">待核实</span></span></div>
+            <div class="kv"><span class="k">2#泊位作业</span><span class="v"><span class="pill r">已暂停</span></span></div>
+          </div>
+          <div class="card flex-1 min-h-0 p-2.5 overflow-hidden">
+            <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[12px] font-bold text-[#36bffa]">资源调用</span><span class="chip ml-auto">需求·已派·到场·待补</span></div>
+            <table class="tbl">
+              <thead><tr><th>类别</th><th class="text-right">需求</th><th class="text-right">已派</th><th class="text-right">到场</th><th class="text-right">待补</th></tr></thead>
+              <tbody>
+                <tr><td>水侧核验组</td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">0</td></tr>
+                <tr><td>岸侧保障组</td><td class="num">1</td><td class="num">1</td><td class="num">1</td><td class="num">0</td></tr>
+                <tr><td>应急物资</td><td class="num">2</td><td class="num">1</td><td class="num">0</td><td class="num">1</td></tr>
+                <tr><td>拖轮/船舶</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">1</td></tr>
+                <tr><td>环境监测</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">1</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
+          <div class="card flex-1 min-h-0 p-0 overflow-hidden flex flex-col">
+            <div class="shrink-0 h-8 px-2.5 flex items-center border-b border-[rgba(14,116,240,.22)] bg-[rgba(8,28,62,.92)]">
+              <span class="text-[12px] font-bold text-[#36bffa]">事件定位与管控</span>
+              <span class="chip ml-auto">观测异常 · 待核水域 · 岸侧管控</span>
+            </div>
+            <div class="map-box flex-1">
+              <img class="bg" src="../assets/dispatch/map_command.jpg" alt="事件定位">
+              <div class="map-mask"></div>
+              <button type="button" class="poi evt" style="left:62%;top:48%" onclick="toast('观测异常水面')">观测异常</button>
+              <button type="button" class="poi z" style="left:55%;top:42%" onclick="toast('待核水域')">待核水域</button>
+              <button type="button" class="poi" style="left:48%;top:58%;border-color:#e879f9;color:#e879f9" onclick="toast('岸侧管控已发布')">岸侧管控</button>
+              <div class="inset-2d"><span class="lab">二维研判</span><img src="../assets/dispatch/map_command.jpg" alt="二维"></div>
+              <div class="legend-flat">
+                <b>图例</b>
+                <span><i class="d" style="background:#fa0"></i>观测异常</span>
+                <span><i class="d" style="background:transparent;border:1px dashed #fff;border-radius:2px"></i>待核水域</span>
+                <span><i class="line"></i>岸侧管控</span>
+              </div>
+            </div>
+          </div>
+          <div class="card shrink-0 p-2">
+            <div class="flex items-center gap-1.5 mb-1.5"><span class="mark"></span><span class="text-[12px] font-bold text-[#36bffa]">现场联动与时间线</span></div>
+            <div class="grid gap-2" style="grid-template-columns:1.2fr 1.2fr 1fr">
+              <div class="cam-card"><div class="ph"><img src="../assets/dispatch/cam01.jpg" alt="01"></div><div class="cap">01 · 2#泊位前沿</div></div>
+              <div class="cam-card"><div class="ph"><img src="../assets/dispatch/cam02.jpg" alt="02"></div><div class="cap">02 · 陆侧联络道</div></div>
+              <div class="space-y-1 text-[11px]">
+                <div class="rounded px-2 py-1 border border-[rgba(14,116,240,.16)]"><span class="mono text-[#7eb6ff]">14:08</span> <span class="text-[#e8f6ff]">异常接报</span></div>
+                <div class="rounded px-2 py-1 border border-[rgba(14,116,240,.16)]"><span class="mono text-[#7eb6ff]">14:09</span> <span class="text-[#e8f6ff]">岸侧管控发布</span></div>
+                <div class="rounded px-2 py-1 border border-[rgba(255,170,0,.35)] bg-[rgba(255,170,0,.08)]"><span class="mono text-[#fa0]">14:10</span> <span class="text-[#e8f6ff]">核验进行中</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
+          <div class="card shrink-0 p-2.5">
+            <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[12px] font-bold text-[#36bffa]">当前处置目标</span></div>
+            <div class="text-[13px] font-bold text-[#e8f6ff] leading-snug">核验水面异常并确认影响范围</div>
+            <div class="kv mt-2"><span class="k">下一次回报</span><span class="v mono text-[#fa0]">14:16</span></div>
+          </div>
+          <div class="card flex-1 min-h-0 p-2.5 overflow-hidden">
+            <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[12px] font-bold text-[#36bffa]">实施计划</span><span class="chip ml-auto">并行跟踪</span></div>
+            <div class="plan-item"><div><div class="t">水侧核验</div><div class="s">回报 14:16</div></div><span class="pill b">在途</span></div>
+            <div class="plan-item"><div><div class="t">岸侧保障</div><div class="s">回报 14:18</div></div><span class="pill g">已到场</span></div>
+            <div class="plan-item"><div><div class="t">环境监测</div><div class="s">待派发</div></div><span class="pill m">待派</span></div>
+            <div class="plan-item"><div><div class="t">对外协同</div><div class="s">等待回执</div></div><span class="pill y">待反馈</span></div>
+          </div>
+          <div class="card shrink-0 p-2.5">
+            <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[12px] font-bold text-[#36bffa]">协同与恢复</span></div>
+            <div class="kv"><span class="k">海事回执</span><span class="v"><span class="pill y">待反馈</span></span></div>
+            <div class="kv"><span class="k">岸侧管控解除</span><span class="v"><span class="pill m">待确认</span></span></div>
+            <div class="kv"><span class="k">2#泊位复工</span><span class="v"><span class="pill m">待批复</span></span></div>
+          </div>
+        </div>
       </div>
+    </div>
+
+    <footer class="shrink-0 border-t flex items-center justify-center relative bg-[#0a1220]" style="height:5.4%;border-color:rgba(14,116,240,.28)">
+      <div class="absolute left-5 flex items-center gap-2 text-[12px] text-[#b4c7e7]"><i class="fa-solid fa-anchor text-[#00e4ff]"></i><span>金牌港智慧运营指挥中心</span></div>
+      <div id="theme-foot" class="flex gap-2"></div>
+      <div class="absolute right-5 text-[11px] text-[#91abc4]">智慧调度 / <span id="view-label">常态总览</span> · <span id="hd-asof2">--</span></div>
+    </footer>
+    <div id="themes"></div>
+  </div>
+</div>
+
+<!-- ===== 03 事件回顾弹窗 ===== -->
+<div class="review-mask" id="review-modal" role="dialog" aria-modal="true">
+  <div class="review-modal">
+    <div class="rv-hd">
+      <div class="flex items-center gap-2 min-w-0">
+        <i class="fa-regular fa-clock text-[#00e4ff]"></i>
+        <div>
+          <div class="text-[15px] font-extrabold text-[#00e4ff]" id="rv-title">H021 · 联络道车辆剐蹭回顾</div>
+          <div class="text-[11px] text-[#91abc4]" id="rv-meta">11/07 · 已闭环 · 历时 25 分钟</div>
+        </div>
+        <span class="pill m">演示数据</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button type="button" class="tool-btn" id="rv-play"><i class="fa-solid fa-play mr-1"></i>演练回放</button>
+        <button type="button" class="tool-btn" id="rv-close" aria-label="关闭">×</button>
+      </div>
+    </div>
+    <div class="rv-bd">
+      <div class="card p-2 flex flex-col min-h-0">
+        <div class="text-[12px] font-bold text-[#36bffa] mb-1.5">事件位置回放</div>
+        <div class="relative flex-1 min-h-0 rounded overflow-hidden border border-[rgba(14,116,240,.25)]">
+          <img id="rv-map" src="../assets/dispatch/map_review.jpg" alt="位置" class="absolute inset-0 w-full h-full object-cover">
+          <span class="absolute left-2 top-2 pill y" id="rv-pin">H021 事件位置</span>
+        </div>
+        <div class="text-[11px] text-[#b4c7e7] mt-1.5" id="rv-place">陆侧联络道 · 回放节点：到场确认</div>
+      </div>
+      <div class="card p-2 flex flex-col min-h-0 gap-2">
+        <div class="text-[12px] font-bold text-[#36bffa]">历史画面与回执</div>
+        <div class="relative flex-1 min-h-[120px] rounded overflow-hidden border border-[rgba(14,116,240,.25)]">
+          <img id="rv-cam" src="../assets/dispatch/cam_review.jpg" alt="历史画面" class="absolute inset-0 w-full h-full object-cover">
+          <span class="absolute left-2 bottom-2 text-[10px] text-[#e8f6ff] bg-[rgba(6,16,34,.75)] px-1.5 py-0.5 rounded" id="rv-cam-ts">11/07 10:12:20</span>
+        </div>
+        <div class="rounded px-2.5 py-2 border border-[rgba(0,196,140,.35)] bg-[rgba(0,196,140,.08)]" id="rv-receipt">
+          <div class="text-[12px] font-bold text-[#00c48c]"><i class="fa-solid fa-circle-check mr-1"></i><span id="rv-receipt-t">岸侧处置组 · 已到场</span></div>
+          <div class="text-[11px] text-[#91abc4] mt-0.5 mono" id="rv-receipt-tm">10:12 · 回执 H021-04</div>
+        </div>
+      </div>
+      <div class="card p-2 flex flex-col min-h-0 overflow-hidden">
+        <div class="text-[12px] font-bold text-[#36bffa] mb-1.5">资料归档</div>
+        <div class="flex-1 min-h-0 overflow-hidden" id="rv-docs"></div>
+      </div>
+    </div>
+    <div class="rv-ft">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-[12px] font-bold text-[#36bffa]">全过程时间轴</span>
+        <span class="text-[11px] text-[#91abc4]">当前回看 <b class="text-[#fa0] mono" id="rv-now">10:12</b> · 范围 10:03—10:28 · 速度 1x</span>
+      </div>
+      <div class="timeline" id="rv-timeline"></div>
     </div>
   </div>
-  <footer class="footer" id="themes"></footer>
-</div></div>
-<div class="toast" id="toast"></div>
+</div>
+
 <script src="wall_domain.js"></script>
 <script src="wall_theme_nav.js"></script>
 <script>
-const c=echarts.init(document.getElementById('c-evt'));
-c.setOption({grid:{left:28,right:8,top:12,bottom:18},xAxis:{type:'category',data:['一级','二级','三级'],axisLabel:{color:'#B4C7E7',fontSize:10}},yAxis:{show:false},series:[{type:'bar',data:[{value:1,itemStyle:{color:'#F53F3F'}},{value:2,itemStyle:{color:'#FFAA00'}},{value:0,itemStyle:{color:'#36BFFA'}}],barWidth:16}]});
-window.addEventListener('resize',()=>c.resize());
-initWallTheme('调度');
+const THEME_LABEL={概览:'港区概览',生产:'生产运行',交通:'港区交通',设备:'设备设施',经营:'经营分析',调度:'智慧调度'};
+function renderThemes(){
+  const el=document.getElementById('theme-foot');
+  if(!el) return;
+  el.innerHTML=Object.keys(THEME_PAGES).map(k=>{
+    const label=THEME_LABEL[k]||k;
+    if(THEME_DISABLED.includes(k)) return `<span class="theme" style="opacity:.4" title="本期未开放">${label}</span>`;
+    if(k==='调度') return `<button type="button" class="theme on">${label}</button>`;
+    const href=k==='概览'?THEME_PAGES[k]+'?from='+encodeURIComponent('调度'):THEME_PAGES[k];
+    return `<a class="theme" href="${href}">${label}</a>`;
+  }).join('');
+}
+renderThemes();
+mountWeather();
+
+function pad(n){return String(n).padStart(2,'0')}
+function tick(){
+  const n=new Date();
+  const t=`${pad(n.getMonth()+1)}/${pad(n.getDate())} ${pad(n.getHours())}:${pad(n.getMinutes())}`;
+  const asof=`${n.getFullYear()}-${pad(n.getMonth()+1)}-${pad(n.getDate())} ${pad(n.getHours())}:${pad(n.getMinutes())}`;
+  const c=document.getElementById('hd-clock'); if(c) c.textContent=t;
+  const a=document.getElementById('hd-asof2'); if(a) a.textContent=asof;
+}
+tick(); setInterval(tick,1000);
+
+document.getElementById('btnPresent').onclick=()=>{document.body.classList.add('present');toast('汇报全屏 · Esc 退出')};
+
+function setView(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on', v.id==='view-'+name));
+  document.querySelectorAll('.view-tab').forEach(b=>b.classList.toggle('on', b.dataset.view===name));
+  const lab=document.getElementById('view-label');
+  if(lab) lab.textContent=name==='command'?'事件指挥':'常态总览';
+  toast(name==='command'?'进入事件指挥 · S004':'切换常态总览');
+}
+document.querySelectorAll('[data-view]').forEach(btn=>{
+  btn.addEventListener('click',()=>setView(btn.getAttribute('data-view')));
+});
+document.querySelectorAll('[data-cmd]').forEach(el=>{
+  el.addEventListener('click',()=>{
+    const id=el.getAttribute('data-cmd');
+    if(id!=='S004'){ toast(id+' · 演示仅开放 S004 指挥视图'); return; }
+    setView('command');
+  });
+});
+
+/* —— 事件回顾 —— */
+const REVIEW={
+  H021:{
+    title:'H021 · 联络道车辆剐蹭回顾',
+    meta:'11/07 · 已闭环 · 历时 25 分钟',
+    place:'陆侧联络道',
+    nodes:[
+      {t:'10:03',l:'事件接报',doc:'H021-01 接报登记单',receipt:'接报登记完成',cam:'11/07 10:03:05'},
+      {t:'10:05',l:'区域定位',doc:'事件位置及关联机位记录',receipt:'已关联机位 02',cam:'11/07 10:05:12'},
+      {t:'10:06',l:'伤害核验',doc:'H021-02 现场核验记录',receipt:'无人员伤害 · 待复核财产',cam:'11/07 10:06:40'},
+      {t:'10:07',l:'资源派发',doc:'H021-03 资源调度单',receipt:'岸侧处置组已派发',cam:'11/07 10:07:18'},
+      {t:'10:12',l:'到场确认',doc:'H021-04 到场回执',receipt:'岸侧处置组 · 已到场',cam:'11/07 10:12:20'},
+      {t:'10:18',l:'处置反馈',doc:'H021-05 处置反馈记录',receipt:'现场处置完成反馈',cam:'11/07 10:18:02'},
+      {t:'10:25',l:'管控解除',doc:'H021-06 管控解除记录',receipt:'联络道管控解除',cam:'11/07 10:25:30'},
+      {t:'10:28',l:'复核闭环',doc:'H021-07 事件复盘报告',receipt:'复核通过 · 事件闭环',cam:'11/07 10:28:00'}
+    ]
+  },
+  H020:{
+    title:'H020 · 输送设备临时停机回顾',
+    meta:'11/06 · 已闭环 · 历时 18 分钟',
+    place:'皮带廊道',
+    nodes:[
+      {t:'09:10',l:'事件接报',doc:'H020-01 接报登记单',receipt:'接报登记完成',cam:'11/06 09:10:08'},
+      {t:'09:12',l:'区域定位',doc:'廊道位置记录',receipt:'定位完成',cam:'11/06 09:12:00'},
+      {t:'09:14',l:'伤害核验',doc:'H020-02 核验记录',receipt:'无人员伤害',cam:'11/06 09:14:20'},
+      {t:'09:16',l:'资源派发',doc:'H020-03 调度单',receipt:'运维组已派发',cam:'11/06 09:16:00'},
+      {t:'09:20',l:'到场确认',doc:'H020-04 到场回执',receipt:'运维组已到场',cam:'11/06 09:20:10'},
+      {t:'09:24',l:'处置反馈',doc:'H020-05 反馈记录',receipt:'设备恢复运行',cam:'11/06 09:24:40'},
+      {t:'09:26',l:'管控解除',doc:'H020-06 解除记录',receipt:'廊道管控解除',cam:'11/06 09:26:00'},
+      {t:'09:28',l:'复核闭环',doc:'H020-07 复盘报告',receipt:'复核闭环',cam:'11/06 09:28:00'}
+    ]
+  },
+  H019:{
+    title:'H019 · 卡口车辆滞留处置回顾',
+    meta:'11/05 · 已闭环 · 历时 12 分钟',
+    place:'东门卡口',
+    nodes:[
+      {t:'15:00',l:'事件接报',doc:'H019-01 接报登记单',receipt:'接报登记完成',cam:'11/05 15:00:00'},
+      {t:'15:02',l:'区域定位',doc:'卡口位置记录',receipt:'定位完成',cam:'11/05 15:02:00'},
+      {t:'15:03',l:'伤害核验',doc:'H019-02 核验记录',receipt:'无伤害',cam:'11/05 15:03:00'},
+      {t:'15:04',l:'资源派发',doc:'H019-03 调度单',receipt:'闸口班组派发',cam:'11/05 15:04:00'},
+      {t:'15:06',l:'到场确认',doc:'H019-04 到场回执',receipt:'闸口班组到场',cam:'11/05 15:06:00'},
+      {t:'15:08',l:'处置反馈',doc:'H019-05 反馈记录',receipt:'滞留解除',cam:'11/05 15:08:00'},
+      {t:'15:10',l:'管控解除',doc:'H019-06 解除记录',receipt:'通道恢复',cam:'11/05 15:10:00'},
+      {t:'15:12',l:'复核闭环',doc:'H019-07 复盘报告',receipt:'复核闭环',cam:'11/05 15:12:00'}
+    ]
+  }
+};
+let rvId='H021', rvIdx=4, rvTimer=null;
+
+function paintReview(idx){
+  const data=REVIEW[rvId]; if(!data) return;
+  rvIdx=Math.max(0,Math.min(data.nodes.length-1,idx));
+  const node=data.nodes[rvIdx];
+  document.getElementById('rv-title').textContent=data.title;
+  document.getElementById('rv-meta').textContent=data.meta;
+  document.getElementById('rv-place').textContent=data.place+' · 回放节点：'+node.l;
+  document.getElementById('rv-pin').textContent=rvId+' 事件位置';
+  document.getElementById('rv-cam-ts').textContent=node.cam;
+  document.getElementById('rv-receipt-t').textContent=node.receipt;
+  document.getElementById('rv-receipt-tm').textContent=node.t+' · 回执 '+node.doc.split(' ')[0];
+  document.getElementById('rv-now').textContent=node.t;
+  document.getElementById('rv-timeline').innerHTML=data.nodes.map((n,i)=>`
+    <div class="tl-node ${i<rvIdx?'done':''} ${i===rvIdx?'on':''}" data-i="${i}">
+      <i class="dot"></i><span class="tm">${n.t}</span><span class="lb">${n.l}</span>
+    </div>`).join('');
+  document.getElementById('rv-docs').innerHTML=data.nodes.map((n,i)=>{
+    const state=i===rvIdx?'当前节点':(i<rvIdx?'已回看':'后续节点');
+    return `<div class="doc ${i===rvIdx?'on':''}" data-i="${i}"><div><div class="n">${n.doc}</div><div class="m">${n.t} · ${state}</div></div><span class="pill ${i===rvIdx?'y':(i<rvIdx?'b':'m')}">${state}</span></div>`;
+  }).join('');
+}
+function openReview(id){
+  if(!REVIEW[id]){ toast(id+' · 暂无回顾档案'); return; }
+  rvId=id; paintReview(id==='H021'?4:4);
+  document.getElementById('review-modal').classList.add('show');
+}
+function closeReview(){
+  document.getElementById('review-modal').classList.remove('show');
+  if(rvTimer){ clearInterval(rvTimer); rvTimer=null; }
+}
+document.querySelectorAll('[data-review]').forEach(el=>{
+  el.addEventListener('click',()=>openReview(el.getAttribute('data-review')));
+});
+document.getElementById('rv-close').onclick=closeReview;
+document.getElementById('review-modal').addEventListener('click',e=>{
+  if(e.target.id==='review-modal') closeReview();
+  const node=e.target.closest('[data-i]');
+  if(node && (node.closest('#rv-timeline')||node.closest('#rv-docs'))) paintReview(Number(node.getAttribute('data-i')));
+});
+document.getElementById('rv-play').onclick=()=>{
+  if(rvTimer){ clearInterval(rvTimer); rvTimer=null; toast('回放已暂停'); return; }
+  toast('演练回放开始');
+  rvTimer=setInterval(()=>{
+    const len=REVIEW[rvId].nodes.length;
+    paintReview((rvIdx+1)%len);
+  },1600);
+};
+
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Escape') return;
+  if(document.getElementById('review-modal').classList.contains('show')){ closeReview(); return; }
+  document.body.classList.remove('present');
+});
 </script>
 </body>
 </html>

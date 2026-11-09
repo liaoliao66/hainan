@@ -32,8 +32,12 @@ function tickClock() {
   const week = document.getElementById('hd-week');
   const time = document.getElementById('hd-time');
   const asof = document.getElementById('hd-asof');
-  if (date) date.textContent = `${n.getFullYear()}年${pad(n.getMonth() + 1)}月${pad(n.getDate())}日`;
-  if (week) week.textContent = '星期' + '日一二三四五六'[n.getDay()];
+  const weekStr = '星期' + '日一二三四五六'[n.getDay()];
+  if (date) {
+    const base = `${n.getFullYear()}年${pad(n.getMonth() + 1)}月${pad(n.getDate())}日`;
+    date.textContent = week ? base : `${base} ${weekStr}`;
+  }
+  if (week) week.textContent = weekStr;
   if (time) time.textContent = `${pad(n.getHours())}:${pad(n.getMinutes())}:${pad(n.getSeconds())}`;
   if (asof) asof.textContent = `${n.getFullYear()}-${pad(n.getMonth() + 1)}-${pad(n.getDate())} ${pad(n.getHours())}:${pad(n.getMinutes())}`;
   if (typeof mountWeather === 'function') mountWeather();

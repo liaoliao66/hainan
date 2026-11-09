@@ -163,6 +163,7 @@ const POI_ICON = {
   海关: 'fa-stamp',
   人员: 'fa-user',
   车辆: 'fa-truck',
+  摄像头: 'fa-video',
   告警: 'fa-triangle-exclamation',
   分区: 'fa-shield-halved',
   岸电: 'fa-plug',
@@ -312,6 +313,18 @@ const MAP_FEATURES = [
   ], groups: [
     { title: '车辆', rows: [['车牌', '粤E·1122'], ['车型', '自卸车'], ['货种', '石英砂'], ['状态', '过磅'], ['目的地', '出港'], ['关联指令', 'ZY-1051']] }
   ]},
+  { name: '前沿摄像头', type: '摄像头', layer: '摄像头', x: 18, y: 70, tone: 'ok', status: '在线', camera: '前沿监控', groups: [
+    { title: '机位', rows: [['编号', 'CAM-01'], ['区域', '1#泊位前沿'], ['状态', '在线'], ['分辨率', '1080P'], ['用途', '卸船作业盯梢']] }
+  ]},
+  { name: '堆场摄像头', type: '摄像头', layer: '摄像头', x: 56, y: 36, tone: 'ok', status: '在线', camera: '散货堆场监控', groups: [
+    { title: '机位', rows: [['编号', 'CAM-02'], ['区域', '散货堆场'], ['状态', '在线'], ['分辨率', '1080P'], ['用途', '堆垛与越界']] }
+  ]},
+  { name: 'CAM-03', type: '摄像头', layer: '摄像头', x: 33, y: 71, tone: 'bad', status: '离线', camera: '2#泊位视频', groups: [
+    { title: '机位', rows: [['编号', 'CAM-03'], ['区域', '2#泊位'], ['状态', '离线'], ['分辨率', '1080P'], ['用途', '泊位作业'], ['说明', '未闭环 · 可开设备详情']] }
+  ]},
+  { name: '卡口摄像头', type: '摄像头', layer: '摄像头', x: 86, y: 26, tone: 'ok', status: '在线', camera: '卡口监控', groups: [
+    { title: '机位', rows: [['编号', 'CAM-04'], ['区域', '东门卡口'], ['状态', '在线'], ['分辨率', '1080P'], ['用途', '过车抓拍']] }
+  ]},
   { name: '前沿粉尘#1', type: '环境', envKind: '粉尘', layer: '环境', x: 22, y: 68, tone: 'ok', status: '达标', camera: '前沿环保监控',
     groups: [{ title: '监测', rows: [['设备', '粉尘仪'], ['分区', '前沿'], ['TSP', '0.62 mg/m³'], ['PM10', '0.41 mg/m³'], ['限值', '1.0 / 1.5'], ['作业影响', '前沿卸船正常'], ['等级', '达标'], ['采样', '1分钟'], ['优先级', 'P0']] }]},
   { name: '堆场粉尘#1', type: '环境', envKind: '粉尘', layer: '环境', x: 54, y: 42, tone: 'warn', status: '关注', camera: '散货堆场环保监控', alert: '粉尘关注 · 二级 · 监测中',
@@ -414,9 +427,34 @@ function renderEnvBoardHtml(mode) {
   </div>`;
 }
 
+function weatherWorkTone(work) {
+  return /禁|停|限制/.test(work) ? 'r' : /关注|警戒/.test(work) ? 'y' : 'g';
+}
+
+function renderTodayWeatherHtml() {
+  const w = WEATHER;
+  const slot = (WEATHER_7D && WEATHER_7D[0]) || {
+    icon: w.icon || 'fa-cloud-sun',
+    desc: w.sky || '多云',
+    high: String(w.temp || '').replace(/[^\d.]/g, '') || '--',
+    low: '--',
+    wind: [w.windDir, w.wind].filter(Boolean).join(' ')
+  };
+  const workTone = weatherWorkTone(w.work);
+  const tip = `${slot.desc} · ${slot.wind} · ${slot.high}°/${slot.low}° · ${w.work}`;
+  return `<div class="wx-today" title="${escHtml(tip)}">
+    <i class="fa-solid ${slot.icon} wx-today-icon" aria-hidden="true"></i>
+    <div class="wx-today-meta">
+      <div class="wx-today-desc">${escHtml(slot.desc)} · ${escHtml(slot.wind)}</div>
+      <div class="wx-today-temp"><b>${escHtml(String(slot.high))}°</b><span>/${escHtml(String(slot.low))}°</span></div>
+    </div>
+    <span class="wx-work ${workTone}">${escHtml(w.work)}</span>
+  </div>`;
+}
+
 function renderWeatherHtml() {
   const w = WEATHER;
-  const workTone = /禁|停|限制/.test(w.work) ? 'r' : /关注|警戒/.test(w.work) ? 'y' : 'g';
+  const workTone = weatherWorkTone(w.work);
   const week = ['日', '一', '二', '三', '四', '五', '六'];
   const base = new Date();
   const days = (WEATHER_7D || []).map((slot, i) => {
@@ -438,9 +476,32 @@ function renderWeatherHtml() {
   </div>`;
 }
 
+function ensureTodayWeatherStyles() {
+  if (document.getElementById('wx-today-css')) return;
+  const s = document.createElement('style');
+  s.id = 'wx-today-css';
+  s.textContent = `
+.wx-today{display:inline-flex;align-items:center;gap:10px;min-width:0;height:42px;padding:0 12px;border-radius:6px;border:1px solid rgba(0,228,255,.32);background:linear-gradient(180deg,rgba(0,228,255,.12),rgba(14,116,240,.06));box-sizing:border-box}
+.wx-today-icon{font-size:18px;color:#dff6ff;line-height:1;flex-shrink:0}
+.wx-today-meta{display:flex;flex-direction:column;justify-content:center;gap:2px;min-width:0;line-height:1.15}
+.wx-today-desc{font-size:12px;color:#b4c7e7;white-space:nowrap}
+.wx-today-temp{font-size:14px;font-variant-numeric:tabular-nums;line-height:1.1}
+.wx-today-temp b{color:#00e4ff;font-weight:700}
+.wx-today-temp span{color:rgba(180,199,231,.7)}
+.wx-work{flex-shrink:0;padding:3px 8px;border-radius:3px;font-size:11px;font-weight:700;border:1px solid transparent;line-height:1.2}
+.wx-work.g{color:#00c48c;background:rgba(0,196,140,.1);border-color:rgba(0,196,140,.35)}
+.wx-work.y{color:#fa0;background:rgba(255,170,0,.12);border-color:rgba(255,170,0,.35)}
+.wx-work.r{color:#ff9a9a;background:rgba(245,63,63,.12);border-color:rgba(245,63,63,.35)}
+[data-weather]{display:flex;align-items:center;justify-content:flex-end;height:100%}
+`;
+  document.head.appendChild(s);
+}
+
 function mountWeather() {
+  ensureTodayWeatherStyles();
   document.querySelectorAll('[data-weather]').forEach((el) => {
-    el.innerHTML = renderWeatherHtml();
+    const mode = (el.getAttribute('data-weather') || 'today').toLowerCase();
+    el.innerHTML = mode === '7' || mode === '7d' ? renderWeatherHtml() : renderTodayWeatherHtml();
   });
 }
 
@@ -627,6 +688,7 @@ function renderFeatureDims(feat) {
     海关: vizCustoms,
     人员: vizPerson,
     车辆: vizVehicle,
+    摄像头: vizCamera,
     告警: vizAlert,
     变电: vizPower,
     岸电: vizShore,
@@ -700,19 +762,16 @@ function vsteps(items) {
 function camSrcOf(feat) {
   const kind = yardKindOf(feat);
   const type = feat.type || '';
-  if (type === '堆场' || type === '仓库') {
-    if (kind === 'breakbulk' || kind === 'warehouse') return '../assets/yard-breakbulk-cam.jpg';
-    return '../assets/yard-bulk-cam.jpg';
-  }
-  if (type === '设备') return '../assets/cam-equip.jpg';
-  if (type === '皮带') return '../assets/cam-belt.jpg';
-  if (type === '变电') return '../assets/cam-power.jpg';
-  if (/卡口|地磅|海关|人员|车辆/.test(type)) return '../assets/cam-gate.jpg';
-  if (/泊位|船舶|岸电/.test(type)) return '../assets/cam-berth.jpg';
-  if (type === '分区') return '../assets/yard-breakbulk-cam.jpg';
-  if (type === '告警') return '../assets/yard-bulk-cam.jpg';
-  if (type === '环境') return '../assets/cam-env.jpg';
-  return '../assets/cam-berth.jpg';
+  /* 演示机位：复用本地 figma 监控帧，避免缺失 jpg 破图 */
+  const CAM_YARD = '../assets/figma/eq-cam1.png';
+  const CAM_EQUIP = '../assets/figma/eq-cam2.png';
+  const CAM_GATE = '../assets/figma/eq-cam3.png';
+  if (type === '堆场' || type === '仓库' || type === '分区' || type === '告警') return CAM_YARD;
+  if (type === '设备' || type === '皮带' || type === '变电') return CAM_EQUIP;
+  if (/卡口|地磅|海关|人员|车辆|环境|摄像头/.test(type)) return CAM_GATE;
+  if (/泊位|船舶|岸电/.test(type)) return CAM_YARD;
+  if (kind === 'breakbulk' || kind === 'warehouse') return CAM_YARD;
+  return CAM_EQUIP;
 }
 
 function camNameOf(feat, fallback) {
@@ -1155,6 +1214,27 @@ function vizZone(feat) {
   });
 }
 
+function vizCamera(feat) {
+  const rows = rowMap(feat);
+  const status = rows['状态'] || feat.status || '在线';
+  const list = compactTable(['项目', '内容'], [
+    ['编号', rows['编号'] || '—'],
+    ['区域', rows['区域'] || '—'],
+    ['状态', status],
+    ['分辨率', rows['分辨率'] || '—'],
+    ['用途', rows['用途'] || '—'],
+    ['说明', rows['说明'] || '演示机位']
+  ].map((row) => `<tr><td class="cargo">${escHtml(row[0])}</td><td>${escHtml(row[1])}</td></tr>`).join(''));
+  return detailLayout({
+    camHtml: camPanel(feat, '摄像头', status),
+    status,
+    note: '视频机位 · 港区概览叠加（泊位/设备等见 BIM）',
+    meterHtml: `<div class="vmeter"><div class="vmeter-fill ${toneOf(status)}" style="width:${/离线|中断|故障/.test(status) ? 12 : 88}%"></div></div>`,
+    tilesHtml: vtiles([['编号', rows['编号'] || '—'], ['区域', rows['区域'] || '—'], ['状态', status], ['用途', rows['用途'] || '—']]),
+    listTitle: '机位档案 · 演示',
+    listHtml: list
+  });
+}
 
 function vizEnv(feat) {
   const rows = rowMap(feat);

@@ -5,8 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>经营分析一张图 · 海南金牌港 · v1.0.0</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+<script src="../vendor/echarts.min.js"></script>
 <link rel="stylesheet" href="../vendor/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="wall_scrollbar.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;600&display=swap');
 *{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;box-sizing:border-box}
@@ -14,402 +15,242 @@
 html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#030712;color:#fff}
 body{display:flex;flex-direction:column}
 .stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
-.wall{position:relative;aspect-ratio:16/9;width:min(98vw,calc(98vh*16/9));height:min(98vh,calc(98vw*9/16));display:flex;flex-direction:column;overflow:hidden;border:1px solid rgba(77,210,225,.22);box-shadow:0 0 40px rgba(0,0,0,.55);background:#07111d}
+.wall{position:relative;aspect-ratio:16/9;width:min(98vw,calc(98vh*16/9));height:min(98vh,calc(98vw*9/16));display:flex;flex-direction:column;overflow:hidden;border:1px solid rgba(77,210,225,.28);box-shadow:0 0 40px rgba(0,0,0,.55);background:#07111d}
 body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
-.card{position:relative;border:1px solid rgba(77,210,225,.28);border-radius:8px;background:linear-gradient(180deg,rgba(14,36,58,.92),rgba(8,22,38,.9));box-shadow:0 4px 16px rgba(0,0,0,.25),inset 0 0 20px rgba(77,210,225,.04);overflow:hidden}
-.mark{width:3px;height:16px;background:linear-gradient(180deg,#4dd0e1,#3ba3ff);flex-shrink:0;border-radius:1px}
-.chip{font-size:9px;color:#8fa6b8;padding:2px 7px;border-radius:99px;background:rgba(77,210,225,.06);border:1px solid rgba(77,210,225,.18)}
-.tool-btn{height:19px;padding:0 10px;border:1px solid #334155;background:#1e293b;border-radius:4px;color:#e2e8f0;font-size:11px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;white-space:nowrap}
-.tool-btn:hover{border-color:#4dd0e1;color:#4dd0e1}
-.theme{min-width:130px;height:40px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;border-radius:4px;text-decoration:none;cursor:pointer;border:1px solid #23435f;background:#0a1c30;color:#91abc4}
-.theme.on{color:#4dd0e1;background:#0d2a47;border-color:#4dd2e1;font-weight:800}
-.toast{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);background:rgba(8,28,62,.95);border:1px solid rgba(77,210,225,.28);padding:8px 14px;border-radius:8px;font-size:12px;opacity:0;transition:.2s;z-index:40}
+.card{position:relative;border:1px solid rgba(77,210,225,.28);border-radius:8px;background:linear-gradient(180deg,rgba(14,36,58,.94),rgba(8,22,38,.92));box-shadow:inset 0 0 18px rgba(77,210,225,.04);overflow:hidden}
+.mark{width:3px;height:14px;background:linear-gradient(180deg,#4dd0e1,#3ba3ff);flex-shrink:0;border-radius:1px}
+.chip{font-size:10px;color:#8fa6b8}
+.tool-btn{height:22px;padding:0 10px;border:1px solid #334155;background:#1e293b;border-radius:4px;color:#e2e8f0;font-size:11px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;white-space:nowrap}
+.tool-btn:hover,.tool-btn.on{border-color:#4dd0e1;color:#4dd0e1}
+.theme{min-width:120px;height:36px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;border-radius:5px;text-decoration:none;cursor:pointer;border:1px solid rgba(14,116,240,.28);background:#0a1220;color:#b4c7e7}
+.theme.on{color:#06202a;background:linear-gradient(180deg,#7ee7f0,#00e4ff);border-color:#00e4ff;font-weight:800}
+.toast{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);background:rgba(8,28,62,.95);border:1px solid rgba(77,210,225,.28);padding:8px 14px;border-radius:8px;font-size:12px;opacity:0;transition:.2s;z-index:80}
 .toast.show{opacity:1}
 #themes{display:none}
-.mini{background:rgba(77,210,225,.05);border:1px solid rgba(77,210,225,.12);border-radius:6px}
-.bar-track{height:8px;border-radius:99px;background:rgba(77,210,225,.12);border:1px solid rgba(77,210,225,.14);overflow:hidden}
-.bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#2b8cff,#4dd0e1 70%,#7ee7f0);box-shadow:0 0 10px rgba(77,210,225,.45)}
-.range-track{height:9px;border-radius:99px;background:rgba(77,210,225,.1);border:1px solid rgba(77,210,225,.16);position:relative}
-.range-band{position:absolute;top:1.5px;height:6px;border-radius:99px;background:linear-gradient(90deg,rgba(43,140,255,.7),rgba(77,210,225,.9));box-shadow:0 0 8px rgba(77,210,225,.35)}
-.range-tick{position:absolute;top:-2px;width:2px;height:13px;background:#fff;border-radius:2px}
-.follow{background:rgba(77,210,225,.05);border:1px solid rgba(77,210,225,.14);border-radius:6px;cursor:pointer}
-.follow:hover{border-color:rgba(77,210,225,.4)}
-.dot{width:8px;height:8px;border-radius:4px;flex-shrink:0}
+.bar{height:7px;border-radius:99px;background:rgba(77,210,225,.12);overflow:hidden}
+.bar>i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#2b8cff,#4dd0e1)}
+.pill{display:inline-flex;align-items:center;padding:2px 7px;border-radius:99px;font-size:10px;font-weight:700;border:1px solid transparent}
+.pill.demo{color:#1a1205;background:linear-gradient(180deg,#ffd180,#ffb74d)}
+.pill.y{color:#fa0;background:rgba(255,170,0,.12);border-color:rgba(255,170,0,.35)}
+.kpi-big{font-size:28px;font-weight:800;color:#4dd0e1;line-height:1;font-variant-numeric:tabular-nums}
+.kpi-sub{font-size:11px;color:#8fa6b8;margin-top:4px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;padding:4px 0;border-bottom:1px solid rgba(77,210,225,.08)}
+.row .k{color:#8fa6b8}.row .v{color:#e8f4fa;font-weight:700}
+.map-wrap{position:relative;flex:1;min-height:0;border-radius:6px;overflow:hidden;border:1px solid rgba(77,210,225,.22);background:#06101c}
+.map-wrap img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.92}
+.map-wrap svg.arcs{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hub{position:absolute;left:72%;top:42%;transform:translate(-50%,-50%);z-index:3;padding:3px 8px;border-radius:99px;background:rgba(0,228,255,.18);border:1px solid rgba(0,228,255,.55);color:#7ee7f0;font-size:11px;font-weight:800;white-space:nowrap;box-shadow:0 0 12px rgba(0,228,255,.35)}
+.region{position:absolute;transform:translate(-50%,-50%);z-index:2;width:10px;height:10px;border-radius:50%;background:#4dd0e1;border:2px solid rgba(255,255,255,.45);box-shadow:0 0 10px rgba(77,210,225,.55);cursor:pointer}
+.legend-flat{position:absolute;left:10px;bottom:8px;z-index:4;display:flex;align-items:center;gap:12px;padding:4px 10px;border:1px solid rgba(77,210,225,.25);border-radius:4px;background:rgba(6,16,34,.72);font-size:11px;color:#b4c7e7;pointer-events:none}
+.legend-flat b{color:#4dd0e1}
+.legend-flat .d{width:8px;height:8px;border-radius:50%;background:#4dd0e1;display:inline-block;margin-right:4px}
+.legend-flat .ln{width:16px;height:0;border-top:2px solid rgba(77,210,225,.8);display:inline-block;margin-right:4px;vertical-align:middle}
+.mini-card{border:1px solid rgba(77,210,225,.16);border-radius:6px;background:rgba(77,210,225,.04);padding:8px 10px}
+.seg{height:8px;border-radius:99px;overflow:hidden;display:flex;background:rgba(77,210,225,.1)}
+.seg i{display:block;height:100%}
+@keyframes dash{to{stroke-dashoffset:-40}}
+.flow{fill:none;stroke:url(#flowGrad);stroke-width:1.6;stroke-dasharray:8 10;animation:dash 2.4s linear infinite;opacity:.85}
 </style>
 </head>
 <body>
 <div class="stage">
   <div class="wall">
-
-    <!-- 操控工具栏 · Figma 19:547 -->
-    <header class="shrink-0 flex flex-col" style="height:9.26%">
-      <div class="flex items-center justify-between px-4 border-b border-[#1e293b] bg-[#0a1220]" style="height:36%">
-        <div class="text-[11px] text-[#94a3b8] whitespace-nowrap">经营分析一张图 · 对外展示版 · 演示数据不可作经营决策依据</div>
+    <header class="shrink-0 flex flex-col" style="height:9.2%">
+      <div class="flex items-center justify-between px-4 border-b border-[#1e293b] bg-[#0a1220]" style="height:38%">
+        <div class="text-[11px] text-[#94a3b8]">经营分析一张图 · V7 客户世界地图版 · 演示数据不可作经营决策依据</div>
         <div class="flex items-center gap-1.5">
-          <button type="button" class="tool-btn" onclick="toast('操控席 · 领导席切换（演示）')">操控席  领导⌄</button>
+          <button type="button" class="tool-btn" onclick="toast('操控席 · 领导席（演示）')">操控席 领导⌄</button>
           <a class="tool-btn" href="../index.html">入口</a>
           <a class="tool-btn" href="pc_wall_command_screen.html?from=%E7%BB%8F%E8%90%A5">概览总览</a>
           <button type="button" class="tool-btn" id="btnPresent">汇报全屏</button>
-          <span class="text-[11px] text-[#94a3b8] px-1">时效 <b class="text-[#e2e8f0]" id="hd-lag">26s</b></span>
-          <button type="button" class="tool-btn" onclick="toast('已刷新演示数据')">刷新数据</button>
-          <button type="button" class="tool-btn" onclick="toast('模拟降级：关键链路演示')">模拟降级</button>
+          <span class="pill demo">演示数据</span>
+          <button type="button" class="tool-btn on" id="btnPeriod">2026年10月</button>
+          <button type="button" class="tool-btn" onclick="toast('年月切换（演示）')">年月</button>
+          <button type="button" class="tool-btn" onclick="toast('筛选面板（演示）')">筛选 ▾</button>
         </div>
       </div>
-      <div class="flex-1 min-h-0 flex items-center justify-between px-6 border-b border-[#1e3a5f]" style="background:linear-gradient(90deg,#080c20,#0d1a3a,#080c20)">
-        <div class="w-[16.7%]">
-          <div class="text-[14px] font-bold text-[#e8f4fa]">海南金牌港</div>
-          <div class="text-[11px] text-[#8fa6b8] mt-0.5">数字孪生平台 / 经营管理</div>
+      <div class="flex-1 min-h-0 flex items-center justify-between px-5 border-b border-[#1e3a5f]" style="background:linear-gradient(90deg,#080c20,#0d1a3a,#080c20)">
+        <div class="w-[260px]">
+          <div class="text-[12px] text-[#4dd0e1] font-bold">海南金牌港</div>
+          <div class="text-[10px] text-[#8fa6b8]">数字孪生平台 / 经营管理 · <span id="hd-clock">--</span></div>
         </div>
-        <div class="text-center">
-          <h1 class="m-0 text-[22px] font-bold tracking-[4px] text-[#4dd0e1] leading-none">经营分析一张图</h1>
-          <p class="m-0 mt-1 text-[11px] tracking-[1px] text-[#8fa6b8]">对外展示版 · 一期全港</p>
+        <div class="text-center flex-1">
+          <h1 class="m-0 text-[20px] font-extrabold tracking-[3px] text-[#4dd0e1]">经营分析一张图</h1>
+          <p class="m-0 mt-0.5 text-[11px] text-[#8fa6b8]">一期全港 · 月度经营复盘 · 客户地域主视觉</p>
         </div>
-        <div class="w-[16.7%] flex items-center justify-end gap-2">
-          <span class="px-2.5 py-1 rounded text-[10px] font-bold text-[#1a1205]" style="background:linear-gradient(180deg,#ffd180,#ffb74d)">演示数据</span>
-          <button type="button" class="px-2.5 py-1 rounded text-[10px] font-bold text-[#a8c0d0] bg-[#0c2034] border border-[rgba(77,210,225,.28)]" onclick="toast('统计周期：2026年10月')">统计周期 2026年10月</button>
-          <button type="button" class="px-2.5 py-1 rounded text-[10px] font-bold text-[#a8c0d0] bg-[#0c2034] border border-[rgba(77,210,225,.28)]" onclick="toast('筛选面板（演示）')">筛选 ▾</button>
-        </div>
+        <div class="w-[260px] flex justify-end" data-weather="today"></div>
       </div>
     </header>
 
-    <!-- 主体三列 · 400 | 1024 | 440 -->
-    <div class="flex-1 min-h-0 grid gap-3 px-4 py-3" style="grid-template-columns:20.83% minmax(0,1fr) 22.92%">
-
-      <!-- 左列 · 核心指标 -->
-      <div class="min-h-0 flex flex-col gap-2.5 overflow-hidden">
-
-        <!-- 吞吐目标 -->
-        <div class="card shrink-0 p-3.5">
-          <div class="flex items-center gap-2 mb-2">
-            <span class="mark"></span>
-            <span class="text-[13px] font-bold text-[#7ee7f0]">吞吐目标</span>
-            <span class="chip ml-auto">10月累计</span>
-          </div>
-          <div class="flex items-baseline justify-between mb-2">
-            <span class="mono text-[40px] font-bold leading-none text-white">53.8</span>
-            <span class="text-[13px] text-[#4dd0e1]">万吨</span>
-          </div>
-          <div class="flex justify-between text-[11px] mb-1.5">
-            <span class="text-[#8fa6b8]">计划目标</span>
-            <span class="font-bold text-[#a8c0d0]">58.0 万吨</span>
-          </div>
-          <div class="bar-track mb-1.5"><div class="bar-fill" style="width:92.8%"></div></div>
-          <div class="flex justify-between text-[11px]">
-            <span class="text-[#8fa6b8]">完成率</span>
-            <span class="font-bold text-[#4dd0e1]">92.8%</span>
-          </div>
-        </div>
-
-        <!-- 效率与泊位 -->
-        <div class="card shrink-0 p-3.5">
-          <div class="flex items-center gap-2 mb-2.5">
-            <span class="mark"></span>
-            <span class="text-[13px] font-bold text-[#7ee7f0]">效率与泊位</span>
-          </div>
-          <div class="grid grid-cols-2 gap-2">
-            <div class="mini p-2.5">
-              <div class="text-[9px] text-[#8fa6b8]">泊位综合利用率</div>
-              <div class="mono text-[18px] font-bold text-white mt-1">78%–85%</div>
-              <div class="text-[8px] text-[rgba(143,166,184,.85)] mt-1">对外展示为区间值</div>
-            </div>
-            <div class="mini p-2.5">
-              <div class="text-[9px] text-[#8fa6b8]">散杂堆场占用</div>
-              <div class="mono text-[18px] font-bold text-white mt-1">68%–75%</div>
-              <div class="text-[8px] text-[rgba(143,166,184,.85)] mt-1">仓区加权口径</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 生产与服务 -->
-        <div class="card shrink-0 p-3.5 flex flex-col gap-2.5">
-          <div class="flex items-center gap-2">
-            <span class="mark"></span>
-            <span class="text-[13px] font-bold text-[#7ee7f0]">生产与服务</span>
-          </div>
-          <div class="grid grid-cols-2 gap-2">
-            <div class="mini px-2.5 py-2.5">
-              <div class="text-[11px] text-[#8fa6b8]">作业船舶</div>
-              <div class="mt-1.5"><span class="mono text-[20px] font-bold text-white">28</span><span class="text-[9px] text-[#4dd0e1] ml-1">艘次</span></div>
-            </div>
-            <div class="mini px-2.5 py-2.5">
-              <div class="text-[11px] text-[#8fa6b8]">计划兑现率</div>
-              <div class="mt-1.5"><span class="mono text-[20px] font-bold text-white">93.1</span><span class="text-[9px] text-[#4dd0e1] ml-1">%</span></div>
-            </div>
-            <div class="mini px-2.5 py-2.5">
-              <div class="text-[11px] text-[#8fa6b8]">散杂堆场占用</div>
-              <div class="mt-1.5"><span class="mono text-[20px] font-bold text-white">71.0</span><span class="text-[9px] text-[#4dd0e1] ml-1">%</span></div>
-            </div>
-            <div class="mini px-2.5 py-2.5">
-              <div class="text-[11px] text-[#8fa6b8]">设备综合利用率</div>
-              <div class="mt-1.5"><span class="mono text-[20px] font-bold text-white">65.4</span><span class="text-[9px] text-[#4dd0e1] ml-1">%</span></div>
-            </div>
-            <div class="mini px-2.5 py-2.5">
-              <div class="text-[11px] text-[#8fa6b8]">平均在港周转</div>
-              <div class="mt-1.5"><span class="mono text-[20px] font-bold text-white">43</span><span class="text-[9px] text-[#4dd0e1] ml-1">分钟</span></div>
-            </div>
-            <div class="mini px-2.5 py-2.5">
-              <div class="text-[11px] text-[#8fa6b8]">装卸单耗</div>
-              <div class="mt-1.5"><span class="mono text-[20px] font-bold text-white">1.82</span><span class="text-[8px] text-[#4dd0e1] ml-1">kWh/t</span></div>
-            </div>
-          </div>
-          <div class="flex items-center justify-center gap-2 rounded-md py-2 border border-[rgba(0,196,140,.32)]" style="background:rgba(0,196,140,.08)">
-            <span class="text-[12px] font-black text-[#3ddc97]">✓</span>
-            <span class="text-[11px] text-[#a8c0d0]">生产安全事故</span>
-            <span class="mono text-[16px] font-bold text-[#3ddc97]">0</span>
-            <span class="text-[11px] text-[#a8c0d0]">起</span>
-          </div>
-        </div>
-
-        <!-- 堆场与泊位压力 -->
-        <div class="card flex-1 min-h-0 p-3.5 flex flex-col">
-          <div class="flex items-center gap-2 mb-3">
-            <span class="mark"></span>
-            <span class="text-[13px] font-bold text-[#7ee7f0]">堆场与泊位压力</span>
-            <span class="chip ml-auto">区间演示</span>
-          </div>
-          <div class="space-y-3 flex-1">
+    <div class="flex-1 min-h-0 grid gap-2.5 px-3 py-2.5" style="grid-template-columns:21% minmax(0,1fr) 22%">
+      <!-- 左 -->
+      <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
+        <div class="card shrink-0 p-2.5">
+          <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[12px] font-bold text-[#4dd0e1]">吞吐汇总</span><span class="chip ml-auto">2026年10月</span></div>
+          <div class="flex items-end justify-between gap-2">
             <div>
-              <div class="text-[10px] text-[#8fa6b8]">高占用仓区占比</div>
-              <div class="mono text-[20px] font-bold text-white mt-1">30%–40%</div>
-              <div class="bar-track mt-1.5 h-[7px] relative">
-                <div class="absolute top-0 h-full rounded-full" style="left:30%;width:10%;background:linear-gradient(90deg,#2b8cff,#7ee7f0);box-shadow:0 0 10px rgba(77,210,225,.45)"></div>
-              </div>
+              <div class="kpi-big mono">53.8<span class="text-[14px] text-[#8fa6b8] font-600 ml-1">万吨</span></div>
+              <div class="kpi-sub">计划 58.0 万吨</div>
+            </div>
+            <div class="text-right">
+              <div class="text-[22px] font-extrabold text-[#7ee7f0] mono">92.8%</div>
+              <div class="text-[10px] text-[#8fa6b8]">达成率</div>
+            </div>
+          </div>
+          <div class="bar mt-2"><i style="width:92.8%"></i></div>
+        </div>
+
+        <div class="card flex-[1.1] min-h-0 p-2 flex flex-col overflow-hidden">
+          <div class="flex items-center gap-1.5 mb-1 shrink-0">
+            <span class="mark"></span><span class="text-[12px] font-bold text-[#4dd0e1]">吞吐计划与实际</span>
+            <span class="chip ml-auto">近六月 · 环比 -2.4%</span>
+          </div>
+          <div id="chartTrend" class="flex-1 min-h-0"></div>
+        </div>
+
+        <div class="card shrink-0 p-2">
+          <div class="flex items-center gap-1.5 mb-1.5"><span class="mark"></span><span class="text-[12px] font-bold text-[#4dd0e1]">货种结构</span><span class="chip ml-auto">实际 / 计划</span></div>
+          <div class="space-y-1.5 text-[12px]">
+            <div>
+              <div class="flex justify-between mb-0.5"><span class="text-[#e8f4fa]">粮食</span><span class="mono text-[#4dd0e1]">24.8 / 26.0</span></div>
+              <div class="bar"><i style="width:95.4%"></i></div>
             </div>
             <div>
-              <div class="text-[10px] text-[#8fa6b8]">2#泊位待卸压港水位</div>
-              <div class="mono text-[20px] font-bold text-[#ffb74d] mt-1">20%–30%</div>
-              <div class="bar-track mt-1.5 h-[7px] relative">
-                <div class="absolute top-0 h-full rounded-full" style="left:20%;width:10%;background:linear-gradient(90deg,#e67e22,#ffb74d);box-shadow:0 0 10px rgba(255,183,77,.4)"></div>
-              </div>
+              <div class="flex justify-between mb-0.5"><span class="text-[#e8f4fa]">矿建散货</span><span class="mono text-[#4dd0e1]">17.7 / 19.5</span></div>
+              <div class="bar"><i style="width:90.8%"></i></div>
+            </div>
+            <div>
+              <div class="flex justify-between mb-0.5"><span class="text-[#e8f4fa]">件杂货</span><span class="mono text-[#4dd0e1]">11.3 / 12.5</span></div>
+              <div class="bar"><i style="width:90.4%"></i></div>
             </div>
           </div>
-          <div class="text-[9px] text-[#637f99] mt-2">仅示运营压力区间，不含金额类科目</div>
+          <div class="text-[10px] text-[#fa0] mt-1.5 leading-snug">矿建散货占计划缺口约 42.9%</div>
+        </div>
+
+        <div class="card shrink-0 p-2 overflow-hidden">
+          <div class="flex items-center gap-1.5 mb-1.5"><span class="mark"></span><span class="text-[12px] font-bold text-[#4dd0e1]">经营质量</span><span class="chip ml-auto">已结账 · 万元</span></div>
+          <div class="grid grid-cols-2 gap-1.5 mb-1.5">
+            <div class="mini-card text-center" style="padding:6px 8px">
+              <div class="text-[18px] font-extrabold text-[#7ee7f0] mono">17.2%</div>
+              <div class="text-[10px] text-[#8fa6b8] mt-0.5">毛利率</div>
+            </div>
+            <div class="mini-card text-center" style="padding:6px 8px">
+              <div class="text-[18px] font-extrabold text-[#4dd0e1] mono">220</div>
+              <div class="text-[10px] text-[#8fa6b8] mt-0.5">营业毛利</div>
+            </div>
+          </div>
+          <div class="row"><span class="k">营业收入</span><span class="v mono">1,280</span></div>
+          <div class="row"><span class="k">营业成本</span><span class="v mono">1,060</span></div>
         </div>
       </div>
 
-      <!-- 中列 · 趋势与目标兑现 -->
-      <div class="min-h-0 flex flex-col gap-2.5 overflow-hidden">
-
-        <!-- 吞吐量趋势 -->
-        <div class="card shrink-0 p-3.5 flex flex-col" style="height:37.9%">
-          <div class="flex items-center gap-2 mb-1 shrink-0">
-            <span class="mark"></span>
-            <span class="text-[13px] font-bold text-[#7ee7f0]">吞吐量趋势</span>
-            <span class="text-[10px] text-[#8fa6b8] ml-1">环比 <b class="text-[#ffb74d]">-2.4%</b></span>
-            <span class="text-[10px] text-[#8fa6b8]">较计划 <b class="text-[#ffb74d]">-4.2 万吨</b></span>
-            <span class="chip ml-auto">近6个月</span>
+      <!-- 中 -->
+      <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
+        <div class="card flex-[1.35] min-h-0 p-0 overflow-hidden flex flex-col">
+          <div class="shrink-0 h-8 px-2.5 flex items-center border-b border-[rgba(77,210,225,.18)]">
+            <span class="text-[12px] font-bold text-[#4dd0e1]">客户地域分布</span>
+            <span class="chip ml-auto">金牌港枢纽 · 八区域示意</span>
           </div>
-          <div id="chartTrend" class="flex-1 min-h-0 w-full"></div>
-        </div>
-
-        <!-- 货种与流向 + 年度目标兑现 -->
-        <div class="shrink-0 grid gap-2.5" style="height:30.1%;grid-template-columns:1fr 1fr">
-          <div class="card p-3.5 flex flex-col min-h-0">
-            <div class="flex items-center gap-2 mb-2 shrink-0">
-              <span class="mark"></span>
-              <span class="text-[13px] font-bold text-[#7ee7f0]">货种与流向</span>
-              <span class="chip ml-auto">本月 · 万吨</span>
-            </div>
-            <div class="grid grid-cols-2 gap-2 mb-2 shrink-0">
-              <div class="mini py-2 text-center">
-                <div class="text-[10px] text-[#8fa6b8]">进港</div>
-                <div class="mt-0.5"><span class="mono text-[22px] font-bold text-[#4dd0e1]">35.5</span><span class="text-[9px] text-[#4dd0e1] ml-0.5">万吨</span></div>
-              </div>
-              <div class="mini py-2 text-center">
-                <div class="text-[10px] text-[#8fa6b8]">出港</div>
-                <div class="mt-0.5"><span class="mono text-[22px] font-bold text-[#4dd0e1]">18.3</span><span class="text-[9px] text-[#4dd0e1] ml-0.5">万吨</span></div>
-              </div>
-            </div>
-            <div class="flex-1 min-h-0 flex flex-col justify-around gap-1.5">
-              <div>
-                <div class="flex justify-between text-[10px] mb-1"><span class="text-[#8fa6b8]">粮食</span><b class="text-white">24.8</b></div>
-                <div class="bar-track h-[5px]"><div class="bar-fill" style="width:100%"></div></div>
-              </div>
-              <div>
-                <div class="flex justify-between text-[10px] mb-1"><span class="text-[#8fa6b8]">矿建</span><b class="text-white">17.7</b></div>
-                <div class="bar-track h-[5px]"><div class="bar-fill" style="width:71%"></div></div>
-              </div>
-              <div>
-                <div class="flex justify-between text-[10px] mb-1"><span class="text-[#8fa6b8]">件杂</span><b class="text-white">11.3</b></div>
-                <div class="bar-track h-[5px]"><div class="bar-fill" style="width:46%"></div></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card p-3.5 flex flex-col min-h-0">
-            <div class="flex items-center gap-2 mb-2 shrink-0">
-              <span class="mark"></span>
-              <span class="text-[13px] font-bold text-[#7ee7f0]">年度目标兑现</span>
-              <span class="chip ml-auto">累计</span>
-            </div>
-            <div class="flex items-baseline justify-between mb-2 shrink-0">
-              <div><span class="mono text-[28px] font-bold text-white">486.4</span><span class="text-[11px] text-[#4dd0e1] ml-1">万吨</span></div>
-              <span class="text-[10px] text-[#8fa6b8]">/ 640.0 万吨</span>
-            </div>
-            <div class="h-2 rounded-full overflow-hidden flex mb-2 shrink-0" style="background:rgba(77,210,225,.12);border:1px solid rgba(77,210,225,.14)">
-              <div style="width:76%;background:linear-gradient(90deg,#2b8cff,#4dd0e1)"></div>
-              <div style="width:17.5%;background:linear-gradient(90deg,rgba(43,140,255,.45),rgba(77,208,225,.45))"></div>
-              <div style="width:6.5%;background:#ffb74d"></div>
-            </div>
-            <div class="mini p-2 mb-1.5 shrink-0">
-              <div class="text-[9px] text-[#8fa6b8]">已实现</div>
-              <div class="text-[15px] font-bold text-[#4dd0e1] mt-0.5">486.4 万吨</div>
-            </div>
-            <div class="grid grid-cols-2 gap-2 shrink-0">
-              <div class="mini p-2">
-                <div class="text-[9px] text-[#8fa6b8]">已确认船期</div>
-                <div class="text-[13px] font-bold text-[#4dd0e1] mt-0.5">112.0 万吨</div>
-              </div>
-              <div class="p-2 rounded-md border border-[rgba(255,183,77,.4)]" style="background:rgba(255,183,77,.1)">
-                <div class="text-[9px] text-[#8fa6b8]">待覆盖缺口</div>
-                <div class="text-[13px] font-bold text-[#ffb74d] mt-0.5">41.6 万吨</div>
-              </div>
-            </div>
+          <div class="map-wrap flex-1" id="worldMap">
+            <img class="bg" src="../assets/business/world_map.jpg" alt="客户世界地图">
+            <svg class="arcs" viewBox="0 0 100 100" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="flowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="rgba(77,210,225,0)"/>
+                  <stop offset="50%" stop-color="#7ee7f0"/>
+                  <stop offset="100%" stop-color="rgba(43,140,255,0)"/>
+                </linearGradient>
+              </defs>
+              <!-- hub ~72,42 -->
+              <path class="flow" d="M18,28 Q45,10 72,42"/>
+              <path class="flow" d="M28,55 Q48,48 72,42"/>
+              <path class="flow" d="M42,68 Q55,58 72,42"/>
+              <path class="flow" d="M52,78 Q60,62 72,42"/>
+              <path class="flow" d="M12,48 Q40,40 72,42"/>
+              <path class="flow" d="M22,72 Q48,60 72,42"/>
+              <path class="flow" d="M8,35 Q38,22 72,42"/>
+              <path class="flow" d="M35,22 Q52,18 72,42"/>
+            </svg>
+            <span class="hub">金牌港</span>
+            <button type="button" class="region" style="left:18%;top:28%" title="北美" onclick="toast('客户区域：北美')"></button>
+            <button type="button" class="region" style="left:28%;top:55%" title="南美" onclick="toast('客户区域：南美')"></button>
+            <button type="button" class="region" style="left:42%;top:32%" title="欧洲" onclick="toast('客户区域：欧洲')"></button>
+            <button type="button" class="region" style="left:52%;top:48%" title="中东" onclick="toast('客户区域：中东')"></button>
+            <button type="button" class="region" style="left:58%;top:58%" title="南亚" onclick="toast('客户区域：南亚')"></button>
+            <button type="button" class="region" style="left:64%;top:62%" title="东南亚" onclick="toast('客户区域：东南亚')"></button>
+            <button type="button" class="region" style="left:78%;top:38%" title="境外东亚" onclick="toast('客户区域：境外东亚')"></button>
+            <button type="button" class="region" style="left:70%;top:48%" title="境内" onclick="toast('客户区域：境内')"></button>
+            <div class="legend-flat"><b>图例</b><span><i class="d"></i>客户区域</span><span><i class="ln"></i>业务关联流光</span></div>
           </div>
         </div>
 
-        <!-- 泊位缺口 -->
-        <div class="card flex-1 min-h-0 p-3.5 flex flex-col overflow-hidden">
-          <div class="flex items-center gap-2 mb-2 shrink-0">
-            <span class="mark"></span>
-            <span class="text-[13px] font-bold text-[#7ee7f0]">泊位缺口</span>
-            <span class="chip ml-auto">本月 · 万吨</span>
+        <div class="grid gap-2 shrink-0" style="grid-template-columns:1.15fr .85fr;height:32%">
+          <div class="card p-2 min-h-0 flex flex-col overflow-hidden">
+            <div class="flex items-center gap-1.5 mb-1 shrink-0">
+              <span class="mark"></span><span class="text-[12px] font-bold text-[#4dd0e1]">国家区域占比</span>
+              <span class="chip ml-auto">货量 · 八区域</span>
+            </div>
+            <div id="chartRegion" class="flex-1 min-h-0"></div>
           </div>
-          <div class="space-y-2 flex-1 min-h-0 overflow-auto">
-            <div class="mini px-2.5 py-2">
-              <div class="flex items-center justify-between mb-1">
-                <span class="text-[11px] font-bold text-white">1# 泊位</span>
-                <span class="px-1.5 py-0.5 rounded-full text-[9px] font-bold text-[#3ddc97] border border-[rgba(61,220,151,.35)]" style="background:rgba(61,220,151,.1)">超计划 +0.6</span>
+          <div class="card p-2 min-h-0 overflow-hidden">
+            <div class="flex items-center gap-1.5 mb-1.5"><span class="mark"></span><span class="text-[12px] font-bold text-[#4dd0e1]">客户规模与结构</span></div>
+            <div class="flex items-end justify-between mb-2">
+              <div>
+                <div class="text-[22px] font-extrabold text-[#4dd0e1] mono">24<span class="text-[12px] text-[#8fa6b8] ml-1">家</span></div>
+                <div class="text-[10px] text-[#8fa6b8]">活跃客户 · 目标 25 · 达成 96.0%</div>
               </div>
-              <div class="flex justify-between text-[10px] text-[#8fa6b8] mb-1">
-                <span>实际 <b class="text-[#a8c0d0]">24.6</b></span>
-                <span>计划 <b class="text-[#a8c0d0]">24.0</b></span>
-              </div>
-              <div class="h-1.5 rounded-full overflow-hidden" style="background:rgba(77,210,225,.1)"><div class="h-full" style="width:100%;background:linear-gradient(90deg,#2b8cff,#4dd0e1)"></div></div>
+              <div class="text-right text-[11px] text-[#b4c7e7]"><div>存量 <b class="text-[#7ee7f0]">20</b></div><div>新增 <b class="text-[#ffb74d]">4</b></div></div>
             </div>
-            <div class="mini px-2.5 py-2">
-              <div class="flex items-center justify-between mb-1">
-                <span class="text-[11px] font-bold text-white">2# 泊位</span>
-                <span class="px-1.5 py-0.5 rounded-full text-[9px] font-bold text-[#ffb74d] border border-[rgba(255,183,77,.4)]" style="background:rgba(255,183,77,.1)">缺口 -3.4</span>
-              </div>
-              <div class="flex justify-between text-[10px] text-[#8fa6b8] mb-1">
-                <span>实际 <b class="text-[#a8c0d0]">18.2</b></span>
-                <span>计划 <b class="text-[#a8c0d0]">21.6</b></span>
-              </div>
-              <div class="h-1.5 rounded-full overflow-hidden flex" style="background:rgba(77,210,225,.1)">
-                <div class="h-full" style="width:84%;background:linear-gradient(90deg,#2b8cff,#4dd0e1)"></div>
-                <div class="h-full" style="width:16%;background:linear-gradient(90deg,#e67e22,#ffb74d)"></div>
-              </div>
-            </div>
-            <div class="px-0.5">
-              <div class="text-[9px] text-[#8fa6b8] mb-1">2# 缺口构成</div>
-              <div class="h-[7px] rounded-full overflow-hidden flex mb-1.5" style="background:rgba(77,210,225,.1)">
-                <div style="width:59%;background:#4dd0e1"></div>
-                <div style="width:26%;background:#ffb74d"></div>
-                <div style="width:15%;background:#64748b"></div>
-              </div>
-              <div class="flex gap-3 text-[9px] text-[#8fa6b8]">
-                <span class="inline-flex items-center gap-1"><i class="inline-block w-[7px] h-[7px] rounded-sm bg-[#4dd0e1]"></i>船期后移 2.0</span>
-                <span class="inline-flex items-center gap-1"><i class="inline-block w-[7px] h-[7px] rounded-sm bg-[#ffb74d]"></i>在泊待卸 0.9</span>
-                <span class="inline-flex items-center gap-1"><i class="inline-block w-[7px] h-[7px] rounded-sm bg-[#64748b]"></i>待核实 0.5</span>
-              </div>
-            </div>
+            <div class="text-[10px] text-[#8fa6b8] mb-1">合作类型货量占比区间</div>
+            <div class="seg mb-1"><i style="width:55%;background:#2b8cff"></i><i style="width:30%;background:#4dd0e1"></i><i style="width:15%;background:#ffb74d"></i></div>
+            <div class="flex justify-between text-[10px] text-[#8fa6b8]"><span>长期 50–60%</span><span>常规 25–35%</span><span>临时 10–20%</span></div>
           </div>
         </div>
       </div>
 
-      <!-- 右列 · 货量结构与运营跟进 -->
-      <div class="min-h-0 flex flex-col gap-2.5 overflow-hidden">
-
-        <!-- 货量结构 -->
-        <div class="card shrink-0 p-3.5" style="height:33.5%">
-          <div class="flex items-center gap-2 mb-3">
-            <span class="mark"></span>
-            <span class="text-[13px] font-bold text-[#7ee7f0]">货量结构</span>
-            <span class="chip ml-auto">货量占比区间</span>
+      <!-- 右 -->
+      <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
+        <div class="card shrink-0 p-2.5">
+          <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[12px] font-bold text-[#4dd0e1]">合同额</span><span class="chip ml-auto">新增生效 · 万元</span></div>
+          <div class="flex items-end justify-between">
+            <div class="kpi-big mono" style="font-size:24px">1,440</div>
+            <div class="text-right"><div class="text-[18px] font-extrabold text-[#7ee7f0] mono">90.0%</div><div class="text-[10px] text-[#8fa6b8]">达成率</div></div>
           </div>
-          <div class="space-y-4">
-            <div>
-              <div class="flex justify-between text-[13px] mb-2"><span class="text-[#8fa6b8]">长期合作</span><b class="text-[#4dd0e1]">50%–60%</b></div>
-              <div class="range-track"><div class="range-band" style="left:50%;width:10%"></div><div class="range-tick" style="left:50%"></div><div class="range-tick" style="left:60%"></div></div>
-            </div>
-            <div>
-              <div class="flex justify-between text-[13px] mb-2"><span class="text-[#8fa6b8]">常客</span><b class="text-[#4dd0e1]">25%–35%</b></div>
-              <div class="range-track"><div class="range-band" style="left:25%;width:10%"></div><div class="range-tick" style="left:25%"></div><div class="range-tick" style="left:35%"></div></div>
-            </div>
-            <div>
-              <div class="flex justify-between text-[13px] mb-2"><span class="text-[#8fa6b8]">临时客户</span><b class="text-[#4dd0e1]">10%–20%</b></div>
-              <div class="range-track"><div class="range-band" style="left:10%;width:10%"></div><div class="range-tick" style="left:10%"></div><div class="range-tick" style="left:20%"></div></div>
-            </div>
-          </div>
-          <div class="text-[9px] text-[#637f99] mt-3">区间含义：货量占比的合理波动范围，不应相加凑合计</div>
+          <div class="bar mt-2 mb-2"><i style="width:90%"></i></div>
+          <div class="row"><span class="k">装卸</span><span class="v mono">900</span></div>
+          <div class="row"><span class="k">仓储</span><span class="v mono">330</span></div>
+          <div class="row"><span class="k">港务服务</span><span class="v mono">210</span></div>
         </div>
 
-        <!-- 运营跟进 -->
-        <div class="card flex-1 min-h-0 p-3.5 flex flex-col overflow-hidden">
-          <div class="flex items-center gap-2 mb-2.5 shrink-0">
-            <span class="mark"></span>
-            <span class="text-[13px] font-bold text-[#7ee7f0]">运营跟进</span>
-            <span class="chip ml-auto">待办 4</span>
+        <div class="card shrink-0 p-2.5">
+          <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[12px] font-bold text-[#4dd0e1]">回款</span><span class="chip ml-auto">本月确认 · 万元</span></div>
+          <div class="flex items-end justify-between">
+            <div class="kpi-big mono" style="font-size:24px">980</div>
+            <div class="text-right"><div class="text-[18px] font-extrabold text-[#7ee7f0] mono">93.3%</div><div class="text-[10px] text-[#8fa6b8]">达成率</div></div>
           </div>
-          <div class="flex-1 min-h-0 overflow-auto space-y-2">
-            <div class="follow flex gap-2.5 items-center p-2.5" onclick="toast('跟进：堆场占用复核')">
-              <span class="dot bg-[#ffb74d]" style="box-shadow:0 0 8px #ffb74d"></span>
-              <div class="flex-1 min-w-0 flex flex-col justify-between self-stretch py-0.5">
-                <div class="flex items-center justify-between">
-                  <span class="text-[14px] font-bold text-white">堆场占用复核</span>
-                  <span class="px-1.5 py-0.5 rounded-full text-[9px] font-bold text-[#ffb74d] border border-[rgba(255,183,77,.4)]" style="background:rgba(255,183,77,.1)">11/10</span>
-                </div>
-                <div class="text-[12px] text-[#8fa6b8]">高占用仓区清单需仓储侧复核</div>
-                <div class="text-[12px] font-bold text-[#4dd0e1]">仓储 · 核对仓区</div>
-              </div>
-            </div>
-            <div class="follow flex gap-2.5 items-center p-2.5" onclick="toast('跟进：2#泊位缺口核查')">
-              <span class="dot bg-[#ffb74d]" style="box-shadow:0 0 8px #ffb74d"></span>
-              <div class="flex-1 min-w-0 flex flex-col justify-between self-stretch py-0.5">
-                <div class="flex items-center justify-between">
-                  <span class="text-[14px] font-bold text-white">2#泊位缺口核查</span>
-                  <span class="px-1.5 py-0.5 rounded-full text-[9px] font-bold text-[#ffb74d] border border-[rgba(255,183,77,.4)]" style="background:rgba(255,183,77,.1)">11/10</span>
-                </div>
-                <div class="text-[12px] text-[#8fa6b8]">船期后移与在泊待卸量待生产确认</div>
-                <div class="text-[12px] font-bold text-[#4dd0e1]">生产 · 核查船期</div>
-              </div>
-            </div>
-            <div class="follow flex gap-2.5 items-center p-2.5" onclick="toast('跟进：集卡周转偏慢')">
-              <span class="dot bg-[#4dd0e1]" style="box-shadow:0 0 8px #4dd0e1"></span>
-              <div class="flex-1 min-w-0 flex flex-col justify-between self-stretch py-0.5">
-                <div class="flex items-center justify-between">
-                  <span class="text-[14px] font-bold text-white">集卡周转偏慢</span>
-                  <span class="px-1.5 py-0.5 rounded-full text-[9px] font-bold text-[#4dd0e1] border border-[rgba(77,210,225,.3)]" style="background:rgba(77,210,225,.1)">11/11</span>
-                </div>
-                <div class="text-[12px] text-[#8fa6b8]">平均周转43分钟，交通侧排查拥堵点</div>
-                <div class="text-[12px] font-bold text-[#4dd0e1]">交通 · 疏堵处置</div>
-              </div>
-            </div>
-            <div class="follow flex gap-2.5 items-center p-2.5" onclick="toast('跟进：装卸单耗偏高')">
-              <span class="dot bg-[#4dd0e1]" style="box-shadow:0 0 8px #4dd0e1"></span>
-              <div class="flex-1 min-w-0 flex flex-col justify-between self-stretch py-0.5">
-                <div class="flex items-center justify-between">
-                  <span class="text-[14px] font-bold text-white">装卸单耗偏高</span>
-                  <span class="px-1.5 py-0.5 rounded-full text-[9px] font-bold text-[#4dd0e1] border border-[rgba(77,210,225,.3)]" style="background:rgba(77,210,225,.1)">11/11</span>
-                </div>
-                <div class="text-[12px] text-[#8fa6b8]">1.82 kWh/t，能源侧复核作业工况</div>
-                <div class="text-[12px] font-bold text-[#4dd0e1]">能源 · 复核工况</div>
-              </div>
-            </div>
-          </div>
+          <div class="bar mt-2 mb-2"><i style="width:93.3%"></i></div>
+          <div class="row"><span class="k">当期应收回款</span><span class="v mono">360</span></div>
+          <div class="row"><span class="k">往期应收回款</span><span class="v mono">620</span></div>
+        </div>
+
+        <div class="card flex-1 min-h-0 p-2.5 overflow-hidden">
+          <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[12px] font-bold text-[#4dd0e1]">账期与应收</span><span class="chip ml-auto">截点 10/31</span></div>
+          <div class="text-[10px] text-[#8fa6b8] mb-1">合同约定账期结构（月末应收为分母）</div>
+          <div class="seg mb-1"><i style="width:50%;background:#2b8cff"></i><i style="width:30%;background:#4dd0e1"></i><i style="width:20%;background:#ffb74d"></i></div>
+          <div class="flex justify-between text-[10px] text-[#8fa6b8] mb-2"><span>≤30天 50%</span><span>31–60天 30%</span><span>>60天 20%</span></div>
+          <div class="row"><span class="k">月末应收</span><span class="v mono text-[#4dd0e1]">860</span></div>
+          <div class="row"><span class="k">已逾期</span><span class="v mono text-[#ff9a9a]">230</span></div>
+          <div class="row"><span class="k">未来30天到期</span><span class="v mono">320</span></div>
+          <div class="row"><span class="k">其他未到期</span><span class="v mono">310</span></div>
+          <div class="text-[10px] text-[#637f99] mt-2">三类到期余额合计 860 · 与月末应收一致</div>
         </div>
       </div>
     </div>
 
-    <!-- 底部主题导航 -->
-    <footer class="shrink-0 border-t border-[#1e3a5f] flex items-center justify-center relative bg-[rgba(8,28,62,.9)]" style="height:5.56%">
-      <div class="absolute left-5 flex items-center gap-2 text-[11px] text-[#637f99]">
-        <i class="fa-solid fa-anchor text-[#4dd0e1]"></i>
-        <span>金牌港智慧运营指挥中心</span>
-      </div>
+    <footer class="shrink-0 border-t border-[#1e3a5f] flex items-center justify-center relative bg-[rgba(8,28,62,.9)]" style="height:5.4%">
+      <div class="absolute left-5 flex items-center gap-2 text-[12px] text-[#8fa6b8]"><i class="fa-solid fa-anchor text-[#4dd0e1]"></i><span>金牌港智慧运营指挥中心</span></div>
       <div id="theme-foot" class="flex gap-2"></div>
-      <div class="absolute right-5 text-[11px] text-[#637f99]">经营分析 / 对外展示版 · 演示数据 · <span id="hd-asof2">--</span></div>
+      <div class="absolute right-5 text-[11px] text-[#8fa6b8]">经营分析 / V7 客户世界地图版 · <span id="hd-asof2">--</span></div>
     </footer>
     <div id="themes"></div>
   </div>
@@ -418,20 +259,20 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 <script src="wall_domain.js"></script>
 <script src="wall_theme_nav.js"></script>
 <script>
-const THEME_LABEL={'概览':'港区概览','生产':'生产一张图','交通':'港区交通','设备':'设备设施','经营':'经营分析','调度':'智慧调度'};
+const THEME_LABEL={概览:'港区概览',生产:'生产运行',交通:'港区交通',设备:'设备设施',经营:'经营分析',调度:'智慧调度'};
 function renderThemes(){
   const el=document.getElementById('theme-foot');
   if(!el) return;
   el.innerHTML=Object.keys(THEME_PAGES).map(k=>{
     const label=THEME_LABEL[k]||k;
-    if(THEME_DISABLED.includes(k)) return `<span class="theme" style="opacity:.4">${label}</span>`;
+    if(THEME_DISABLED.includes(k)) return `<span class="theme" style="opacity:.4" title="本期未开放">${label}</span>`;
     if(k==='经营') return `<button type="button" class="theme on">${label}</button>`;
     const href=k==='概览'?THEME_PAGES[k]+'?from='+encodeURIComponent('经营'):THEME_PAGES[k];
     return `<a class="theme" href="${href}">${label}</a>`;
   }).join('');
 }
 renderThemes();
-initWallTheme('经营');
+mountWeather();
 
 document.getElementById('btnPresent').onclick=()=>{document.body.classList.add('present');toast('汇报全屏 · Esc 退出')};
 document.addEventListener('keydown',e=>{if(e.key==='Escape') document.body.classList.remove('present')});
@@ -439,34 +280,68 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape') document.body.class
 function pad(n){return String(n).padStart(2,'0')}
 function tick(){
   const n=new Date();
-  const clock=`${n.getFullYear()}-${pad(n.getMonth()+1)}-${pad(n.getDate())} ${pad(n.getHours())}:${pad(n.getMinutes())}`;
-  const el2=document.getElementById('hd-asof2');
-  if(el2) el2.textContent=clock;
+  const t=`${pad(n.getMonth()+1)}/${pad(n.getDate())} ${pad(n.getHours())}:${pad(n.getMinutes())}`;
+  const asof=`${n.getFullYear()}-${pad(n.getMonth()+1)}-${pad(n.getDate())} ${pad(n.getHours())}:${pad(n.getMinutes())}`;
+  const c=document.getElementById('hd-clock'); if(c) c.textContent=t;
+  const a=document.getElementById('hd-asof2'); if(a) a.textContent=asof;
 }
-tick();
-setInterval(tick,1000);
+tick(); setInterval(tick,1000);
 
 (function initTrend(){
   const el=document.getElementById('chartTrend');
   if(!el||typeof echarts==='undefined') return;
   const chart=echarts.init(el);
-  const months=['5月','6月','7月','8月','9月','10月'];
-  const actual=[48.2,51.6,55.1,54.0,55.1,53.8];
-  const plan=[50,52,54,56,57,58];
   chart.setOption({
-    grid:{left:42,right:16,top:24,bottom:28},
-    legend:{top:0,right:0,textStyle:{color:'#8fa6b8',fontSize:10},itemWidth:14,itemHeight:8},
+    backgroundColor:'transparent',
+    grid:{left:32,right:8,top:20,bottom:20},
+    legend:{top:0,right:0,textStyle:{color:'#8fa6b8',fontSize:10},itemWidth:10,itemHeight:7},
     tooltip:{trigger:'axis',backgroundColor:'rgba(8,28,62,.95)',borderColor:'rgba(77,210,225,.28)',textStyle:{color:'#e8f4fa',fontSize:11}},
-    xAxis:{type:'category',data:months,axisLine:{lineStyle:{color:'rgba(77,210,225,.25)'}},axisLabel:{color:'#8fa6b8',fontSize:10},axisTick:{show:false}},
-    yAxis:{type:'value',name:'万吨',nameTextStyle:{color:'#637f99',fontSize:10,padding:[0,0,0,8]},splitLine:{lineStyle:{color:'rgba(77,210,225,.08)'}},axisLabel:{color:'#8fa6b8',fontSize:10},axisLine:{show:false}},
+    xAxis:{type:'category',data:['5月','6月','7月','8月','9月','10月'],axisLine:{lineStyle:{color:'rgba(77,210,225,.25)'}},axisLabel:{color:'#8fa6b8',fontSize:9},axisTick:{show:false}},
+    yAxis:{type:'value',splitLine:{lineStyle:{color:'rgba(77,210,225,.08)'}},axisLabel:{color:'#8fa6b8',fontSize:9},axisLine:{show:false}},
     series:[
-      {name:'实际吞吐',type:'bar',barWidth:18,data:actual,itemStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'#7ee7f0'},{offset:1,color:'#2b8cff'}]),borderRadius:[3,3,0,0]}},
-      {name:'计划目标',type:'line',data:plan,smooth:true,symbol:'circle',symbolSize:6,lineStyle:{color:'#ffb74d',width:2},itemStyle:{color:'#ffb74d'}}
+      {name:'实际',type:'line',smooth:true,data:[48.2,51.6,55.1,54.0,55.1,53.8],symbol:'circle',symbolSize:5,lineStyle:{width:2,color:'#4dd0e1'},itemStyle:{color:'#4dd0e1'},areaStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'rgba(77,210,225,.28)'},{offset:1,color:'rgba(77,210,225,0)'}])}},
+      {name:'计划',type:'line',smooth:true,data:[50,52,54,56,57,58],symbol:'circle',symbolSize:4,lineStyle:{width:2,type:'dashed',color:'#ffb74d'},itemStyle:{color:'#ffb74d'}}
     ]
   });
-  window.addEventListener('resize',()=>chart.resize());
   const ro=typeof ResizeObserver!=='undefined'?new ResizeObserver(()=>chart.resize()):null;
   if(ro) ro.observe(el);
+  window.addEventListener('resize',()=>chart.resize());
+})();
+
+(function initRegion(){
+  const el=document.getElementById('chartRegion');
+  if(!el||typeof echarts==='undefined') return;
+  const chart=echarts.init(el);
+  const data=[
+    {name:'境内',value:18.6},
+    {name:'东南亚',value:9.4},
+    {name:'南亚',value:6.8},
+    {name:'中东',value:5.2},
+    {name:'欧洲',value:4.6},
+    {name:'北美',value:3.8},
+    {name:'南美',value:3.1},
+    {name:'境外东亚',value:2.3}
+  ];
+  const colors=['#2b8cff','#4dd0e1','#7ee7f0','#5b8def','#ffb74d','#90caf9','#81d4fa','#64b5f6'];
+  chart.setOption({
+    backgroundColor:'transparent',
+    color:colors,
+    tooltip:{trigger:'item',backgroundColor:'rgba(8,28,62,.95)',borderColor:'rgba(77,210,225,.28)',textStyle:{color:'#e8f4fa',fontSize:11},formatter:p=>`${p.name}<br/>货量 ${p.value} 万吨 · ${p.percent}%`},
+    legend:{type:'scroll',orient:'vertical',right:4,top:'middle',itemWidth:8,itemHeight:8,itemGap:6,textStyle:{color:'#8fa6b8',fontSize:10},pageIconColor:'#4dd0e1',pageTextStyle:{color:'#8fa6b8'}},
+    series:[{
+      type:'pie',
+      radius:['42%','68%'],
+      center:['34%','50%'],
+      avoidLabelOverlap:true,
+      itemStyle:{borderColor:'#07111d',borderWidth:2},
+      label:{show:false},
+      labelLine:{show:false},
+      data:data
+    }]
+  });
+  const ro=typeof ResizeObserver!=='undefined'?new ResizeObserver(()=>chart.resize()):null;
+  if(ro) ro.observe(el);
+  window.addEventListener('resize',()=>chart.resize());
 })();
 </script>
 </body>

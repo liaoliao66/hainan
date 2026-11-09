@@ -6,6 +6,8 @@
 <title>海南金牌港数字孪生指挥中心 · v1.0.0</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="../vendor/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="wall_common.css">
+<link rel="stylesheet" href="wall_scrollbar.css">
 <script src="../vendor/echarts.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;600&display=swap');
@@ -17,6 +19,8 @@ body{display:flex;flex-direction:column}
 .wall{position:relative;aspect-ratio:16/9;width:min(98vw,calc(98vh*16/9));height:min(98vh,calc(98vw*9/16));display:flex;flex-direction:column;overflow:hidden;border:1px solid rgba(14,116,240,.35);box-shadow:0 0 40px rgba(0,0,0,.55);background:#030712}
 body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 .card{position:relative;border:1px solid rgba(14,116,240,.28);border-radius:6px;padding:12px 14px;background:rgba(8,28,62,.9);box-shadow:inset 0 0 12px rgba(14,116,240,.04);overflow:hidden}
+#top5Chart,#cargoChart{background:transparent!important}
+#top5Chart>div,#cargoChart>div,#top5Chart canvas,#cargoChart canvas{background:transparent!important}
 .mark{width:2px;height:14px;background:#0e74f0;flex-shrink:0}
 .chip{font-size:10px;color:#b4c7e7}
 .tool-btn{height:19px;padding:0 10px;border:1px solid #334155;background:#1e293b;border-radius:4px;color:#e2e8f0;font-size:11px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;white-space:nowrap}
@@ -26,19 +30,88 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 .tab.off{opacity:.42}
 .theme{min-width:120px;height:36px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;border-radius:5px;text-decoration:none;cursor:pointer;border:1px solid rgba(14,116,240,.28);background:#0a1220;color:#b4c7e7}
 .theme.on{color:#06202a;background:linear-gradient(180deg,#7ee7f0,#00e4ff);border-color:#00e4ff;font-weight:800}
-.toast{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);background:rgba(8,28,62,.95);border:1px solid rgba(14,116,240,.28);padding:8px 14px;border-radius:8px;font-size:12px;opacity:0;transition:.2s;z-index:40}
+.toast{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);background:rgba(8,28,62,.95);border:1px solid rgba(14,116,240,.28);padding:8px 14px;border-radius:8px;font-size:12px;opacity:0;transition:.2s;z-index:80}
 .toast.show{opacity:1}
 #themes{display:none}
 .gauge{width:100px;height:100px;border-radius:50%;border:1px solid rgba(0,228,255,.42);box-shadow:0 0 10px rgba(14,116,240,.18),inset 0 0 14px rgba(0,228,255,.12);display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 35% 30%,rgba(0,228,255,.28),rgba(8,25,50,.72) 70%)}
-.poi{position:absolute;padding:2px 6px;border-radius:3px;font-size:10px;border:1px solid rgba(0,228,255,.45);color:#00e4ff;background:rgba(8,28,62,.9);cursor:pointer;z-index:3}
-.poi.warn{border-color:rgba(255,170,0,.55);color:#fa0}
-.poi.err{border-color:rgba(245,63,63,.65);color:#ff9a9a}
+.poi{position:absolute;transform:translate(-50%,-50%);padding:2px 6px;border-radius:3px;font-size:10px;border:1px solid rgba(0,228,255,.45);color:#00e4ff;background:rgba(8,28,62,.9);cursor:pointer;z-index:3;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;max-width:140px}
+.poi i{font-size:9px;opacity:.9}
+.poi span{overflow:hidden;text-overflow:ellipsis}
+.poi.warn,.poi.y{border-color:rgba(255,170,0,.55);color:#fa0}
+.poi.err,.poi.bad,.poi.r{border-color:rgba(245,63,63,.65);color:#ff9a9a}
+.poi.ok,.poi.g{border-color:rgba(0,196,140,.55);color:#00c48c}
+.poi.on{box-shadow:0 0 0 2px rgba(0,228,255,.45)}
+.poi.person{border-color:rgba(126,231,240,.5);color:#7ee7f0}
+.poi.customs{border-color:rgba(126,182,255,.55);color:#7eb6ff}
+.poi.muted{opacity:.55}
+.map-legend{position:absolute;left:10px;right:10px;bottom:10px;z-index:6;display:flex;align-items:center;justify-content:flex-end;gap:14px;padding:5px 10px;border:1px solid rgba(14,116,240,.28);border-radius:4px;background:rgba(6,16,34,.72);pointer-events:none}
+.map-legend b{font-size:11px;color:#00e4ff;font-weight:700;margin-right:auto}
+.map-legend-item{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#b4c7e7;white-space:nowrap}
+.map-legend-item .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;border:1px solid rgba(255,255,255,.18)}
+.map-legend-item .dot.g{background:#00c48c}
+.map-legend-item .dot.y{background:#fa0}
+.map-legend-item .dot.r{background:#f53f3f}
+.map-legend-item .dot.m{background:#64748b}
 .filter-on{background:#0e74f0;border-color:#0e74f0;color:#fff}
 .filter-off{background:rgba(8,28,62,.9);border-color:rgba(14,116,240,.28);color:#b4c7e7}
 .bar{height:3px;border-radius:99px;background:rgba(14,116,240,.14);overflow:hidden}
 .bar>i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#0e74f0,#00e4ff)}
-.wx{display:flex;flex-direction:column;align-items:center;gap:1px;padding:3px 6px;border-radius:3px;border:1px solid rgba(14,116,240,.12);background:rgba(14,116,240,.06);min-width:44px}
-.wx.on{border-color:rgba(0,228,255,.45);background:linear-gradient(180deg,rgba(0,228,255,.14),rgba(14,116,240,.06))}
+.hit{cursor:pointer;transition:border-color .15s,background .15s}
+.hit:hover{border-color:rgba(0,228,255,.45)!important;background:rgba(14,116,240,.14)!important}
+:root{--blue:#0E74F0;--blue-light:#36BFFA;--cyan:#00E4FF;--red:#F53F3F;--yellow:#FFAA00;--green:#00C48C;--gray:#B4C7E7;--muted:rgba(180,199,231,.72);--line:rgba(14,116,240,.18)}
+.pill{display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;border:1px solid transparent;white-space:nowrap}
+.pill.g{color:#00c48c;background:rgba(0,196,140,.12);border-color:rgba(0,196,140,.35)}
+.pill.y{color:#ffba5a;background:rgba(255,170,0,.12);border-color:rgba(255,170,0,.35)}
+.pill.r{color:#ff8f8f;background:rgba(245,63,63,.12);border-color:rgba(245,63,63,.35)}
+.pill.b{color:#54d8ff;background:rgba(84,216,255,.1);border-color:rgba(84,216,255,.3)}
+.pill.m{color:#b4c7e7;background:rgba(180,199,231,.1);border-color:rgba(180,199,231,.25)}
+.ov-modal-mask,.eq-modal-mask{display:none;position:fixed;inset:0;z-index:90;background:rgba(2,8,20,.62);align-items:center;justify-content:center;padding:1.5vmin}
+.ov-modal-mask.show,.eq-modal-mask.show{display:flex}
+.ov-modal,.eq-modal{width:min(94vw,1180px);height:min(82vh,760px);display:flex;flex-direction:column;overflow:hidden;border-radius:10px;background:linear-gradient(165deg,rgba(8,28,62,.98),rgba(6,18,42,.98));border:1px solid rgba(0,228,255,.35);box-shadow:0 0 40px rgba(0,0,0,.55)}
+.ovm-hd,.eqm-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--line);flex-shrink:0;background:rgba(8,28,62,.96)}
+.ovm-hd .left,.eqm-hd .left{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+.ovm-hd h4,.eqm-hd h4{margin:0;font-size:15px;color:var(--cyan);font-weight:800;letter-spacing:.04em}
+.ovm-hd .acts,.eqm-hd .acts{display:flex;align-items:center;gap:6px}
+.ovm-hd .acts button,.eqm-hd .acts button{font-size:12px;padding:5px 10px;border-radius:4px;cursor:pointer;font-weight:600;border:1px solid rgba(14,116,240,.4);background:rgba(14,116,240,.2);color:var(--blue-light)}
+.ovm-hd .x,.eqm-hd .x{width:30px;padding:0;font-size:16px;line-height:28px;text-align:center;color:#e8f6ff}
+.ovm-bd,.eqm-bd{padding:12px 16px 14px;flex:1;min-height:0;overflow:auto}
+.ovm-ft,.eqm-ft{padding:0 16px 12px;font-size:11px;color:rgba(180,199,231,.55);flex-shrink:0}
+.eqm-tabs{display:flex;gap:4px;padding:8px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap;flex-shrink:0}
+.eqm-tabs button{font-size:12px;padding:5px 12px;border-radius:4px;cursor:pointer;font-weight:700;border:1px solid transparent;background:transparent;color:var(--gray)}
+.eqm-tabs button.on{background:rgba(14,116,240,.45);border-color:rgba(0,228,255,.4);color:#fff}
+.eqm-grid{display:grid;grid-template-columns:.9fr 1.2fr;gap:10px}
+.eqm-col{display:flex;flex-direction:column;gap:10px;min-width:0}
+.eqm-card{border:1px solid rgba(14,116,240,.22);border-radius:6px;padding:10px 12px;background:rgba(14,116,240,.06)}
+.eqm-card h5{margin:0 0 8px;font-size:13px;color:var(--blue-light);font-weight:700;border-left:3px solid var(--blue);padding-left:7px}
+.eqm-kv{display:flex;justify-content:space-between;gap:10px;padding:3px 0;border-bottom:1px solid rgba(14,116,240,.08);font-size:12px}
+.eqm-kv .k{color:var(--muted)}.eqm-kv .v{color:#e8f6ff;font-weight:600;text-align:right}
+.eqm-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.eqm-metric{text-align:center;padding:8px 4px;border-radius:5px;background:rgba(14,116,240,.1);border:1px solid rgba(14,116,240,.2)}
+.eqm-metric .lab{font-size:11px;color:var(--gray)}
+.eqm-metric .val{font-size:18px;font-weight:800;color:var(--cyan);margin-top:3px}
+.eqm-metric .val small{font-size:11px;color:var(--muted);margin-left:2px}
+.eqm-metric.y .val{color:var(--yellow)}.eqm-metric.r .val{color:#ff8f8f}
+.eqm-tip{font-size:11px;color:rgba(180,199,231,.6);margin-top:6px}
+.eqm-alert{padding:7px 9px;border-radius:4px;font-size:12px;font-weight:700;margin-bottom:6px}
+.eqm-alert.ok{background:rgba(0,196,140,.12);color:var(--green);border:1px solid rgba(0,196,140,.3)}
+.eqm-alert.y{background:rgba(255,170,0,.12);color:var(--yellow);border:1px solid rgba(255,170,0,.35)}
+.eqm-alert.r{background:rgba(245,63,63,.12);color:#ff8f8f;border:1px solid rgba(245,63,63,.35)}
+.eqm-btns{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.eqm-btns button{font-size:11px;padding:4px 9px;border-radius:3px;cursor:pointer;font-weight:600;border:1px solid rgba(14,116,240,.35);background:rgba(14,116,240,.2);color:var(--blue-light)}
+.eqm-video{position:relative;aspect-ratio:16/9;border-radius:5px;overflow:hidden;border:1px solid rgba(14,116,240,.3);background:linear-gradient(160deg,#0c1929,#132337)}
+.eqm-video .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;color:var(--cyan);font-size:13px;gap:6px;text-align:center;padding:10px}
+.eqm-video .badge{position:absolute;left:8px;top:8px;z-index:1;font-size:10px;padding:2px 6px;border-radius:2px;background:rgba(255,170,0,.22);color:var(--yellow);font-weight:700;border:1px solid rgba(255,170,0,.35)}
+.eqm-video .rec{position:absolute;right:8px;top:8px;z-index:1;font-size:10px;color:var(--red);font-weight:800}
+.eqm-video .cap{position:absolute;left:8px;right:8px;bottom:8px;font-size:11px;color:#e8f6ff;font-weight:600}
+.eqm-work-title{font-size:13px;font-weight:800;color:#e8f6ff;margin-bottom:6px}
+.eqm-line{font-size:12px;color:var(--gray);margin-top:3px;line-height:1.4}
+.eqm-prog .t{display:flex;justify-content:space-between;font-size:12px;color:var(--gray);margin-bottom:4px}
+.eqm-prog .t b{color:var(--cyan)}
+.eqm-prog .b{height:5px;background:rgba(14,116,240,.15);border-radius:99px;overflow:hidden}
+.eqm-prog .b i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--blue),var(--cyan))}
+.eqm-tbl{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.eqm-tbl th{text-align:left;color:var(--blue-light);padding:4px;background:rgba(14,116,240,.14)}
+.eqm-tbl td{padding:4px;border-bottom:1px solid rgba(14,116,240,.1);color:var(--gray)}
 </style>
 </head>
 <body>
@@ -67,24 +140,17 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 
     <!-- 主标题栏 · Figma 15:28 -->
     <header class="shrink-0 h-[60px] px-5 flex items-center justify-between border-b border-[rgba(14,116,240,.28)]" style="background:linear-gradient(90deg,#080c20,#0d1a3a,#080c20)">
-      <div class="w-[280px]">
-        <div class="text-[13px] text-[#00e4ff]" id="hd-date">--</div>
-        <div class="flex items-center gap-1.5 mt-0.5">
-          <span class="mono text-[18px] text-[#00e4ff]" id="hd-time">--</span>
+      <div class="w-[280px] flex flex-col justify-center">
+        <div class="text-[13px] text-[#00e4ff] leading-tight" id="hd-date">--</div>
+        <div class="flex items-baseline gap-1.5 mt-0.5">
+          <span class="mono text-[18px] text-[#00e4ff] leading-none" id="hd-time">--</span>
           <span class="text-[10px] text-[#b4c7e7]">数据截至 <span id="hd-asof">--</span></span>
         </div>
       </div>
-      <div class="text-center flex-1">
-        <div class="flex gap-1 justify-center items-center mb-0.5" id="theme-top"></div>
+      <div class="text-center flex-1 flex items-center justify-center">
         <h1 class="m-0 text-[20px] font-extrabold tracking-[2px] text-[#00e4ff]" style="text-shadow:0 0 16px rgba(0,228,255,.35)">海南金牌港数字孪生指挥中心</h1>
       </div>
-      <div class="w-[420px] flex flex-col items-end gap-1">
-        <div class="flex items-center gap-1.5 text-[10px]">
-          <span class="text-[#b4c7e7]">通航气象·7日</span>
-          <span class="px-1.5 py-px rounded-sm border border-[rgba(0,196,140,.35)] bg-[rgba(0,196,140,.1)] text-[#00c48c]">可作业</span>
-        </div>
-        <div class="flex gap-1" id="wx-box"></div>
-      </div>
+      <div class="w-[280px] flex items-center justify-end" data-weather="today"></div>
     </header>
 
     <!-- 主体 · 360 | 1108 | 408 -->
@@ -119,19 +185,19 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
         <div class="card shrink-0">
           <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[13px] font-bold text-[#36bffa]">资源占用</span><span class="chip ml-auto">车辆 · 船舶 · 堆场</span></div>
           <div class="grid grid-cols-2 gap-2 mb-2 text-[10px]">
-            <div class="rounded border border-[rgba(14,116,240,.2)] bg-[rgba(14,116,240,.06)] p-2">
+            <div class="hit rounded border border-[rgba(14,116,240,.2)] bg-[rgba(14,116,240,.06)] p-2" data-ov="卡口1">
               <div class="text-[#b4c7e7] mb-1">车辆</div>
               <div class="flex justify-between"><div class="text-center flex-1"><div class="text-[20px] text-[#00e4ff]">18</div><div class="text-[#637f99]">待进港</div></div><div class="text-center flex-1"><div class="text-[20px] text-[#00e4ff]">186</div><div class="text-[#637f99]">已进港</div></div></div>
             </div>
-            <div class="rounded border border-[rgba(14,116,240,.2)] bg-[rgba(14,116,240,.06)] p-2">
+            <div class="hit rounded border border-[rgba(14,116,240,.2)] bg-[rgba(14,116,240,.06)] p-2" data-ov="远航11">
               <div class="text-[#b4c7e7] mb-1">船舶</div>
               <div class="flex justify-between"><div class="text-center flex-1"><div class="text-[20px] text-[#00e4ff]">1</div><div class="text-[#637f99]">待泊</div></div><div class="text-center flex-1"><div class="text-[20px] text-[#00e4ff]">1</div><div class="text-[#637f99]">锚地</div></div></div>
             </div>
           </div>
           <div class="space-y-1.5 text-[12px]">
-            <div class="flex items-center justify-between rounded px-3 py-2 bg-[rgba(14,116,240,.06)]"><span class="text-[#e7eef8]">散货堆场</span><b class="text-[#00e4ff] text-[18px]">76%</b><span class="text-[10px] text-[#fa0]">关注·80万吨</span></div>
-            <div class="flex items-center justify-between rounded px-3 py-2 bg-[rgba(14,116,240,.06)]"><span class="text-[#e7eef8]">件杂堆场</span><b class="text-[#00e4ff] text-[18px]">54%</b><span class="text-[10px] text-[#00c48c]">正常·15万吨</span></div>
-            <div class="flex items-center justify-between rounded px-3 py-2 bg-[rgba(14,116,240,.06)]"><span class="text-[#e7eef8]">仓库</span><b class="text-[#00e4ff] text-[18px]">38%</b><span class="text-[10px] text-[#00c48c]">正常·10万吨</span></div>
+            <div class="hit flex items-center justify-between rounded px-3 py-2 bg-[rgba(14,116,240,.06)]" data-ov="散货堆场A"><span class="text-[#e7eef8]">散货堆场</span><b class="text-[#00e4ff] text-[18px]">76%</b><span class="text-[10px] text-[#fa0]">关注·80万吨</span></div>
+            <div class="hit flex items-center justify-between rounded px-3 py-2 bg-[rgba(14,116,240,.06)]" data-ov="件杂堆场"><span class="text-[#e7eef8]">件杂堆场</span><b class="text-[#00e4ff] text-[18px]">54%</b><span class="text-[10px] text-[#00c48c]">正常·15万吨</span></div>
+            <div class="hit flex items-center justify-between rounded px-3 py-2 bg-[rgba(14,116,240,.06)]" data-ov="仓库"><span class="text-[#e7eef8]">仓库</span><b class="text-[#00e4ff] text-[18px]">38%</b><span class="text-[10px] text-[#00c48c]">正常·10万吨</span></div>
           </div>
         </div>
       </div>
@@ -140,23 +206,25 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
       <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
         <div class="card flex-1 min-h-0 relative p-0 overflow-hidden">
           <div class="absolute left-0 right-0 top-0 z-10 h-[34px] px-2.5 flex items-center gap-1 bg-[rgba(8,28,62,.92)] border-b border-[rgba(14,116,240,.28)]">
-            <button type="button" class="tab filter-off" onclick="toast('地图复位')">复位</button>
+            <button type="button" class="tab filter-off" id="fltReset">复位</button>
             <button type="button" class="tab filter-on flt" data-f="全部">全部</button>
-            <button type="button" class="tab filter-off flt" data-f="泊位">泊位</button>
-            <button type="button" class="tab filter-off flt" data-f="设备">设备</button>
-            <button type="button" class="tab filter-off flt" data-f="堆场">堆场</button>
-            <button type="button" class="tab filter-off flt" data-f="卡口">卡口</button>
-            <button type="button" class="tab filter-off flt" data-f="告警">告警</button>
-            <span class="ml-auto text-[10px] text-[#637f99]">港区态势 · 点选 POI</span>
+            <button type="button" class="tab filter-off flt" data-f="人员">人员</button>
+            <button type="button" class="tab filter-off flt" data-f="车辆">车辆</button>
+            <button type="button" class="tab filter-off flt" data-f="摄像头">摄像头</button>
+            <button type="button" class="tab filter-off flt" data-f="环境监测">环境监测</button>
+            <span class="ml-auto text-[10px] text-[#637f99]" id="mapHint">人员/车辆/摄像/环境 · 其余见 BIM</span>
           </div>
-          <img src="../assets/figma/eq-map.png" alt="港区底图" class="absolute inset-0 w-full h-full object-cover opacity-75">
-          <div class="absolute inset-0" style="background:linear-gradient(180deg,rgba(3,7,18,.15),rgba(3,7,18,.4))"></div>
-          <button type="button" class="poi" style="left:22%;top:28%" data-k="泊位" onclick="toast('定位：1#泊位')">1#泊位 作业</button>
-          <button type="button" class="poi" style="left:48%;top:36%" data-k="泊位" onclick="toast('定位：2#泊位')">2#泊位 作业</button>
-          <button type="button" class="poi warn" style="left:34%;top:52%" data-k="设备" onclick="toast('定位：T2 输送')">T2 输送 关注</button>
-          <button type="button" class="poi" style="left:62%;top:44%" data-k="堆场" onclick="toast('定位：散货堆场')">散货堆场 76%</button>
-          <button type="button" class="poi" style="left:14%;top:58%" data-k="卡口" onclick="toast('定位：北卡口')">北卡口</button>
-          <button type="button" class="poi err" style="left:70%;top:22%" data-k="告警" onclick="toast('告警：CAM-03 离线')">CAM-03 离线</button>
+          <div class="absolute inset-0 top-[34px]" id="mapBox">
+            <img src="../assets/figma/eq-map.png" alt="港区底图" class="absolute inset-0 w-full h-full object-cover opacity-75">
+            <div class="absolute inset-0" style="background:linear-gradient(180deg,rgba(3,7,18,.15),rgba(3,7,18,.4))"></div>
+            <aside class="map-legend" id="mapLegend" aria-label="状态色图例">
+              <b>图例</b>
+              <span class="map-legend-item"><i class="dot g"></i>正常</span>
+              <span class="map-legend-item"><i class="dot y"></i>关注</span>
+              <span class="map-legend-item"><i class="dot r"></i>异常</span>
+              <span class="map-legend-item"><i class="dot m"></i>弱显</span>
+            </aside>
+          </div>
         </div>
       </div>
 
@@ -165,14 +233,14 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
         <div class="card shrink-0">
           <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[13px] font-bold text-[#36bffa]">正在作业</span><span class="chip ml-auto">卸船 · 待泊/锚地</span></div>
           <div class="grid grid-cols-2 gap-2 mb-2 text-[11px]">
-            <div class="rounded border border-[rgba(14,116,240,.22)] bg-[rgba(14,116,240,.06)] p-2">
+            <div class="hit rounded border border-[rgba(14,116,240,.22)] bg-[rgba(14,116,240,.06)] p-2" data-ov="1号泊位">
               <div class="flex justify-between"><b class="text-[#e7eef8]">1# 泊位</b><span class="text-[#00c48c]">作业中</span></div>
               <div class="text-[#b4c7e7] mt-1">海建68 · 水泥熟料</div>
               <div class="text-[#00e4ff] mt-0.5">卸 82% · 皮带直送</div>
               <div class="bar mt-1.5"><i style="width:82%"></i></div>
               <span class="inline-block mt-1 px-1.5 py-px rounded text-[10px] border border-[rgba(0,196,140,.35)] text-[#00c48c]">放行</span>
             </div>
-            <div class="rounded border border-[rgba(14,116,240,.22)] bg-[rgba(14,116,240,.06)] p-2">
+            <div class="hit rounded border border-[rgba(14,116,240,.22)] bg-[rgba(14,116,240,.06)] p-2" data-ov="2号泊位">
               <div class="flex justify-between"><b class="text-[#e7eef8]">2# 泊位</b><span class="text-[#00c48c]">作业中</span></div>
               <div class="text-[#b4c7e7] mt-1">金港5 · 河砂</div>
               <div class="text-[#00e4ff] mt-0.5">卸 46% · 皮带直送</div>
@@ -182,8 +250,8 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
           </div>
           <div class="text-[11px]">
             <div class="flex text-[#637f99] mb-1"><span class="w-[90px]">船名</span><span class="w-[60px]">状态</span><span class="flex-1">货种</span><span class="w-[48px]">疏运</span></div>
-            <div class="flex border-t border-[rgba(14,116,240,.16)] py-1"><span class="w-[90px] text-[#e7eef8]">远航11</span><span class="w-[60px] text-[#fa0]">待靠</span><span class="flex-1 text-[#b4c7e7]">石英砂</span><span class="w-[48px] text-[#b4c7e7]">汽车</span></div>
-            <div class="flex border-t border-[rgba(14,116,240,.16)] py-1"><span class="w-[90px] text-[#e7eef8]">琼海9</span><span class="w-[60px] text-[#7eb6ff]">锚地</span><span class="flex-1 text-[#b4c7e7]">钢铁件杂</span><span class="w-[48px] text-[#b4c7e7]">汽车</span></div>
+            <div class="hit flex border-t border-[rgba(14,116,240,.16)] py-1" data-ov="远航11"><span class="w-[90px] text-[#e7eef8]">远航11</span><span class="w-[60px] text-[#fa0]">待靠</span><span class="flex-1 text-[#b4c7e7]">石英砂</span><span class="w-[48px] text-[#b4c7e7]">汽车</span></div>
+            <div class="hit flex border-t border-[rgba(14,116,240,.16)] py-1" data-ov="琼海9"><span class="w-[90px] text-[#e7eef8]">琼海9</span><span class="w-[60px] text-[#7eb6ff]">锚地</span><span class="flex-1 text-[#b4c7e7]">钢铁件杂</span><span class="w-[48px] text-[#b4c7e7]">汽车</span></div>
           </div>
         </div>
         <div class="card shrink-0">
@@ -195,25 +263,25 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
             <div class="rounded bg-[rgba(14,116,240,.08)] py-1.5"><div class="text-[16px] text-[#ff9a9a]">2</div><div class="text-[#637f99]">停机</div></div>
           </div>
           <div class="space-y-2 text-[11px]">
-            <div><div class="flex justify-between"><span class="text-[#e7eef8]">卸船机</span><span class="text-[#637f99]">共 2</span></div><div class="bar mt-1"><i style="width:50%"></i></div><div class="text-[#637f99] mt-0.5">运行 1 · 关注 1</div></div>
-            <div><div class="flex justify-between"><span class="text-[#e7eef8]">输送系统</span><span class="text-[#637f99]">共 6</span></div><div class="bar mt-1"><i style="width:70%"></i></div><div class="text-[#637f99] mt-0.5">运行 4 · 关注 1 · 停机 1</div></div>
-            <div><div class="flex justify-between"><span class="text-[#e7eef8]">岸电与闸口</span><span class="text-[#637f99]">共 7</span></div><div class="bar mt-1"><i style="width:85%"></i></div><div class="text-[#637f99] mt-0.5">运行 5 · 关注 1 · 停机 1</div></div>
+            <div class="hit" data-ov="卸船机"><div class="flex justify-between"><span class="text-[#e7eef8]">卸船机</span><span class="text-[#637f99]">共 2</span></div><div class="bar mt-1"><i style="width:50%"></i></div><div class="text-[#637f99] mt-0.5">运行 1 · 关注 1</div></div>
+            <div class="hit" data-ov="输送系统"><div class="flex justify-between"><span class="text-[#e7eef8]">输送系统</span><span class="text-[#637f99]">共 6</span></div><div class="bar mt-1"><i style="width:70%"></i></div><div class="text-[#637f99] mt-0.5">运行 4 · 关注 1 · 停机 1</div></div>
+            <div class="hit" data-ov="岸电与闸口"><div class="flex justify-between"><span class="text-[#e7eef8]">岸电与闸口</span><span class="text-[#637f99]">共 7</span></div><div class="bar mt-1"><i style="width:85%"></i></div><div class="text-[#637f99] mt-0.5">运行 5 · 关注 1 · 停机 1</div></div>
           </div>
         </div>
         <div class="card flex-1 min-h-0 overflow-auto">
           <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[13px] font-bold text-[#36bffa]">未闭环告警</span><span class="chip ml-auto">3</span></div>
           <div class="space-y-2 text-[11px]">
-            <div class="rounded border border-[rgba(255,170,0,.35)] bg-[rgba(255,170,0,.08)] p-2 cursor-pointer" onclick="toast('告警 A001')">
+            <div class="hit rounded border border-[rgba(255,170,0,.35)] bg-[rgba(255,170,0,.08)] p-2" data-ov="A001">
               <div class="flex justify-between"><span class="text-[#fa0]">A001 · 13:42</span><span class="text-[#00e4ff]">处理中</span></div>
               <div class="font-bold text-[#e7eef8] mt-1">T2输送驱动轴承温升</div>
               <div class="text-[#637f99] mt-0.5">关联设备主题 · 风险核查</div>
             </div>
-            <div class="rounded border border-[rgba(14,116,240,.22)] bg-[rgba(14,116,240,.06)] p-2 cursor-pointer" onclick="toast('告警 A002')">
+            <div class="hit rounded border border-[rgba(14,116,240,.22)] bg-[rgba(14,116,240,.06)] p-2" data-ov="A002">
               <div class="flex justify-between"><span class="text-[#ff9a9a]">A002 · 12:18</span><span class="text-[#fa0]">待响应</span></div>
               <div class="font-bold text-[#e7eef8] mt-1">SC-02驱动故障</div>
               <div class="text-[#637f99] mt-0.5">卸船环节受限</div>
             </div>
-            <div class="rounded border border-[rgba(14,116,240,.22)] bg-[rgba(14,116,240,.06)] p-2 cursor-pointer" onclick="toast('告警 A003')">
+            <div class="hit rounded border border-[rgba(14,116,240,.22)] bg-[rgba(14,116,240,.06)] p-2" data-ov="A003">
               <div class="flex justify-between"><span class="text-[#ff9a9a]">A003 · 11:05</span><span class="text-[#fa0]">待响应</span></div>
               <div class="font-bold text-[#e7eef8] mt-1">CAM-03离线</div>
               <div class="text-[#637f99] mt-0.5">2#泊位视频点失效</div>
@@ -231,41 +299,71 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
     <div id="themes"></div>
   </div>
 </div>
+
+<div class="ov-modal-mask" id="ov-modal" role="dialog" aria-modal="true">
+  <div class="ov-modal">
+    <div class="ovm-hd">
+      <div class="left">
+        <h4 id="ovm-title">对象详情</h4>
+        <span class="pill g" id="ovm-status">—</span>
+        <span class="pill b" id="ovm-type">—</span>
+        <span class="pill m">演示数据</span>
+      </div>
+      <div class="acts">
+        <button type="button" id="ovm-locate"><i class="fa-solid fa-location-crosshairs"></i> 定位</button>
+        <button type="button" class="x" id="ovm-close" aria-label="关闭">×</button>
+      </div>
+    </div>
+    <div class="ovm-bd" id="ovm-body"></div>
+    <div class="ovm-ft">港区概览详情复用演示档案；堆场/泊位/船舶/卡口/告警等按对象类型展示。Esc 关闭。</div>
+  </div>
+</div>
+
+<div class="eq-modal-mask" id="eq-modal" role="dialog" aria-modal="true">
+  <div class="eq-modal">
+    <div class="eqm-hd">
+      <div class="left">
+        <h4 id="eqm-title">设备详情</h4>
+        <span class="pill g" id="eqm-status">—</span>
+        <span class="pill b" id="eqm-area">—</span>
+        <span class="pill m">演示数据</span>
+      </div>
+      <div class="acts">
+        <button type="button" id="eqm-locate"><i class="fa-solid fa-location-crosshairs"></i> 定位设备</button>
+        <button type="button" class="x" id="eqm-close" aria-label="关闭">×</button>
+      </div>
+    </div>
+    <div class="eqm-tabs" id="eqm-tabs"></div>
+    <div class="eqm-bd" id="eqm-body"></div>
+    <div class="eqm-ft">设备档案为演示；与设备一张图共用 13 类模板。</div>
+  </div>
+</div>
+
 <script src="wall_domain.js"></script>
 <script src="wall_theme_nav.js"></script>
+<script src="wall_eq_detail.js"></script>
+<script src="wall_ov_detail.js"></script>
 <script>
 const THEME_LABEL={概览:'港区概览',生产:'生产运行',交通:'港区交通',设备:'设备设施',经营:'经营分析',调度:'智慧调度'};
-const TOP_KEYS=['概览','生产','交通','设备','经营','调度'];
-function renderTop(){
-  const el=document.getElementById('theme-top');
-  el.innerHTML=TOP_KEYS.map(k=>{
-    if(THEME_DISABLED.includes(k)||k==='经营') return `<span class="tab off" title="本期未开放">${k}</span>`;
-    if(k==='概览') return `<button type="button" class="tab on">${k}</button>`;
-    return `<a class="tab" href="${THEME_PAGES[k]}">${k}</a>`;
-  }).join('');
-}
+const LAYER_MAP={
+  全部:null,
+  人员:['人员'],
+  车辆:['车辆'],
+  摄像头:['摄像头'],
+  环境监测:['环境']
+};
+const OV_MAP_TYPES=['人员','车辆','摄像头','环境'];
 function renderFoot(){
   const el=document.getElementById('theme-foot');
   el.innerHTML=Object.keys(THEME_PAGES).map(k=>{
     const label=THEME_LABEL[k]||k;
-    if(THEME_DISABLED.includes(k)) return `<span class="theme" style="opacity:.4">${label}</span>`;
+    if(THEME_DISABLED.includes(k)) return `<span class="theme" style="opacity:.4" title="本期未开放">${label}</span>`;
     if(k==='概览') return `<button type="button" class="theme on">${label}</button>`;
     return `<a class="theme" href="${THEME_PAGES[k]}">${label}</a>`;
   }).join('');
 }
-renderTop();renderFoot();
-/* 仅复用 toast / THEME_PAGES；本页自绘主题导航与时钟，避免 initWallTheme 覆盖布局 */
-
-const WX=[
-  ['今天','东南风3级','26°/18°',1],
-  ['明天','东北风3级','24°/17°',0],
-  ['周三','北风4级','22°/16°',0],
-  ['周四','东风2级','25°/17°',0],
-  ['周五','南风2级','28°/19°',0],
-  ['周六','东南风3级','27°/20°',0],
-  ['周日','东风3级','26°/19°',0]
-];
-document.getElementById('wx-box').innerHTML=WX.map(([d,w,t,on])=>`<div class="wx ${on?'on':''}"><span class="text-[8px] text-[#b4c7e7]">${d}</span><i class="fa-solid fa-cloud-sun text-[10px] text-[#dff6ff]"></i><span class="text-[7px] text-[rgba(180,199,231,.75)]">${w}</span><span class="text-[8px] font-bold text-[#00e4ff]">${t}</span></div>`).join('');
+renderFoot();
+mountWeather();
 
 function pad(n){return String(n).padStart(2,'0')}
 function tick(){
@@ -280,26 +378,93 @@ function tick(){
 tick();setInterval(tick,1000);
 
 document.getElementById('btnPresent').onclick=()=>{document.body.classList.add('present');toast('汇报全屏 · Esc 退出')};
-document.addEventListener('keydown',e=>{if(e.key==='Escape') document.body.classList.remove('present')});
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Escape') return;
+  if(document.getElementById('ov-modal')?.classList.contains('show')) return;
+  if(document.getElementById('eq-modal')?.classList.contains('show')) return;
+  document.body.classList.remove('present');
+});
+
+const mapBox=document.getElementById('mapBox');
+OvDetail.mountPois(mapBox,{types:OV_MAP_TYPES});
+OvDetail.bind();
+EqDetail.bind();
+
+function focusOnMap(name){
+  const id=OvDetail.resolveName(name)||name;
+  document.querySelectorAll('#mapBox .poi').forEach(p=>{
+    const hit=p.dataset.n===id || p.dataset.n===name;
+    p.classList.toggle('on',hit);
+    if(hit) p.scrollIntoView({block:'nearest',inline:'nearest'});
+  });
+  const hint=document.getElementById('mapHint');
+  if(hint) hint.textContent='已定位 '+id+' · 再点可开详情';
+  toast('已定位：'+id);
+}
+OvDetail.setLocateHandler(focusOnMap);
+EqDetail.setLocateHandler((id)=>{
+  const guess={
+    'SC-01':'卸船机#1','SC-02':'卸船机#1','T2-DRV':'卸船机#1',
+    'BM-01':'BM1','AD-01':'岸电','PD-01':'1#变电所','GT-01':'卡口1','WB-01':'地磅#1',
+    'CAM-03':'CAM-03'
+  }[id]||id;
+  focusOnMap(guess);
+});
+
+function openOv(raw){
+  const opened=OvDetail.open(raw);
+  if(opened){
+    const name=OvDetail.resolveName(raw)||raw;
+    if(findMapFeature(name)||findMapFeature(OvDetail.resolveName(raw))) focusOnMap(name);
+  }
+  return opened;
+}
+
+function matchLayer(poiLayer, filter){
+  if(!filter || filter==='全部') return true;
+  const allow=LAYER_MAP[filter]||[filter];
+  return allow.includes(poiLayer);
+}
 
 document.querySelectorAll('.flt').forEach(btn=>{
   btn.onclick=()=>{
     document.querySelectorAll('.flt').forEach(b=>{b.classList.remove('filter-on');b.classList.add('filter-off')});
     btn.classList.add('filter-on');btn.classList.remove('filter-off');
     const f=btn.dataset.f;
-    document.querySelectorAll('.poi').forEach(p=>{p.style.display=(f==='全部'||p.dataset.k===f)?'':'none'});
+    document.querySelectorAll('#mapBox .poi').forEach(p=>{
+      p.style.display=matchLayer(p.dataset.k,f)?'':'none';
+    });
     toast('筛选：'+f);
   };
 });
+document.getElementById('fltReset').onclick=()=>{
+  document.querySelectorAll('.flt').forEach(b=>{
+    const on=b.dataset.f==='全部';
+    b.classList.toggle('filter-on',on);
+    b.classList.toggle('filter-off',!on);
+  });
+  document.querySelectorAll('#mapBox .poi').forEach(p=>{p.style.display='';p.classList.remove('on')});
+  document.getElementById('mapHint').textContent='港区态势 · 点选打开详情';
+  toast('视角复位');
+};
 
-echarts.init(document.getElementById('cargoChart')).setOption({
+document.querySelector('.wall').addEventListener('click',e=>{
+  const poi=e.target.closest('#mapBox .poi');
+  if(poi){ openOv(poi.dataset.n); return; }
+  const hit=e.target.closest('[data-ov]');
+  if(hit){ openOv(hit.getAttribute('data-ov')); }
+});
+
+echarts.init(document.getElementById('cargoChart'),null,{renderer:'canvas'}).setOption({
+  backgroundColor:'transparent',
   series:[{type:'pie',radius:['48%','72%'],label:{show:false},
     data:[{value:67,name:'水泥熟料',itemStyle:{color:'#0e74f0'}},{value:52.1,name:'河砂',itemStyle:{color:'#36bffa'}},{value:33.5,name:'石英砂',itemStyle:{color:'#7eb6ff'}},{value:33.4,name:'钢铁件杂',itemStyle:{color:'#b4c7e7'}}]}]
 });
-echarts.init(document.getElementById('top5Chart')).setOption({
-  grid:{left:90,right:24,top:10,bottom:20},
-  xAxis:{type:'value',axisLabel:{color:'#637f99',fontSize:10},splitLine:{lineStyle:{color:'rgba(14,116,240,.12)'}}},
-  yAxis:{type:'category',data:['海建物流','金港贸易','远航砂石','琼海建材','湾区钢铁'].reverse(),axisLabel:{color:'#b4c7e7',fontSize:10}},
+echarts.init(document.getElementById('top5Chart'),null,{renderer:'canvas'}).setOption({
+  backgroundColor:'transparent',
+  grid:{left:90,right:24,top:8,bottom:16,containLabel:false},
+  xAxis:{type:'value',axisLabel:{color:'#637f99',fontSize:10},splitLine:{show:true,lineStyle:{color:'rgba(14,116,240,.1)',type:'dashed'}},axisLine:{show:false},axisTick:{show:false}},
+  yAxis:{type:'category',data:['海建物流','金港贸易','远航砂石','琼海建材','湾区钢铁'].reverse(),axisLabel:{color:'#b4c7e7',fontSize:10},axisLine:{show:false},axisTick:{show:false},splitLine:{show:false}},
   series:[{type:'bar',data:[42,35,28,21,18].reverse(),barWidth:12,itemStyle:{color:new echarts.graphic.LinearGradient(0,0,1,0,[{offset:0,color:'#0e74f0'},{offset:1,color:'#00e4ff'}]),borderRadius:[0,3,3,0]}}]
 });
 </script>
