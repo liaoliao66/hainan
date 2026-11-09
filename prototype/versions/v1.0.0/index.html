@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>v1.0.0 PC原型入口（细粒度）- 海南金牌港数字孪生</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex">
+<aside class="w-64 bg-slate-800 text-slate-100 min-h-screen p-4 flex flex-col sticky top-0 h-screen">
+  <div class="mb-5">
+    <div class="text-[11px] text-slate-400">版本 v1.0.0 · 细粒度重制</div>
+    <h1 class="text-lg font-semibold mt-1">金牌港数字孪生</h1>
+  </div>
+  <nav class="space-y-1 text-sm flex-1 overflow-auto">
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 bg-slate-700" href="index.html"><i class="fa-solid fa-house w-4"></i>版本首页</a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 hover:bg-slate-700" href="pages/pc_wall_command_screen.html"><i class="fa-solid fa-tv w-4"></i>指挥大屏拼接</a>
+    <div class="text-[11px] text-slate-500 px-3 pt-3 pb-1">主题整屏（Display_Wall 密度）</div>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 hover:bg-slate-700" href="pages/pc_wall_theme_production.html"><i class="fa-solid fa-ship w-4"></i>生产一张图（深做）</a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 hover:bg-slate-700" href="pages/pc_wall_theme_traffic.html"><i class="fa-solid fa-truck w-4"></i>交通主题整屏</a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 hover:bg-slate-700" href="pages/pc_wall_theme_equipment.html"><i class="fa-solid fa-gears w-4"></i>设备主题整屏</a>
+    <span class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-500 cursor-not-allowed" title="本期未开放"><i class="fa-solid fa-chart-pie w-4"></i>经营主题整屏 · 本期不做</span>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 hover:bg-slate-700" href="pages/pc_wall_theme_dispatch.html"><i class="fa-solid fa-bell w-4"></i>调度主题整屏</a>
+    <div class="text-[11px] text-slate-500 px-3 pt-3 pb-1">业务细页</div>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 hover:bg-slate-700" href="pages/pc_scene_edit.html"><i class="fa-solid fa-pen-ruler w-4"></i>场景编辑</a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 hover:bg-slate-700" href="pages/pc_resource_center.html"><i class="fa-solid fa-layer-group w-4"></i>资源中心</a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 hover:bg-slate-700" href="pages/pc_remote_session.html"><i class="fa-solid fa-tower-broadcast w-4"></i>大屏会话控制</a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 hover:bg-slate-700" href="pages/pc_overview_port_map.html"><i class="fa-solid fa-map w-4"></i>港区概览一张图</a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 hover:bg-slate-700" href="pages/pc_production_map.html"><i class="fa-solid fa-ship w-4"></i>生产一张图</a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 hover:bg-slate-700" href="pages/pc_traffic_map.html"><i class="fa-solid fa-truck w-4"></i>交通一张图</a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 hover:bg-slate-700" href="pages/pc_equipment_map.html"><i class="fa-solid fa-gears w-4"></i>设备设施一张图</a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 hover:bg-slate-700" href="pages/pc_business_map.html"><i class="fa-solid fa-chart-pie w-4"></i>经营分析一张图</a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 hover:bg-slate-700" href="pages/pc_dispatch_map.html"><i class="fa-solid fa-bell w-4"></i>智慧调度一张图</a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 hover:bg-slate-700" href="pages/pc_model_manage.html"><i class="fa-solid fa-cube w-4"></i>模型管理</a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 hover:bg-slate-700" href="pages/pc_data_status.html"><i class="fa-solid fa-heart-pulse w-4"></i>接口与数据状态</a>
+  </nav>
+  <a class="text-xs text-slate-400 hover:text-white" href="../../index.html">返回总入口</a>
+</aside>
+<main class="flex-1 p-8 overflow-auto">
+  <div class="max-w-7xl mx-auto">
+    <h2 class="text-2xl font-semibold">v1.0.0 演示报告入口</h2>
+    <p class="text-sm text-slate-500 mt-2">本期主交付：一张图大屏（领导展示）。经营主题本期不做；其它主题仅讲解跳转。海关通关可演示。</p>
+    <div class="mt-4 overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
+      <table class="min-w-full text-sm">
+        <thead class="bg-slate-100 text-slate-600">
+          <tr>
+            <th class="px-3 py-2 text-left font-medium">优先级</th>
+            <th class="px-3 py-2 text-left font-medium">演示步骤</th>
+            <th class="px-3 py-2 text-left font-medium">要讲清的结果</th>
+            <th class="px-3 py-2 text-left font-medium">入口</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-t border-slate-100"><td class="px-3 py-2">P0</td><td class="px-3 py-2">一张图大屏（领导展示）</td><td class="px-3 py-2">概览态势、2 泊位作业、安全摘要；经营入口灰显</td><td class="px-3 py-2"><a class="text-sky-700 hover:underline" href="pages/pc_wall_command_screen.html">打开大屏</a></td></tr>
+          <tr class="border-t border-slate-100"><td class="px-3 py-2">P0</td><td class="px-3 py-2">点「汇报全屏」</td><td class="px-3 py-2">去掉工具条，按成品墙讲解；Esc 退出</td><td class="px-3 py-2">大屏顶栏</td></tr>
+          <tr class="border-t border-slate-100"><td class="px-3 py-2">P0</td><td class="px-3 py-2">编排模式拖模块</td><td class="px-3 py-2">模块可跨分屏移动，主视锁定</td><td class="px-3 py-2">大屏顶栏</td></tr>
+          <tr class="border-t border-slate-100"><td class="px-3 py-2">P0</td><td class="px-3 py-2">概览检索「海建68」或「1号泊位」</td><td class="px-3 py-2">清单、主视、详情同步；无结果出空态</td><td class="px-3 py-2"><a class="text-sky-700 hover:underline" href="pages/pc_overview_port_map.html">港区概览</a></td></tr>
+          <tr class="border-t border-slate-100"><td class="px-3 py-2">P0</td><td class="px-3 py-2">生产图点「门机#5」</td><td class="px-3 py-2">装卸异常可定位到设备</td><td class="px-3 py-2"><a class="text-sky-700 hover:underline" href="pages/pc_production_map.html">生产一张图</a></td></tr>
+          <tr class="border-t border-slate-100"><td class="px-3 py-2">P0</td><td class="px-3 py-2">点「模拟异常」</td><td class="px-3 py-2">接口降级仍保留最近快照</td><td class="px-3 py-2">各一张图页眉</td></tr>
+          <tr class="border-t border-slate-100"><td class="px-3 py-2">P1</td><td class="px-3 py-2">底栏切到调度</td><td class="px-3 py-2">事件、视频、应急资源同屏</td><td class="px-3 py-2"><a class="text-sky-700 hover:underline" href="pages/pc_wall_theme_dispatch.html">调度整屏</a></td></tr>
+          <tr class="border-t border-slate-100"><td class="px-3 py-2">P1</td><td class="px-3 py-2">模型校准后发布</td><td class="px-3 py-2">自检失败不能上线，通过后可发布</td><td class="px-3 py-2"><a class="text-sky-700 hover:underline" href="pages/pc_model_manage.html">模型管理</a></td></tr>
+          <tr class="border-t border-slate-100"><td class="px-3 py-2">P1</td><td class="px-3 py-2">场景编辑 / 资源中心 / 大屏会话控制</td><td class="px-3 py-2">底座可编排，指挥可切模式</td><td class="px-3 py-2"><a class="text-sky-700 hover:underline" href="pages/pc_scene_edit.html">场景</a> · <a class="text-sky-700 hover:underline" href="pages/pc_resource_center.html">资源</a> · <a class="text-sky-700 hover:underline" href="pages/pc_remote_session.html">会话控制</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mt-6 grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+      <a class="bg-white rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition" href="pages/pc_wall_command_screen.html">
+        <div class="text-sky-600 mb-2"><i class="fa-solid fa-tv"></i></div>
+        <h3 class="font-semibold">指挥大屏拼接主屏</h3>
+        <p class="text-sm text-slate-500 mt-1">对标 Display_Wall：翻牌/ECharts/角标/POI下钻 · 可编排</p>
+      </a>
+      <a class="bg-white rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition" href="pages/pc_wall_theme_production.html"><h3 class="font-semibold">生产运行一张图 V4</h3><p class="text-sm text-slate-500 mt-1">三汇总 · 船车计划 · 报警联动 · 具名测点</p></a>
+      <a class="bg-white rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition" href="pages/pc_wall_theme_traffic.html"><h3 class="font-semibold">交通主题整屏</h3><p class="text-sm text-slate-500 mt-1">车辆/卡口/拥堵/视频</p></a>
+      <a class="bg-white rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition" href="pages/pc_wall_theme_equipment.html"><h3 class="font-semibold">设备主题整屏</h3><p class="text-sm text-slate-500 mt-1">健康度/告警/故障趋势</p></a>
+      <div class="bg-slate-100 rounded-2xl p-5 opacity-70"><h3 class="font-semibold text-slate-500">经营主题整屏</h3><p class="text-sm text-slate-400 mt-1">本期不做（领导展示一张图裁剪）</p></div>
+      <a class="bg-white rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition" href="pages/pc_wall_theme_dispatch.html"><h3 class="font-semibold">调度主题整屏</h3><p class="text-sm text-slate-500 mt-1">事件定位/应急资源/视频</p></a>
+      <a class="bg-white rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition" href="pages/pc_overview_port_map.html"><h3 class="font-semibold">港区概览</h3><p class="text-sm text-slate-500 mt-1">5 个子能力模块卡 + 图层/详情四栏</p></a>
+      <a class="bg-white rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition" href="pages/pc_production_map.html"><h3 class="font-semibold">生产一张图</h3><p class="text-sm text-slate-500 mt-1">船泊装卸堆场设备全链路</p></a>
+      <a class="bg-white rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition" href="pages/pc_traffic_map.html"><h3 class="font-semibold">交通一张图</h3><p class="text-sm text-slate-500 mt-1">车辆卡口轨迹拥堵</p></a>
+      <a class="bg-white rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition" href="pages/pc_equipment_map.html"><h3 class="font-semibold">设备设施</h3><p class="text-sm text-slate-500 mt-1">运行/健康/利用率</p></a>
+      <a class="bg-white rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition" href="pages/pc_business_map.html"><h3 class="font-semibold">经营分析</h3><p class="text-sm text-slate-500 mt-1">指标/多维/预警</p></a>
+      <a class="bg-white rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition" href="pages/pc_dispatch_map.html"><h3 class="font-semibold">智慧调度</h3><p class="text-sm text-slate-500 mt-1">事件定位/资源/视频联动</p></a>
+      <a class="bg-white rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition" href="pages/pc_scene_edit.html"><h3 class="font-semibold">场景编辑</h3><p class="text-sm text-slate-500 mt-1">摆放、聚焦、16:9 预览</p></a>
+      <a class="bg-white rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition" href="pages/pc_resource_center.html"><h3 class="font-semibold">资源中心</h3><p class="text-sm text-slate-500 mt-1">模板应用到专题</p></a>
+      <a class="bg-white rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition" href="pages/pc_remote_session.html"><h3 class="font-semibold">大屏会话控制</h3><p class="text-sm text-slate-500 mt-1">PC 指挥席切换大屏模式与主题</p></a>
+      <a class="bg-white rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition" href="pages/pc_model_manage.html"><h3 class="font-semibold">模型管理</h3><p class="text-sm text-slate-500 mt-1">导入自检发布/校准</p></a>
+      <a class="bg-white rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition" href="pages/pc_data_status.html"><h3 class="font-semibold">接口状态</h3><p class="text-sm text-slate-500 mt-1">9 系统接入与降级策略</p></a>
+    </div>
+  </div>
+</main>
+</body>
+</html>

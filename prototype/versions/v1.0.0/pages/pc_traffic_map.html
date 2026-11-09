@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>交通一张图 · v1.0.0</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex">
+<aside class="w-64 shrink-0 bg-slate-800 text-slate-100 min-h-screen p-4 flex flex-col sticky top-0 h-screen">
+  <div class="mb-5">
+    <div class="text-[11px] text-slate-400">海南金牌港 · 版本 v1.0.0</div>
+    <div class="text-lg font-semibold mt-1">数字孪生平台</div>
+    <div class="text-[11px] text-slate-400 mt-1">PC 业务端（细粒度）</div>
+  </div>
+  <nav class="space-y-1 text-sm flex-1 overflow-auto"><a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="../index.html"><i class="fa-solid fa-house w-4 text-center"></i><span>版本首页</span></a>
+<a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_wall_command_screen.html"><i class="fa-solid fa-tv w-4 text-center"></i><span>指挥大屏拼接</span></a>
+<a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_overview_port_map.html"><i class="fa-solid fa-map w-4 text-center"></i><span>港区概览一张图</span></a>
+<a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_production_map.html"><i class="fa-solid fa-ship w-4 text-center"></i><span>生产一张图</span></a>
+<a class="flex items-center gap-2 rounded-xl px-3 py-2 bg-slate-700 text-white" href="pc_traffic_map.html"><i class="fa-solid fa-truck w-4 text-center"></i><span>交通一张图</span></a>
+<a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_equipment_map.html"><i class="fa-solid fa-gears w-4 text-center"></i><span>设备设施一张图</span></a>
+<a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_business_map.html"><i class="fa-solid fa-chart-pie w-4 text-center"></i><span>经营分析一张图</span></a>
+<a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_dispatch_map.html"><i class="fa-solid fa-bell w-4 text-center"></i><span>智慧调度一张图</span></a>
+<a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_scene_edit.html"><i class="fa-solid fa-pen-ruler w-4 text-center"></i><span>场景编辑</span></a>
+<a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_resource_center.html"><i class="fa-solid fa-layer-group w-4 text-center"></i><span>资源中心</span></a>
+<a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_remote_session.html"><i class="fa-solid fa-tower-broadcast w-4 text-center"></i><span>大屏会话控制</span></a>
+<a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_model_manage.html"><i class="fa-solid fa-cube w-4 text-center"></i><span>模型管理</span></a>
+<a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_data_status.html"><i class="fa-solid fa-heart-pulse w-4 text-center"></i><span>接口与数据状态</span></a></nav>
+  <a class="text-xs text-slate-400 hover:text-white mt-3" href="../../index.html">返回总入口</a>
+</aside>
+<main class="flex-1 min-w-0 p-5 md:p-6 overflow-auto">
+  <div class="max-w-[1400px] mx-auto">
+    <div class="text-xs text-slate-400 mb-2">首页 / 数字孪生 / 交通一张图</div>
+    
+    <header class="flex flex-wrap items-start justify-between gap-3 mb-4">
+      <div>
+        <h2 class="text-2xl font-semibold">交通一张图</h2>
+        <p class="text-sm text-slate-500 mt-1">车辆全域监管、卡口道闸、流量监测、轨迹分析、拥堵预警（PRD 3.5）</p>
+      </div>
+      <div class="flex flex-wrap gap-2 text-sm">
+        <button class="rounded-xl border border-slate-200 bg-white px-3 py-2" onclick="toast('已切换二维 GIS')">二维</button>
+        <button class="rounded-xl bg-slate-800 text-white px-3 py-2" onclick="toast('已切换三维孪生')">三维</button>
+        <button class="rounded-xl border border-slate-200 bg-white px-3 py-2" onclick="toast('模拟：接口降级，列表展示缓存')">模拟异常</button>
+        <a href="pc_wall_command_screen.html" class="rounded-xl bg-sky-700 text-white px-3 py-2">投放大屏</a>
+      </div>
+    </header>
+
+    <section class="mb-4 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3"><div class="bg-white rounded-2xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
+          <div class="flex items-center justify-between text-xs text-slate-500"><span>在港车辆</span><i class="fa-solid fa-truck text-slate-300"></i></div>
+          <div class="mt-2 flex items-end gap-1"><span class="text-2xl font-semibold tracking-tight">186</span><span class="text-xs text-slate-400 mb-1">辆</span></div>
+          <div class="text-[11px] mt-1 text-sky-600">作业车 92</div>
+        </div><div class="bg-white rounded-2xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
+          <div class="flex items-center justify-between text-xs text-slate-500"><span>今日进港</span><i class="fa-solid fa-right-to-bracket text-slate-300"></i></div>
+          <div class="mt-2 flex items-end gap-1"><span class="text-2xl font-semibold tracking-tight">326</span><span class="text-xs text-slate-400 mb-1">车次</span></div>
+          <div class="text-[11px] mt-1 text-slate-500">出港 301</div>
+        </div><div class="bg-white rounded-2xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
+          <div class="flex items-center justify-between text-xs text-slate-500"><span>闸口放行率</span><i class="fa-solid fa-door-open text-slate-300"></i></div>
+          <div class="mt-2 flex items-end gap-1"><span class="text-2xl font-semibold tracking-tight">97</span><span class="text-xs text-slate-400 mb-1">%</span></div>
+          <div class="text-[11px] mt-1 text-emerald-600">目标 ≥95%</div>
+        </div><div class="bg-white rounded-2xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
+          <div class="flex items-center justify-between text-xs text-slate-500"><span>拥堵点</span><i class="fa-solid fa-road text-slate-300"></i></div>
+          <div class="mt-2 flex items-end gap-1"><span class="text-2xl font-semibold tracking-tight">2</span><span class="text-xs text-slate-400 mb-1">处</span></div>
+          <div class="text-[11px] mt-1 text-amber-600">东门/堆场入口</div>
+        </div><div class="bg-white rounded-2xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
+          <div class="flex items-center justify-between text-xs text-slate-500"><span>平均通行</span><i class="fa-solid fa-clock text-slate-300"></i></div>
+          <div class="mt-2 flex items-end gap-1"><span class="text-2xl font-semibold tracking-tight">4.6</span><span class="text-xs text-slate-400 mb-1">分钟</span></div>
+          <div class="text-[11px] mt-1 text-amber-600">环比 +0.8</div>
+        </div><div class="bg-white rounded-2xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
+          <div class="flex items-center justify-between text-xs text-slate-500"><span>违停</span><i class="fa-solid fa-ban text-slate-300"></i></div>
+          <div class="mt-2 flex items-end gap-1"><span class="text-2xl font-semibold tracking-tight">5</span><span class="text-xs text-slate-400 mb-1">起</span></div>
+          <div class="text-[11px] mt-1 text-rose-600">未处理 2</div>
+        </div></section>
+
+    <section class="mb-3 bg-white rounded-2xl border border-slate-100 p-3 shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
+      <div class="text-xs font-semibold text-slate-600 mb-2">本页功能模块（PRD 对齐）</div>
+      <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-2"><div class="rounded-xl border border-slate-200 p-3"><div class="text-xs font-semibold text-slate-700 mb-1">车辆全域监管</div><div class="text-[11px] text-slate-500 leading-5">作业/运输/社会车辆统一编码监管</div></div><div class="rounded-xl border border-slate-200 p-3"><div class="text-xs font-semibold text-slate-700 mb-1">卡口道闸联动</div><div class="text-[11px] text-slate-500 leading-5">进出记录、抓拍、识别、放行状态</div></div><div class="rounded-xl border border-slate-200 p-3"><div class="text-xs font-semibold text-slate-700 mb-1">交通流量监测</div><div class="text-[11px] text-slate-500 leading-5">关键道路与出入口实时流量</div></div><div class="rounded-xl border border-slate-200 p-3"><div class="text-xs font-semibold text-slate-700 mb-1">轨迹与路径分析</div><div class="text-[11px] text-slate-500 leading-5">轨迹回放与路径统计</div></div><div class="rounded-xl border border-slate-200 p-3"><div class="text-xs font-semibold text-slate-700 mb-1">拥堵识别预警</div><div class="text-[11px] text-slate-500 leading-5">节点拥堵识别并地图高亮</div></div></div>
+    </section>
+
+    <section class="mb-4 bg-white rounded-2xl p-3 shadow-[0_4px_12px_rgba(0,0,0,0.05)] flex flex-wrap gap-2 items-center">
+      <input id="kw" class="rounded-xl border border-slate-200 px-3 py-2 text-sm min-w-[180px]" placeholder="名称 / 编号 / 关键字">
+      <select class="rounded-xl border border-slate-200 px-3 py-2 text-sm"><option>全部</option><option>作业车</option><option>运输车</option><option>社会车</option><option>卡口</option><option>拥堵点</option></select>
+      <select class="rounded-xl border border-slate-200 px-3 py-2 text-sm"><option>全部状态</option><option>行驶</option><option>排队</option><option>停留</option><option>放行</option><option>告警</option></select>
+      <select class="rounded-xl border border-slate-200 px-3 py-2 text-sm"><option>全部区域</option><option>码头前沿</option><option>堆场区</option><option>卡口道路</option><option>办公区</option></select>
+      <input type="datetime-local" class="rounded-xl border border-slate-200 px-3 py-2 text-sm">
+      <button class="rounded-xl bg-slate-800 text-white px-4 py-2 text-sm" onclick="toast('已按条件检索并定位首条结果')">查询定位</button>
+      <button class="rounded-xl border border-slate-200 px-3 py-2 text-sm" onclick="toast('筛选已重置')">重置</button>
+      <span class="text-xs text-slate-400 ml-auto">数据截至 <span id="asof">--</span></span>
+    </section>
+
+    <section class="grid xl:grid-cols-12 gap-4 mb-4">
+      <aside class="xl:col-span-2 bg-white rounded-2xl p-3 shadow-[0_4px_12px_rgba(0,0,0,0.05)] h-fit">
+        <div class="font-semibold text-sm mb-2">图层树</div>
+        <div class="text-[11px] text-slate-400 mb-2">勾选后叠加到主视</div>
+        <label class="flex items-center gap-2 py-1.5 text-sm"><input type="checkbox" class="rounded" checked> <span>道路</span></label><label class="flex items-center gap-2 py-1.5 text-sm"><input type="checkbox" class="rounded" checked> <span>卡口道闸</span></label><label class="flex items-center gap-2 py-1.5 text-sm"><input type="checkbox" class="rounded" checked> <span>车辆定位</span></label><label class="flex items-center gap-2 py-1.5 text-sm"><input type="checkbox" class="rounded" > <span>轨迹</span></label><label class="flex items-center gap-2 py-1.5 text-sm"><input type="checkbox" class="rounded" checked> <span>拥堵热力</span></label><label class="flex items-center gap-2 py-1.5 text-sm"><input type="checkbox" class="rounded" checked> <span>视频</span></label><label class="flex items-center gap-2 py-1.5 text-sm"><input type="checkbox" class="rounded" checked> <span>违停</span></label>
+        <div class="mt-3 pt-3 border-t border-slate-100">
+          <div class="font-semibold text-sm mb-2">图例</div>
+          <div class="space-y-1 text-xs text-slate-600">
+            <div><span class="inline-block w-2.5 h-2.5 rounded-full bg-cyan-400 mr-1"></span>泊位/作业点</div>
+            <div><span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 mr-1"></span>堆场/资源</div>
+            <div><span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-400 mr-1"></span>卡口/交通</div>
+            <div><span class="inline-block w-2.5 h-2.5 rounded-full bg-rose-400 mr-1"></span>告警/故障</div>
+          </div>
+        </div>
+      </aside>
+
+      <div class="xl:col-span-7 bg-slate-900 rounded-2xl min-h-[480px] relative overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
+        <img class="absolute inset-0 w-full h-full object-contain object-center" src="../assets/port-aerial.jpg?v=plan" alt="港区主视">
+        <div class="absolute inset-0 pointer-events-none bg-gradient-to-t from-slate-950/25 via-transparent to-slate-950/15"></div>
+        <div class="absolute left-3 top-3 flex flex-wrap gap-2 z-10">
+          <button class="rounded-lg bg-slate-950/70 text-white text-xs px-2.5 py-1.5 border border-white/10" onclick="toast('视角已复位')">复位</button>
+          <button class="rounded-lg bg-slate-950/70 text-white text-xs px-2.5 py-1.5 border border-white/10" onclick="toast('框选模式：开')">框选</button>
+          <button class="rounded-lg bg-slate-950/70 text-white text-xs px-2.5 py-1.5 border border-white/10" onclick="toast('热力图层已切换')">热力</button>
+          <button class="rounded-lg bg-slate-950/70 text-white text-xs px-2.5 py-1.5 border border-white/10" onclick="toast('轨迹回放 1x')">轨迹</button>
+        </div>
+        <div class="absolute left-3 top-14 text-white text-xs bg-slate-950/50 rounded-lg px-2 py-1 z-10">主视 · 交通图层 · 车辆/卡口/拥堵</div>
+        <button type="button" class="absolute poi-btn" style="left:70%;top:40%;" data-name="卡口1" data-type="卡口" title="卡口1"><span class="block w-3.5 h-3.5 rounded-full bg-amber-400 ring-2 ring-white/70 shadow"></span></button><button type="button" class="absolute poi-btn" style="left:55%;top:58%;" data-name="堆场入口" data-type="节点" title="堆场入口"><span class="block w-3.5 h-3.5 rounded-full bg-amber-400 ring-2 ring-white/70 shadow"></span></button><button type="button" class="absolute poi-btn" style="left:48%;top:46%;" data-name="粤A·D1234" data-type="车辆" title="粤A·D1234"><span class="block w-3.5 h-3.5 rounded-full bg-cyan-400 ring-2 ring-white/70 shadow"></span></button><button type="button" class="absolute poi-btn" style="left:42%;top:62%;" data-name="违停点" data-type="告警" title="违停点"><span class="block w-3.5 h-3.5 rounded-full bg-rose-400 ring-2 ring-white/70 shadow"></span></button>
+        <div class="absolute left-3 bottom-3 right-3 flex flex-wrap gap-2 z-10">
+          <span class="text-[11px] text-slate-100 bg-slate-950/55 rounded-lg px-2 py-1">在港车 186</span><span class="text-[11px] text-slate-100 bg-slate-950/55 rounded-lg px-2 py-1">排队 8</span><span class="text-[11px] text-slate-100 bg-slate-950/55 rounded-lg px-2 py-1">拥堵点 2</span><span class="text-[11px] text-slate-100 bg-slate-950/55 rounded-lg px-2 py-1">放行率 97%</span>
+        </div>
+      </div>
+
+      <aside class="xl:col-span-3 bg-white rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] overflow-hidden flex flex-col min-h-[480px]">
+        <div class="js-tabs flex flex-col h-full">
+          <div class="flex gap-1 p-2 border-b border-slate-100 bg-slate-50">
+            <button data-tab="detail" class="flex-1 rounded-lg px-2 py-1.5 text-xs bg-slate-800 text-white">详情</button>
+            <button data-tab="video" class="flex-1 rounded-lg px-2 py-1.5 text-xs bg-slate-100 text-slate-600">视频</button>
+            <button data-tab="alert" class="flex-1 rounded-lg px-2 py-1.5 text-xs bg-slate-100 text-slate-600">告警</button>
+            <button data-tab="rel" class="flex-1 rounded-lg px-2 py-1.5 text-xs bg-slate-100 text-slate-600">关联</button>
+          </div>
+          <div class="p-3 flex-1 overflow-auto text-sm">
+            <div data-pane="detail">
+              <div class="font-semibold mb-2" id="detail-name">卡口1</div>
+              <div class="space-y-2 text-sm">
+                <div class="flex justify-between gap-2 border-b border-slate-50 py-1.5"><span class="text-slate-500">位置</span><span class="text-right">东门</span></div><div class="flex justify-between gap-2 border-b border-slate-50 py-1.5"><span class="text-slate-500">排队</span><span class="text-right">8 辆</span></div><div class="flex justify-between gap-2 border-b border-slate-50 py-1.5"><span class="text-slate-500">今日通行</span><span class="text-right">126</span></div><div class="flex justify-between gap-2 border-b border-slate-50 py-1.5"><span class="text-slate-500">识别成功率</span><span class="text-right">98.2%</span></div><div class="flex justify-between gap-2 border-b border-slate-50 py-1.5"><span class="text-slate-500">状态</span><span class="text-right">缓行</span></div><div class="flex justify-between gap-2 border-b border-slate-50 py-1.5"><span class="text-slate-500">关联视频</span><span class="text-right">2 路</span></div>
+              </div>
+              <div class="mt-3 grid grid-cols-2 gap-2">
+                <button class="rounded-xl border border-slate-200 py-2 text-xs" onclick="toast('已在主视定位')">地图定位</button>
+                <button class="rounded-xl bg-slate-800 text-white py-2 text-xs" onclick="document.getElementById('video-modal').classList.remove('hidden')">打开视频</button>
+              </div>
+            </div>
+            <div data-pane="video" class="hidden">
+              <div class="grid grid-cols-2 gap-2">
+                <button class="rounded-xl bg-slate-900 text-white p-3 text-left text-xs h-24 relative overflow-hidden" onclick="document.getElementById('video-modal').classList.remove('hidden')"><div class="opacity-70">东门全景</div><div class="absolute right-2 top-2 text-emerald-400">在线</div></button><button class="rounded-xl bg-slate-900 text-white p-3 text-left text-xs h-24 relative overflow-hidden" onclick="document.getElementById('video-modal').classList.remove('hidden')"><div class="opacity-70">车道1</div><div class="absolute right-2 top-2 text-emerald-400">在线</div></button><button class="rounded-xl bg-slate-900 text-white p-3 text-left text-xs h-24 relative overflow-hidden" onclick="document.getElementById('video-modal').classList.remove('hidden')"><div class="opacity-70">车道2</div><div class="absolute right-2 top-2 text-rose-400">离线</div></button><button class="rounded-xl bg-slate-900 text-white p-3 text-left text-xs h-24 relative overflow-hidden" onclick="document.getElementById('video-modal').classList.remove('hidden')"><div class="opacity-70">堆场入口</div><div class="absolute right-2 top-2 text-emerald-400">在线</div></button>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-2">支持点选即看；离线点位标红不可播放。</p>
+            </div>
+            <div data-pane="alert" class="hidden space-y-2">
+              <div class="rounded-xl border border-slate-200 p-2"><div class="flex justify-between text-xs"><span class="font-medium">东门拥堵</span><span class="text-amber-600">二级</span></div><div class="text-[11px] text-slate-500 mt-1">卡口1 · 8分钟前</div></div><div class="rounded-xl border border-slate-200 p-2"><div class="flex justify-between text-xs"><span class="font-medium">违停占道</span><span class="text-amber-600">三级</span></div><div class="text-[11px] text-slate-500 mt-1">堆场通道 · 20分钟前</div></div>
+            </div>
+            <div data-pane="rel" class="hidden space-y-2 text-sm">
+              <div class="rounded-xl bg-slate-50 px-3 py-2 flex justify-between"><span>关联车辆</span><span class="text-slate-500">粤A·D1234 等 8 辆</span></div><div class="rounded-xl bg-slate-50 px-3 py-2 flex justify-between"><span>关联道路</span><span class="text-slate-500">东进主干道</span></div><div class="rounded-xl bg-slate-50 px-3 py-2 flex justify-between"><span>责任岗</span><span class="text-slate-500">卡口值班</span></div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="bg-white rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] overflow-hidden mb-4">
+      <div class="px-4 py-3 border-b border-slate-100 flex flex-wrap items-center justify-between gap-2">
+        <div class="font-semibold text-sm">车辆 / 卡口 / 拥堵对象</div>
+        <div class="text-xs text-slate-400">单击行同步右侧详情 · 空结果展示空态</div>
+      </div>
+      <div class="overflow-auto">
+        <table class="w-full text-sm min-w-[860px]">
+          <thead class="bg-slate-100 text-slate-600 text-xs">
+            <tr>
+              <th class="text-left px-3 py-2.5 font-medium">对象</th><th class="text-left px-3 py-2.5 font-medium">类型</th><th class="text-left px-3 py-2.5 font-medium">位置</th><th class="text-left px-3 py-2.5 font-medium">关键指标</th><th class="text-left px-3 py-2.5 font-medium">状态</th><th class="text-left px-3 py-2.5 font-medium">更新时间</th>
+            </tr>
+          </thead>
+          <tbody><tr class="border-t border-slate-100 hover:bg-slate-50 cursor-pointer row-pick" data-name="粤A·D1234"><td class="px-3 py-2.5">粤A·D1234</td><td class="px-3 py-2.5">运输车</td><td class="px-3 py-2.5">主干道</td><td class="px-3 py-2.5">时速 18km/h</td><td class="px-3 py-2.5"><span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">行驶</span></td><td class="px-3 py-2.5 text-slate-500">刚刚</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50 cursor-pointer row-pick" data-name="琼B·F7788"><td class="px-3 py-2.5">琼B·F7788</td><td class="px-3 py-2.5">作业车</td><td class="px-3 py-2.5">泊位周边</td><td class="px-3 py-2.5">停留 12 分</td><td class="px-3 py-2.5"><span class="text-[11px] px-2 py-0.5 rounded-full bg-sky-50 text-sky-700">停留</span></td><td class="px-3 py-2.5 text-slate-500">刚刚</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50 cursor-pointer row-pick" data-name="卡口1"><td class="px-3 py-2.5">卡口1</td><td class="px-3 py-2.5">卡口</td><td class="px-3 py-2.5">东门</td><td class="px-3 py-2.5">排队 8</td><td class="px-3 py-2.5"><span class="text-[11px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-700">缓行</span></td><td class="px-3 py-2.5 text-slate-500">刚刚</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50 cursor-pointer row-pick" data-name="堆场入口"><td class="px-3 py-2.5">堆场入口</td><td class="px-3 py-2.5">节点</td><td class="px-3 py-2.5">堆场A</td><td class="px-3 py-2.5">饱和度 81%</td><td class="px-3 py-2.5"><span class="text-[11px] px-2 py-0.5 rounded-full bg-rose-50 text-rose-700">拥堵</span></td><td class="px-3 py-2.5 text-slate-500">2分钟前</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50 cursor-pointer row-pick" data-name="违停-通道3"><td class="px-3 py-2.5">违停-通道3</td><td class="px-3 py-2.5">违停</td><td class="px-3 py-2.5">堆场通道</td><td class="px-3 py-2.5">占道</td><td class="px-3 py-2.5"><span class="text-[11px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-700">未处理</span></td><td class="px-3 py-2.5 text-slate-500">20分钟前</td></tr></tbody>
+        </table>
+      </div>
+      <div class="px-4 py-3 border-t border-slate-100 flex flex-wrap justify-between gap-2 text-xs text-slate-500">
+        <span>正常 / 边界 / 异常：有数据可定位；无结果空态；接口失败保留最近成功快照。</span>
+        <span>共 5 条 · 第 1 / 1 页
+          <button class="ml-2 rounded-lg border px-2 py-0.5" onclick="toast('上一页')">上一页</button>
+          <button class="rounded-lg border px-2 py-0.5" onclick="toast('下一页')">下一页</button>
+        </span>
+      </div>
+    </section>
+
+    <div id="video-modal" class="hidden fixed inset-0 z-40 bg-slate-950/60 flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl w-full max-w-3xl overflow-hidden shadow-[0_12px_40px_rgba(0,0,0,0.12)]">
+        <div class="flex items-center justify-between px-4 py-3 border-b">
+          <div class="font-semibold text-sm">视频联动 · <span id="vm-title">卡口1</span></div>
+          <button class="text-slate-500" onclick="document.getElementById('video-modal').classList.add('hidden')"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="bg-slate-900 h-72 flex items-center justify-center text-slate-300 text-sm">实时视频演示窗（联调替换流地址）</div>
+        <div class="p-3 flex gap-2 justify-end">
+          <button class="rounded-xl border px-3 py-2 text-sm" onclick="toast('已截图')">截图</button>
+          <button class="rounded-xl border px-3 py-2 text-sm" onclick="toast('近24小时回放')">回放</button>
+          <button class="rounded-xl bg-slate-800 text-white px-3 py-2 text-sm" onclick="document.getElementById('video-modal').classList.add('hidden')">关闭</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+    document.getElementById('asof').textContent = new Date().toLocaleString('zh-CN', {hour12:false});
+    function setDetail(name){
+      document.getElementById('detail-name').textContent = name;
+      document.getElementById('vm-title').textContent = name;
+      toast('已选中：' + name);
+    }
+    document.querySelectorAll('.poi-btn,.row-pick').forEach(el=>el.addEventListener('click',()=>setDetail(el.getAttribute('data-name'))));
+    </script>
+    
+  </div>
+</main>
+<div id="toast" class="fixed right-4 bottom-4 z-50 hidden rounded-xl bg-slate-900 text-white text-sm px-4 py-3 shadow-lg"></div>
+<script>
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.remove('hidden');clearTimeout(window.__tt);window.__tt=setTimeout(()=>t.classList.add('hidden'),1800);}
+function bindTabs(root){
+  root.querySelectorAll('[data-tabs]').forEach(box=>{
+    const btns=[...box.querySelectorAll('[data-tab]')];
+    const panes=[...box.querySelectorAll('[data-pane]')];
+    btns.forEach(b=>b.onclick=()=>{
+      btns.forEach(x=>x.classList.remove('bg-slate-800','text-white'));
+      btns.forEach(x=>x.classList.add('bg-white','text-slate-600'));
+      b.classList.add('bg-slate-800','text-white'); b.classList.remove('bg-white','text-slate-600');
+      panes.forEach(p=>p.classList.toggle('hidden', p.getAttribute('data-pane')!==b.getAttribute('data-tab')));
+    });
+  });
+}
+document.querySelectorAll('[data-tabs]').forEach(b=>bindTabs(b.parentElement||document));
+document.querySelectorAll('[data-tabs]').forEach(box=>{
+  const scope=box.parentElement; /* fallback */
+});
+document.querySelectorAll('.js-tabs').forEach(wrap=>{
+  const btns=[...wrap.querySelectorAll('[data-tab]')];
+  const panes=[...wrap.querySelectorAll('[data-pane]')];
+  btns.forEach(b=>b.onclick=()=>{
+    btns.forEach(x=>{x.classList.remove('bg-slate-800','text-white');x.classList.add('bg-slate-100','text-slate-600');});
+    b.classList.add('bg-slate-800','text-white'); b.classList.remove('bg-slate-100','text-slate-600');
+    panes.forEach(p=>p.classList.toggle('hidden', p.getAttribute('data-pane')!==b.getAttribute('data-tab')));
+  });
+});
+</script>
+<script src="pc_map_live.js"></script>
+</body></html>

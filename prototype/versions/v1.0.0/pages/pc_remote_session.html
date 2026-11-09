@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>大屏会话控制 · v1.0.0</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex">
+<aside class="w-64 shrink-0 bg-slate-800 text-slate-100 min-h-screen p-4 flex flex-col sticky top-0 h-screen">
+  <div class="mb-5">
+    <div class="text-[11px] text-slate-400">海南金牌港 · 版本 v1.0.0</div>
+    <div class="text-lg font-semibold mt-1">数字孪生平台</div>
+    <div class="text-[11px] text-slate-400 mt-1">PC 业务端</div>
+  </div>
+  <nav class="space-y-1 text-sm flex-1 overflow-auto">
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="../index.html"><i class="fa-solid fa-house w-4 text-center"></i><span>版本首页</span></a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_wall_command_screen.html"><i class="fa-solid fa-tv w-4 text-center"></i><span>指挥大屏拼接</span></a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_overview_port_map.html"><i class="fa-solid fa-map w-4 text-center"></i><span>港区概览一张图</span></a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_production_map.html"><i class="fa-solid fa-ship w-4 text-center"></i><span>生产一张图</span></a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_traffic_map.html"><i class="fa-solid fa-truck w-4 text-center"></i><span>交通一张图</span></a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_equipment_map.html"><i class="fa-solid fa-gears w-4 text-center"></i><span>设备设施一张图</span></a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_business_map.html"><i class="fa-solid fa-chart-pie w-4 text-center"></i><span>经营分析一张图</span></a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_dispatch_map.html"><i class="fa-solid fa-bell w-4 text-center"></i><span>智慧调度一张图</span></a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_scene_edit.html"><i class="fa-solid fa-pen-ruler w-4 text-center"></i><span>场景编辑</span></a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_resource_center.html"><i class="fa-solid fa-layer-group w-4 text-center"></i><span>资源中心</span></a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 bg-slate-700 text-white" href="pc_remote_session.html"><i class="fa-solid fa-tower-broadcast w-4 text-center"></i><span>大屏会话控制</span></a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_model_manage.html"><i class="fa-solid fa-cube w-4 text-center"></i><span>模型管理</span></a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_data_status.html"><i class="fa-solid fa-heart-pulse w-4 text-center"></i><span>接口与数据状态</span></a>
+  </nav>
+  <a class="text-xs text-slate-400 hover:text-white mt-3" href="../../index.html">返回总入口</a>
+</aside>
+<main class="flex-1 min-w-0 p-5 md:p-6 overflow-auto">
+  <div class="max-w-3xl mx-auto">
+    <div class="text-xs text-slate-400 mb-2">首页 / 指挥 / 大屏会话控制</div>
+    <header class="mb-4">
+      <h2 class="text-2xl font-semibold">大屏会话控制</h2>
+      <p class="text-sm text-slate-500 mt-1">PC 指挥席绑定当前大屏，切换模式、主题和焦点泊位。本期不做独立 App 和企微。</p>
+    </header>
+    <section class="bg-white rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] mb-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="text-xs text-slate-400">当前会话</div>
+          <div class="font-semibold mt-1">兴盛指挥墙 · 16:9 · 在线</div>
+        </div>
+        <span id="bind" class="text-xs px-2 py-1 rounded-full bg-emerald-50 text-emerald-700">已绑定</span>
+      </div>
+    </section>
+    <section class="bg-white rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] mb-4">
+      <div class="font-semibold text-sm mb-3">主题</div>
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm" id="themes"></div>
+    </section>
+    <section class="bg-white rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
+      <div class="font-semibold text-sm mb-3">焦点</div>
+      <div class="grid grid-cols-2 gap-2 text-sm">
+        <a class="rounded-xl border border-slate-200 py-3 text-center" href="pc_wall_command_screen.html" target="_blank">定位 1# 水泥熟料</a>
+        <a class="rounded-xl border border-slate-200 py-3 text-center" href="pc_wall_command_screen.html" target="_blank">定位 2# 河砂</a>
+      </div>
+      <p id="log" class="mt-4 text-sm text-slate-500">等待指令。大屏将在新窗口打开对应画面。</p>
+    </section>
+  </div>
+</main>
+<script>
+const themes={
+  '概览':'pc_wall_command_screen.html',
+  '生产':'pc_wall_theme_production.html',
+  '交通':'pc_wall_theme_traffic.html',
+  '设备':'pc_wall_theme_equipment.html',
+  '经营':'pc_wall_theme_business.html',
+  '调度':'pc_wall_theme_dispatch.html'
+};
+const log=document.getElementById('log');
+document.getElementById('themes').innerHTML=Object.keys(themes).map(n=>`<a class="rounded-xl border border-slate-200 py-3 text-center hover:bg-slate-50" target="_blank" href="${themes[n]}">${n}</a>`).join('');
+document.getElementById('themes').addEventListener('click', (e)=>{
+  const a=e.target.closest('a');
+  if(!a) return;
+  log.textContent='已下发主题「'+a.textContent+'」。正在打开指挥大屏。';
+});
+</script>
+</body>
+</html>

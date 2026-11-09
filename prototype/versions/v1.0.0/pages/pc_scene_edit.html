@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>场景编辑 · v1.0.0</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex">
+<aside class="w-64 shrink-0 bg-slate-800 text-slate-100 min-h-screen p-4 flex flex-col sticky top-0 h-screen">
+  <div class="mb-5">
+    <div class="text-[11px] text-slate-400">海南金牌港 · 版本 v1.0.0</div>
+    <div class="text-lg font-semibold mt-1">数字孪生平台</div>
+    <div class="text-[11px] text-slate-400 mt-1">PC 业务端</div>
+  </div>
+  <nav class="space-y-1 text-sm flex-1 overflow-auto">
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="../index.html"><i class="fa-solid fa-house w-4 text-center"></i><span>版本首页</span></a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_wall_command_screen.html"><i class="fa-solid fa-tv w-4 text-center"></i><span>指挥大屏拼接</span></a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_overview_port_map.html"><i class="fa-solid fa-map w-4 text-center"></i><span>港区概览一张图</span></a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_production_map.html"><i class="fa-solid fa-ship w-4 text-center"></i><span>生产一张图</span></a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_traffic_map.html"><i class="fa-solid fa-truck w-4 text-center"></i><span>交通一张图</span></a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_equipment_map.html"><i class="fa-solid fa-gears w-4 text-center"></i><span>设备设施一张图</span></a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_business_map.html"><i class="fa-solid fa-chart-pie w-4 text-center"></i><span>经营分析一张图</span></a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_dispatch_map.html"><i class="fa-solid fa-bell w-4 text-center"></i><span>智慧调度一张图</span></a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 bg-slate-700 text-white" href="pc_scene_edit.html"><i class="fa-solid fa-pen-ruler w-4 text-center"></i><span>场景编辑</span></a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_resource_center.html"><i class="fa-solid fa-layer-group w-4 text-center"></i><span>资源中心</span></a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_remote_session.html"><i class="fa-solid fa-tower-broadcast w-4 text-center"></i><span>大屏会话控制</span></a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_model_manage.html"><i class="fa-solid fa-cube w-4 text-center"></i><span>模型管理</span></a>
+    <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_data_status.html"><i class="fa-solid fa-heart-pulse w-4 text-center"></i><span>接口与数据状态</span></a>
+  </nav>
+  <a class="text-xs text-slate-400 hover:text-white mt-3" href="../../index.html">返回总入口</a>
+</aside>
+<main class="flex-1 min-w-0 p-5 md:p-6 overflow-auto">
+  <div class="max-w-[1400px] mx-auto">
+    <div class="text-xs text-slate-400 mb-2">首页 / 运维 / 场景编辑</div>
+    <header class="flex flex-wrap items-start justify-between gap-3 mb-4">
+      <div>
+        <h2 class="text-2xl font-semibold">场景编辑</h2>
+        <p class="text-sm text-slate-500 mt-1">摆放已发布模型、保存指挥视角、按 16:9 大屏预览。保存后同步港区概览。</p>
+      </div>
+      <div class="flex flex-wrap gap-2 text-sm">
+        <select id="res" class="rounded-xl border border-slate-200 bg-white px-3 py-2">
+          <option value="16:9">预览 16:9 指挥墙</option>
+          <option value="desk">预览工作站</option>
+        </select>
+        <button id="btn-save" class="rounded-xl bg-slate-800 text-white px-3 py-2">保存视角</button>
+        <a href="pc_overview_port_map.html" class="rounded-xl border border-slate-200 bg-white px-3 py-2">去概览核对</a>
+      </div>
+    </header>
+    <section class="grid xl:grid-cols-12 gap-4">
+      <aside class="xl:col-span-3 bg-white rounded-2xl p-3 shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
+        <div class="font-semibold text-sm mb-2">场景树</div>
+        <div id="tree" class="space-y-1 text-sm"></div>
+        <p class="text-[11px] text-slate-400 mt-3">未通过自检的模型不可放入场景。</p>
+      </aside>
+      <div class="xl:col-span-6">
+        <div id="stage-wrap" class="bg-slate-900 rounded-2xl relative overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.05)]" style="aspect-ratio:16/9">
+          <div class="absolute inset-0 opacity-40" style="background:radial-gradient(circle at 40% 55%,#0e7490,transparent 42%),linear-gradient(160deg,#0f172a,#082f49)"></div>
+          <div id="objs" class="absolute inset-0"></div>
+          <div class="absolute left-3 bottom-3 text-[11px] text-slate-200 bg-slate-950/50 rounded-lg px-2 py-1">拖动对象调整摆放 · 当前视角：指挥默认</div>
+        </div>
+      </div>
+      <aside class="xl:col-span-3 bg-white rounded-2xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
+        <div class="font-semibold text-sm mb-3">对象属性</div>
+        <div id="prop" class="text-sm text-slate-500">点选场景中的对象</div>
+        <button id="btn-focus" class="mt-4 w-full rounded-xl border border-slate-200 py-2 text-sm">聚焦到主视中心</button>
+        <div class="mt-4 rounded-xl bg-slate-50 p-3 text-xs text-slate-500 leading-5">
+          正常：保存后概览使用该视角。<br>边界：分区模型可隐藏，不影响其他对象。<br>异常：自检失败模型保持灰色，不能发布。
+        </div>
+      </aside>
+    </section>
+  </div>
+</main>
+<div id="toast" class="fixed right-4 bottom-4 z-50 hidden rounded-xl bg-slate-900 text-white text-sm px-4 py-3 shadow-lg"></div>
+<script>
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.remove('hidden');clearTimeout(window.__tt);window.__tt=setTimeout(()=>t.classList.add('hidden'),1800);}
+const ITEMS=[
+  {id:'oblique',name:'港区倾斜_2026Q3',ok:true,x:18,y:22,w:46,h:38},
+  {id:'bim1',name:'1号泊位BIM',ok:true,x:22,y:40,w:18,h:16},
+  {id:'bim2',name:'2号泊位BIM',ok:true,x:40,y:46,w:16,h:14},
+  {id:'yard',name:'堆场A精细模',ok:false,x:52,y:58,w:18,h:14}
+];
+const tree=document.getElementById('tree');
+const objs=document.getElementById('objs');
+let current='bim1';
+function render(){
+  tree.innerHTML=ITEMS.map(it=>`<button data-id="${it.id}" class="w-full text-left rounded-xl px-3 py-2 ${it.id===current?'bg-slate-800 text-white':'hover:bg-slate-50'}">${it.name}${it.ok?'':' · 草稿'}</button>`).join('');
+  objs.innerHTML=ITEMS.map(it=>`<button data-id="${it.id}" class="absolute rounded-lg border text-[11px] px-2 py-1 ${it.ok?'bg-sky-500/80 border-sky-200 text-white':'bg-slate-500/70 border-slate-300 text-slate-100'} ${it.id===current?'ring-2 ring-amber-300':''}" style="left:${it.x}%;top:${it.y}%;width:${it.w}%;height:${it.h}%">${it.name}</button>`).join('');
+  const it=ITEMS.find(x=>x.id===current);
+  document.getElementById('prop').innerHTML=`<div class="font-medium text-slate-800 mb-2">${it.name}</div>
+    <div class="flex justify-between py-1 border-b border-slate-100"><span>状态</span><span>${it.ok?'可发布':'草稿，不可上线'}</span></div>
+    <div class="flex justify-between py-1 border-b border-slate-100"><span>水平位置</span><span>${it.x}%</span></div>
+    <div class="flex justify-between py-1"><span>垂直位置</span><span>${it.y}%</span></div>`;
+  bind();
+}
+function bind(){
+  document.querySelectorAll('#tree button,#objs button').forEach(b=>b.onclick=()=>{current=b.dataset.id;render();});
+  document.querySelectorAll('#objs button').forEach(b=>{
+    b.onpointerdown=(ev)=>{
+      if(!ITEMS.find(x=>x.id===b.dataset.id).ok){toast('草稿模型仅可查看，不能调整上线摆放');return;}
+      const stage=document.getElementById('stage-wrap').getBoundingClientRect();
+      const it=ITEMS.find(x=>x.id===b.dataset.id);
+      current=it.id;
+      const move=(e)=>{
+        it.x=Math.max(2,Math.min(80,((e.clientX-stage.left)/stage.width)*100-it.w/2));
+        it.y=Math.max(2,Math.min(75,((e.clientY-stage.top)/stage.height)*100-it.h/2));
+        b.style.left=it.x+'%'; b.style.top=it.y+'%';
+      };
+      const up=()=>{window.removeEventListener('pointermove',move);window.removeEventListener('pointerup',up);render();};
+      window.addEventListener('pointermove',move); window.addEventListener('pointerup',up);
+    };
+  });
+}
+document.getElementById('res').onchange=function(){
+  const wrap=document.getElementById('stage-wrap');
+  wrap.style.aspectRatio=this.value==='16:9'?'16/9':'16/10';
+  toast(this.value==='16:9'?'已按指挥墙 16:9 预览':'已按工作站比例预览');
+};
+document.getElementById('btn-save').onclick=()=>{
+  const it=ITEMS.find(x=>x.id===current);
+  if(!it.ok){toast('当前对象未通过发布条件，视角可保存，对象不会上线');return;}
+  toast('视角已保存，港区概览将使用「'+it.name+'」所在构图');
+};
+document.getElementById('btn-focus').onclick=()=>{
+  const it=ITEMS.find(x=>x.id===current);
+  it.x=34; it.y=36; render();
+  toast('已将「'+it.name+'」聚焦到主视中心');
+};
+render();
+</script>
+</body>
+</html>

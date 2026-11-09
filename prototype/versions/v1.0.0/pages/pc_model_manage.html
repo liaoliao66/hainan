@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>模型管理 · v1.0.0</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex">
+<aside class="w-64 shrink-0 bg-slate-800 text-slate-100 min-h-screen p-4 flex flex-col sticky top-0 h-screen">
+  <div class="mb-5">
+    <div class="text-[11px] text-slate-400">海南金牌港 · 版本 v1.0.0</div>
+    <div class="text-lg font-semibold mt-1">数字孪生平台</div>
+    <div class="text-[11px] text-slate-400 mt-1">PC 业务端（细粒度）</div>
+  </div>
+  <nav class="space-y-1 text-sm flex-1 overflow-auto"><a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="../index.html"><i class="fa-solid fa-house w-4 text-center"></i><span>版本首页</span></a>
+<a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_wall_command_screen.html"><i class="fa-solid fa-tv w-4 text-center"></i><span>指挥大屏拼接</span></a>
+<a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_overview_port_map.html"><i class="fa-solid fa-map w-4 text-center"></i><span>港区概览一张图</span></a>
+<a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_production_map.html"><i class="fa-solid fa-ship w-4 text-center"></i><span>生产一张图</span></a>
+<a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_traffic_map.html"><i class="fa-solid fa-truck w-4 text-center"></i><span>交通一张图</span></a>
+<a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_equipment_map.html"><i class="fa-solid fa-gears w-4 text-center"></i><span>设备设施一张图</span></a>
+<a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_business_map.html"><i class="fa-solid fa-chart-pie w-4 text-center"></i><span>经营分析一张图</span></a>
+<a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_dispatch_map.html"><i class="fa-solid fa-bell w-4 text-center"></i><span>智慧调度一张图</span></a>
+<a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_scene_edit.html"><i class="fa-solid fa-pen-ruler w-4 text-center"></i><span>场景编辑</span></a>
+<a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_resource_center.html"><i class="fa-solid fa-layer-group w-4 text-center"></i><span>资源中心</span></a>
+<a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_remote_session.html"><i class="fa-solid fa-tower-broadcast w-4 text-center"></i><span>大屏会话控制</span></a>
+<a class="flex items-center gap-2 rounded-xl px-3 py-2 bg-slate-700 text-white" href="pc_model_manage.html"><i class="fa-solid fa-cube w-4 text-center"></i><span>模型管理</span></a>
+<a class="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700" href="pc_data_status.html"><i class="fa-solid fa-heart-pulse w-4 text-center"></i><span>接口与数据状态</span></a></nav>
+  <a class="text-xs text-slate-400 hover:text-white mt-3" href="../../index.html">返回总入口</a>
+</aside>
+<main class="flex-1 min-w-0 p-5 md:p-6 overflow-auto">
+  <div class="max-w-[1400px] mx-auto">
+    <div class="text-xs text-slate-400 mb-2">首页 / 运维 / 模型管理</div>
+    
+<header class="flex flex-wrap justify-between gap-3 mb-4">
+  <div><h2 class="text-2xl font-semibold">模型管理</h2><p class="text-sm text-slate-500 mt-1">预览、导入、格式/材质/坐标自检、发布到场景（PRD 3.1.5）</p></div>
+  <div class="flex gap-2">
+    <button class="rounded-xl border px-3 py-2 text-sm" onclick="toast('已刷新列表')">刷新</button>
+    <button class="rounded-xl bg-slate-800 text-white px-3 py-2 text-sm" onclick="document.getElementById('imp').classList.remove('hidden')">导入模型</button>
+  </div>
+</header>
+<section class="grid md:grid-cols-4 gap-3 mb-4">
+  <div class="bg-white rounded-2xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)]"><div class="text-xs text-slate-500">模型总数</div><div class="text-2xl font-semibold">18</div></div>
+  <div class="bg-white rounded-2xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)]"><div class="text-xs text-slate-500">已发布</div><div class="text-2xl font-semibold text-emerald-600">12</div></div>
+  <div class="bg-white rounded-2xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)]"><div class="text-xs text-slate-500">待校准</div><div class="text-2xl font-semibold text-amber-600">4</div></div>
+  <div class="bg-white rounded-2xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)]"><div class="text-xs text-slate-500">自检失败</div><div class="text-2xl font-semibold text-rose-600">2</div></div>
+</section>
+<section class="bg-white rounded-2xl p-3 mb-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)] flex flex-wrap gap-2">
+  <input class="rounded-xl border px-3 py-2 text-sm" placeholder="模型名称 / 批次号">
+  <select class="rounded-xl border px-3 py-2 text-sm"><option>全部类型</option><option>倾斜摄影</option><option>BIM</option><option>人工模型</option><option>GIS图层</option></select>
+  <select class="rounded-xl border px-3 py-2 text-sm"><option>全部状态</option><option>已发布</option><option>待校准</option><option>自检失败</option><option>草稿</option></select>
+  <select class="rounded-xl border px-3 py-2 text-sm"><option>全部分区</option><option>全域</option><option>码头</option><option>堆场</option><option>陆域配套</option></select>
+  <button class="rounded-xl bg-slate-800 text-white px-4 py-2 text-sm" onclick="toast('已筛选')">查询</button>
+</section>
+<section class="grid xl:grid-cols-3 gap-4">
+  <div class="xl:col-span-2 bg-white rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] overflow-hidden">
+    <table class="w-full text-sm">
+      <thead class="bg-slate-100 text-xs text-slate-600"><tr>
+        <th class="text-left px-3 py-2">模型名称</th><th class="text-left px-3 py-2">类型</th><th class="text-left px-3 py-2">分区</th>
+        <th class="text-left px-3 py-2">坐标/LOD</th><th class="text-left px-3 py-2">自检</th><th class="text-left px-3 py-2">状态</th><th class="text-left px-3 py-2">操作</th>
+      </tr></thead>
+      <tbody>
+        <tr class="border-t hover:bg-slate-50"><td class="px-3 py-2">港区倾斜_2026Q3</td><td class="px-3 py-2">倾斜摄影</td><td class="px-3 py-2">全域</td><td class="px-3 py-2">CGCS2000 / L3</td><td class="px-3 py-2 text-emerald-600">通过</td><td class="px-3 py-2">已发布</td><td class="px-3 py-2 space-x-2"><button class="text-sky-700" onclick="toast('预览')">预览</button><button class="text-slate-500" onclick="toast('已下架')">下架</button></td></tr>
+        <tr class="border-t hover:bg-slate-50"><td class="px-3 py-2">1号泊位BIM</td><td class="px-3 py-2">BIM</td><td class="px-3 py-2">码头</td><td class="px-3 py-2">偏移 1.8m</td><td class="px-3 py-2 text-amber-600">坐标待校准</td><td class="px-3 py-2">待校准</td><td class="px-3 py-2 space-x-2"><button class="text-sky-700" onclick="toast('打开校准')">校准</button><button class="text-sky-700" onclick="toast('预览')">预览</button></td></tr>
+        <tr class="border-t hover:bg-slate-50"><td class="px-3 py-2">堆场A精细模</td><td class="px-3 py-2">人工模型</td><td class="px-3 py-2">堆场</td><td class="px-3 py-2">合格 / L2</td><td class="px-3 py-2 text-emerald-600">通过</td><td class="px-3 py-2">草稿</td><td class="px-3 py-2 space-x-2"><button class="text-sky-700" onclick="toast('已发布到场景')">发布</button></td></tr>
+        <tr class="border-t hover:bg-slate-50"><td class="px-3 py-2">陆域道路_补测</td><td class="px-3 py-2">倾斜摄影</td><td class="px-3 py-2">陆域</td><td class="px-3 py-2">材质缺失</td><td class="px-3 py-2 text-rose-600">失败</td><td class="px-3 py-2">自检失败</td><td class="px-3 py-2 space-x-2"><button class="text-sky-700" onclick="toast('查看报告')">报告</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="bg-white rounded-2xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
+    <div class="font-semibold mb-2">自检规范提示</div>
+    <ul class="text-sm text-slate-600 space-y-2 list-disc pl-4">
+      <li>格式：OSGB / 3D Tiles / FBX（按引擎约定）</li>
+      <li>坐标：统一港区坐标系，禁漂移</li>
+      <li>材质贴图完整，无大面积拉花破面</li>
+      <li>LOD 层级命名符合规范</li>
+      <li>重点作业区优先发布</li>
+    </ul>
+    <div class="mt-4 rounded-xl bg-slate-50 p-3 text-xs text-slate-500">边界：分批交付时可分区占位；异常：自检失败不可发布。</div>
+  </div>
+</section>
+<div id="imp" class="hidden fixed inset-0 z-40 bg-slate-900/40 flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl w-full max-w-lg p-5 shadow-[0_12px_40px_rgba(0,0,0,0.12)]">
+    <h3 class="font-semibold text-lg">导入模型</h3>
+    <div class="mt-3 space-y-3 text-sm">
+      <input class="w-full rounded-xl border px-3 py-2" placeholder="模型名称">
+      <select class="w-full rounded-xl border px-3 py-2"><option>倾斜摄影</option><option>BIM</option><option>人工模型</option></select>
+      <select class="w-full rounded-xl border px-3 py-2"><option>全域</option><option>码头</option><option>堆场</option><option>陆域配套</option></select>
+      <input type="file" class="w-full text-sm">
+    </div>
+    <div class="mt-5 flex justify-end gap-2">
+      <button class="rounded-xl border px-4 py-2" onclick="document.getElementById('imp').classList.add('hidden')">取消</button>
+      <button class="rounded-xl bg-slate-800 text-white px-4 py-2" onclick="document.getElementById('imp').classList.add('hidden');toast('已进入自检队列')">开始自检</button>
+    </div>
+  </div>
+</div>
+
+  </div>
+</main>
+<div id="toast" class="fixed right-4 bottom-4 z-50 hidden rounded-xl bg-slate-900 text-white text-sm px-4 py-3 shadow-lg"></div>
+<script>
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.remove('hidden');clearTimeout(window.__tt);window.__tt=setTimeout(()=>t.classList.add('hidden'),1800);}
+function bindTabs(root){
+  root.querySelectorAll('[data-tabs]').forEach(box=>{
+    const btns=[...box.querySelectorAll('[data-tab]')];
+    const panes=[...box.querySelectorAll('[data-pane]')];
+    btns.forEach(b=>b.onclick=()=>{
+      btns.forEach(x=>x.classList.remove('bg-slate-800','text-white'));
+      btns.forEach(x=>x.classList.add('bg-white','text-slate-600'));
+      b.classList.add('bg-slate-800','text-white'); b.classList.remove('bg-white','text-slate-600');
+      panes.forEach(p=>p.classList.toggle('hidden', p.getAttribute('data-pane')!==b.getAttribute('data-tab')));
+    });
+  });
+}
+document.querySelectorAll('[data-tabs]').forEach(b=>bindTabs(b.parentElement||document));
+document.querySelectorAll('[data-tabs]').forEach(box=>{
+  const scope=box.parentElement; /* fallback */
+});
+document.querySelectorAll('.js-tabs').forEach(wrap=>{
+  const btns=[...wrap.querySelectorAll('[data-tab]')];
+  const panes=[...wrap.querySelectorAll('[data-pane]')];
+  btns.forEach(b=>b.onclick=()=>{
+    btns.forEach(x=>{x.classList.remove('bg-slate-800','text-white');x.classList.add('bg-slate-100','text-slate-600');});
+    b.classList.add('bg-slate-800','text-white'); b.classList.remove('bg-slate-100','text-slate-600');
+    panes.forEach(p=>p.classList.toggle('hidden', p.getAttribute('data-pane')!==b.getAttribute('data-tab')));
+  });
+});
+</script>
+<script src="pc_ops_live.js"></script>
+</body></html>

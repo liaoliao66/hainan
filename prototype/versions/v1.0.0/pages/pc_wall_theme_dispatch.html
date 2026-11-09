@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>调度主题整屏 · 海南金牌港 · v1.0.0</title>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+<link rel="stylesheet" href="wall_common.css">
+<script src="../vendor/echarts.min.js"></script>
+<link rel="stylesheet" href="../vendor/font-awesome/css/all.min.css">
+</head>
+<body>
+<div class="tool"><span>调度主题 · 告警定位 · 通关状态 · 环境/人员/广播为模拟 · 墙上不能喊话</span><a href="../index.html">入口</a><a href="pc_wall_command_screen.html?from=%E8%B0%83%E5%BA%A6">概览整屏</a></div>
+<div class="stage"><div class="wall">
+  <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div><div class="corner corner-br"></div>
+  <div class="top-line"></div>
+  <header class="header">
+    <div class="hd-left"><div class="date" id="hd-date">--</div><div><span id="hd-week">--</span> · <span id="hd-time">--</span></div></div>
+    <div class="hd-center"><div class="main">金牌港 · 智慧调度一张图</div><div class="sub">未闭环告警 · 在港船通关 · 视频在右上 · <span id="hd-asof">--</span></div></div>
+    <div class="hd-right"><div data-weather></div></div>
+  </header>
+  <div class="body">
+    <div class="col">
+      <div class="card"><div class="card-title"><i class="fa-solid fa-bell"></i> 事件 KPI</div>
+        <div class="kpi-grid">
+          <div class="kpi"><div class="v r">2</div><div class="l">未闭环</div></div>
+          <div class="kpi"><div class="v y">2</div><div class="l">处置中</div></div>
+          <div class="kpi"><div class="v g">4</div><div class="l">已处置</div></div>
+          <div class="kpi"><div class="v">66.7%</div><div class="l">处置率</div></div>
+        </div>
+        <div class="chip-row"><span class="chip on">查验未告警</span><span class="chip">异常进二级</span><span class="chip">广播只看状态</span></div>
+      </div>
+      <div class="card flex1"><div class="card-title"><i class="fa-solid fa-list"></i> 事件列表</div>
+        <div class="alert" data-n="散货堆场越界"><span>散货堆场越界</span><span class="tag r">一级·未闭环</span></div>
+        <div class="alert" data-n="琼海9"><span>琼海9通关异常</span><span class="tag y">二级·未闭环</span></div>
+        <div class="alert" data-n="卸船机#1"><span>卸船机#1振动偏高</span><span class="tag y">二级·处置中</span></div>
+        <div class="alert" data-n="金港5"><span>金港5查验</span><span class="tag y">查验·不告警</span></div>
+        <div class="chart" id="c-evt" style="margin-top:6px"></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card flex1" style="padding:1%"><div class="card-title"><i class="fa-solid fa-location-dot"></i> 事件定位主视</div>
+        <div class="map">
+          <img src="../assets/port-aerial.jpg?v=plan" alt="港区">
+          <div class="map-mask"></div>
+          <div class="map-tools">
+            <button data-layer="复位">复位</button>
+            <button data-layer="全部" class="on">全部</button>
+            <button data-layer="事件">事件</button>
+            <button data-layer="环境">环境</button>
+            <button data-layer="人员">人员</button>
+            <button data-layer="海关">海关</button>
+            <button data-layer="告警">告警</button>
+          </div>
+          <button class="poi bad" style="left:57%;top:36%" data-n="散货堆场越界" data-t="事件" data-layer="事件" data-s="一级处置中"></button>
+          <button class="poi warn" style="left:46%;top:48%" data-n="卸船机#1" data-t="事件" data-layer="事件" data-s="二级·振动偏高"></button>
+          <button class="poi warn" style="left:54%;top:42%" data-n="堆场粉尘#1" data-t="环境" data-layer="环境" data-s="关注"></button>
+          <button class="poi" style="left:40%;top:20%" data-n="港区气象站" data-t="环境" data-layer="环境" data-s="在线"></button>
+          <button class="poi" style="left:28%;top:62%" data-n="门机风速#1" data-t="环境" data-layer="环境" data-s="可作业"></button>
+          <button class="poi person" style="left:58%;top:44%" data-n="前沿在岗" data-t="人员" data-layer="人员" data-s="12人"></button>
+          <button class="poi customs" style="left:76%;top:46%" data-n="琼海9" data-t="通关" data-layer="海关" data-s="异常·二级"></button>
+          <div class="map-label">环境点位可点 · 人员只显示区域人数</div>
+          <div id="drill">
+            <div class="drill-hd">
+              <span class="d-mark"><i id="d-icon" class="fa-solid fa-location-dot"></i></span>
+              <div class="d-titles"><div class="d-kicker" id="d-kicker">对象</div><h5 id="d-title">对象详情</h5></div>
+              <span class="d-pill" id="d-pill"></span>
+              <button type="button" id="d-close" aria-label="关闭">×</button>
+            </div>
+            <div id="d-dims"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card flex1"><div class="card-title"><i class="fa-solid fa-leaf"></i> 作业环境<div class="meta">对装卸影响</div></div>
+        <div class="env-board-wrap" data-env-board="full"></div>
+      </div>
+      <div class="card flex1"><div class="card-title"><i class="fa-solid fa-tower-broadcast"></i> 人员 / 广播<div class="meta">模拟</div></div>
+        <table class="tbl"><thead><tr><th>分区</th><th>人数</th><th>广播</th></tr></thead>
+          <tbody>
+            <tr><td class="hl">前沿</td><td>12</td><td>空闲</td></tr>
+            <tr><td class="hl">廊道</td><td>6</td><td><span class="tag y">播报中</span></td></tr>
+            <tr><td class="hl">堆场</td><td>9</td><td>空闲</td></tr>
+            <tr><td class="hl">卡口</td><td>4</td><td>空闲</td></tr>
+            <tr><td class="hl">综合楼</td><td>18</td><td>空闲</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <footer class="footer" id="themes"></footer>
+</div></div>
+<div class="toast" id="toast"></div>
+<script src="wall_domain.js"></script>
+<script src="wall_theme_nav.js"></script>
+<script>
+const c=echarts.init(document.getElementById('c-evt'));
+c.setOption({grid:{left:28,right:8,top:12,bottom:18},xAxis:{type:'category',data:['一级','二级','三级'],axisLabel:{color:'#B4C7E7',fontSize:10}},yAxis:{show:false},series:[{type:'bar',data:[{value:1,itemStyle:{color:'#F53F3F'}},{value:2,itemStyle:{color:'#FFAA00'}},{value:0,itemStyle:{color:'#36BFFA'}}],barWidth:16}]});
+window.addEventListener('resize',()=>c.resize());
+initWallTheme('调度');
+</script>
+</body>
+</html>

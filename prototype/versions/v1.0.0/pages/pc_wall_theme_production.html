@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>生产运行一张图 · 海南金牌港</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="../vendor/font-awesome/css/all.min.css">
+<script src="../vendor/echarts.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap');
+*{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#030712;color:#fff}
+body{display:flex;flex-direction:column}
+.tool{flex:0 0 auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:6px 10px;background:#0b1220;border-bottom:1px solid #1e293b;font-size:12px;color:#94a3b8;z-index:20}
+.tool a,.tool button{color:#e2e8f0;border:1px solid #334155;background:#1e293b;border-radius:6px;padding:5px 9px;cursor:pointer;text-decoration:none}
+.stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
+.wall{position:relative;aspect-ratio:16/9;width:min(98vw,calc(98vh*16/9));height:min(98vh,calc(98vw*9/16));display:flex;flex-direction:column;overflow:hidden;border:1px solid rgba(14,116,240,.35);box-shadow:0 0 40px rgba(0,0,0,.55);background:linear-gradient(165deg,#080c20,#0d1a3a 48%,#0a1228)}
+body.present .tool{display:none}
+body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
+.card{position:relative;border:1px solid rgba(14,116,240,.28);border-radius:6px;padding:12px;background:rgba(8,28,62,.9);box-shadow:inset 0 0 14px rgba(14,116,240,.05);overflow:hidden}
+.mark{width:3px;height:16px;background:#00e4ff;flex-shrink:0;border-radius:1px}
+.chip{font-size:11px;color:#b4c7e7}
+.theme{min-width:88px;text-align:center;padding:7px 12px;font-size:13px;font-weight:600;border-radius:5px;text-decoration:none;cursor:pointer;border:1px solid rgba(14,116,240,.28);background:#0a1729;color:#b4c7e7}
+.theme.on{color:#06202a;background:linear-gradient(180deg,#7ee7f0,#00e4ff);border-color:#00e4ff;font-weight:800}
+.toast{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);background:rgba(8,28,62,.95);border:1px solid rgba(14,116,240,.28);padding:8px 14px;border-radius:8px;font-size:12px;opacity:0;transition:.2s;z-index:40}
+.toast.show{opacity:1}
+#themes{display:none}
+.bar{height:6px;border-radius:99px;background:rgba(14,116,240,.15);overflow:hidden}
+.bar>i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#0e74f0,#00e4ff)}
+</style>
+</head>
+<body>
+<div class="tool">
+  <span>生产运行一张图 · Figma方案落地 · 演示数据不可作调度依据</span>
+  <a href="../index.html">入口</a>
+  <a href="pc_wall_command_screen.html?from=%E7%94%9F%E4%BA%A7">概览总览</a>
+  <button type="button" id="btnPresent">汇报全屏</button>
+</div>
+<div class="stage">
+  <div class="wall">
+
+    <header class="shrink-0 h-[7%] px-6 flex items-center justify-between border-b border-[rgba(14,116,240,.28)]" style="background:linear-gradient(90deg,#080c20,#0d1a3a,#080c20)">
+      <div class="w-[300px]">
+        <div class="text-[12px] text-[#b4c7e7]">一期 · 2×7万吨级通用泊位 年设计吞吐 700 万吨</div>
+        <span class="inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] bg-[rgba(180,199,231,.14)] text-[#b4c7e7]">演示数据不可作调度依据</span>
+      </div>
+      <div class="text-center">
+        <h1 class="m-0 text-[22px] font-extrabold tracking-[3px] text-[#00e4ff]">海南金牌港 · 生产运行一张图</h1>
+        <p class="m-0 mt-1 text-[11px] text-[#b4c7e7]">码头前沿作业 · 泊位任务与待泊计划</p>
+      </div>
+      <div class="w-[300px] text-right text-[12px] text-[#b4c7e7]"><div id="hd-asof">--</div><div class="mt-1 text-[#637f99]">演示数据</div></div>
+    </header>
+    <div class="flex-1 min-h-0 grid gap-2.5 px-3 py-2.5" style="grid-template-columns:22.5% minmax(0,1fr) 22%">
+      <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
+        <div class="card shrink-0">
+          <div class="flex items-center gap-2 mb-2"><span class="mark" style="background:#0e74f0"></span><span class="text-[13px] font-bold text-[#36bffa]">作业汇总</span></div>
+          <div class="grid grid-cols-3 gap-1.5">
+            <div class="rounded p-2 bg-[rgba(14,116,240,.08)] border border-[rgba(14,116,240,.16)]"><div class="text-[10px] text-[#b4c7e7]">今日吞吐量</div><div class="text-[20px] font-extrabold text-[#00e4ff] mt-1">1.86<span class="text-[10px] text-[#36bffa] ml-0.5">万吨</span></div><div class="bar mt-2"><i style="width:62%"></i></div></div>
+            <div class="rounded p-2 bg-[rgba(14,116,240,.08)] border border-[rgba(14,116,240,.16)]"><div class="text-[10px] text-[#b4c7e7]">装卸船舶</div><div class="text-[20px] font-extrabold mt-1">2<span class="text-[10px] text-[#36bffa] ml-0.5">艘</span></div><div class="text-[9px] text-[#637f99] mt-1">1#作业 · 2#待装</div></div>
+            <div class="rounded p-2 bg-[rgba(14,116,240,.08)] border border-[rgba(14,116,240,.16)]"><div class="text-[10px] text-[#b4c7e7]">计划兑现率</div><div class="text-[20px] font-extrabold mt-1">93.1<span class="text-[10px] text-[#36bffa] ml-0.5">%</span></div><div class="text-[9px] text-[#637f99] mt-1">当日口径</div></div>
+          </div>
+        </div>
+        <div class="card shrink-0">
+          <div class="flex items-center gap-2 mb-2"><span class="mark" style="background:#0e74f0"></span><span class="text-[13px] font-bold text-[#36bffa]">泊位作业与当前任务</span><span class="chip ml-auto">按泊位并列</span></div>
+          <div class="rounded pl-2.5 pr-2 py-2.5 mb-2 bg-[rgba(14,116,240,.07)] border border-[rgba(14,116,240,.2)] relative overflow-hidden">
+            <div class="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-[#00c48c] to-[rgba(0,196,140,.35)]"></div>
+            <div class="flex justify-between items-center"><span class="font-bold text-[13px]">1#泊位</span><span class="text-[10px] px-2 py-0.5 rounded-full bg-[rgba(0,196,140,.18)] text-[#00c48c]">作业中</span></div>
+            <div class="text-[11px] text-[#b4c7e7] mt-1">任务 RW-001 · 1#泊位 → 1#散货仓库</div>
+            <div class="flex justify-between text-[9px] text-[#637f99] mt-1"><span>进度 66%</span><span>预计 15:40 完工</span></div>
+            <div class="bar mt-1.5"><i style="width:66%"></i></div>
+            <div class="text-[9px] text-[#ffaa00] mt-1.5">关联报警 A001（作业影响待评估）</div>
+          </div>
+          <div class="rounded pl-2.5 pr-2 py-2.5 bg-[rgba(14,116,240,.04)] border border-[rgba(14,116,240,.16)] relative overflow-hidden">
+            <div class="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-[#b4c7e7] to-[rgba(180,199,231,.25)]"></div>
+            <div class="flex justify-between items-center"><span class="font-bold text-[13px]">2#泊位</span><span class="text-[10px] px-2 py-0.5 rounded-full bg-[rgba(180,199,231,.14)] text-[#b4c7e7]">待装</span></div>
+            <div class="text-[11px] text-[#b4c7e7] mt-1">2#泊位 · 待装</div>
+            <div class="flex justify-between text-[9px] text-[#637f99] mt-1"><span>进度 0%</span><span>待船舶靠泊</span></div>
+            <div class="bar mt-1.5"><i style="width:2%"></i></div>
+          </div>
+        </div>
+        <div class="card flex-1 min-h-0 overflow-auto">
+          <div class="flex items-center gap-2 mb-2"><span class="mark" style="background:#0e74f0"></span><span class="text-[13px] font-bold text-[#36bffa]">待泊船舶计划</span></div>
+          <div class="text-[10px]">
+            <div class="flex bg-[rgba(14,116,240,.14)] text-[#36bffa] font-bold py-1 text-center"><span class="flex-[1.2]">船舶</span><span class="flex-1">ETA</span><span class="flex-1">计划泊位</span><span class="flex-1">货类</span></div>
+            <div class="flex border-b border-[rgba(14,116,240,.08)] py-1.5 text-center"><span class="flex-[1.2]">海建19</span><span class="flex-1 text-[#00e4ff]">14:30</span><span class="flex-1">2#泊位</span><span class="flex-1">熟料</span></div>
+            <div class="flex border-b border-[rgba(14,116,240,.08)] py-1.5 text-center bg-[rgba(14,116,240,.04)]"><span class="flex-[1.2]">金港顺</span><span class="flex-1 text-[#00e4ff]">16:10</span><span class="flex-1">1#泊位</span><span class="flex-1">矿粉</span></div>
+            <div class="flex border-b border-[rgba(14,116,240,.08)] py-1.5 text-center"><span class="flex-[1.2]">南洋星</span><span class="flex-1 text-[#00e4ff]">18:00</span><span class="flex-1">2#泊位</span><span class="flex-1">钢材</span></div>
+          </div>
+        </div>
+        <div class="card shrink-0">
+          <div class="flex items-center gap-2 mb-2"><span class="mark" style="background:#0e74f0"></span><span class="text-[13px] font-bold text-[#36bffa]">待进港预约车辆</span></div>
+          <div class="text-[10px]">
+            <div class="flex bg-[rgba(14,116,240,.14)] text-[#36bffa] font-bold py-1 text-center"><span class="flex-1">车牌</span><span class="flex-1">预约</span><span class="flex-[1.2]">作业去向</span><span class="flex-1">状态</span></div>
+            <div class="flex border-b border-[rgba(14,116,240,.08)] py-1.5 items-center text-center"><span class="flex-1">琼A·D8123</span><span class="flex-1">14:20</span><span class="flex-[1.2]">1#仓库</span><span class="flex-1"><span class="px-1.5 py-0.5 rounded-full bg-[rgba(14,116,240,.22)] text-[#36bffa]">候场</span></span></div>
+            <div class="flex border-b border-[rgba(14,116,240,.08)] py-1.5 items-center text-center"><span class="flex-1">琼B·F3310</span><span class="flex-1">14:45</span><span class="flex-[1.2]">地磅W01</span><span class="flex-1"><span class="px-1.5 py-0.5 rounded-full bg-[rgba(255,170,0,.18)] text-[#ffaa00]">排队</span></span></div>
+          </div>
+        </div>
+      </div>
+      <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
+        <div class="card flex-1 min-h-0 relative p-0">
+          <div class="absolute left-3 top-3 z-10 text-[11px] px-2 py-1 rounded bg-[rgba(8,28,62,.9)] border border-[rgba(0,228,255,.4)] text-[#00e4ff]">码头前沿作业视图</div>
+          <div class="absolute right-3 top-3 z-10 flex gap-1 text-[10px]">
+            <span class="px-2 py-0.5 rounded bg-[rgba(8,28,62,.9)] border border-[rgba(14,116,240,.35)]">泊位</span>
+            <span class="px-2 py-0.5 rounded bg-[rgba(8,28,62,.9)] border border-[rgba(14,116,240,.35)]">作业</span>
+            <span class="px-2 py-0.5 rounded bg-[rgba(8,28,62,.9)] border border-[rgba(14,116,240,.35)]">设备</span>
+          </div>
+          <img src="../assets/port-aerial.jpg?v=prod" alt="码头" class="absolute inset-0 w-full h-full object-cover opacity-50">
+          <div class="absolute inset-0" style="background:linear-gradient(180deg,rgba(7,20,39,.2),rgba(7,20,39,.55))"></div>
+          <button type="button" class="absolute left-[36%] top-[42%] px-2 py-1 rounded text-[11px] font-bold bg-[rgba(8,28,62,.9)] border border-[rgba(0,228,255,.4)] text-[#00e4ff]" onclick="toast('1#泊位 · 作业中')">1# 作业中</button>
+          <button type="button" class="absolute left-[48%] top-[48%] px-2 py-1 rounded text-[11px] font-bold bg-[rgba(8,28,62,.9)] border border-[rgba(0,228,255,.4)] text-[#00e4ff]" onclick="toast('2#泊位 · 待装')">2# 待装</button>
+          <button type="button" class="absolute left-[30%] top-[58%] px-2 py-0.5 rounded text-[10px] bg-[rgba(8,28,62,.9)] border border-[rgba(0,196,140,.4)] text-[#00c48c]" onclick="toast('CAM-01')">CAM-01 · 1#泊位</button>
+          <button type="button" class="absolute left-[55%] top-[62%] px-2 py-0.5 rounded text-[10px] bg-[rgba(8,28,62,.9)] border border-[rgba(245,63,63,.4)] text-[#ff8f8f]" onclick="toast('CAM-03 离线')">CAM-03 · 离线</button>
+        </div>
+        <div class="card shrink-0 grid grid-cols-2 gap-2 !p-2">
+          <div>
+            <div class="flex items-center gap-2 mb-1.5"><span class="mark" style="background:#0e74f0"></span><span class="text-[12px] font-bold text-[#36bffa]">作业设备状态监测</span></div>
+            <div class="space-y-1 text-[11px]">
+              <div class="flex justify-between rounded px-2 py-1.5 bg-[rgba(14,116,240,.08)]"><span>SC-01</span><span class="text-[#00c48c]">运行 · 负载72%</span></div>
+              <div class="flex justify-between rounded px-2 py-1.5 bg-[rgba(14,116,240,.08)]"><span>BM-01</span><span class="text-[#00c48c]">运行 · 2.5m/s</span></div>
+              <div class="flex justify-between rounded px-2 py-1.5 bg-[rgba(255,170,0,.1)] border border-[rgba(255,170,0,.3)]"><span>T2驱动</span><span class="text-[#ffaa00]">预警 · 78℃</span></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 mb-1.5"><span class="mark" style="background:#0e74f0"></span><span class="text-[12px] font-bold text-[#36bffa]">作业环境监测</span></div>
+            <div class="grid grid-cols-2 gap-1 text-[11px]">
+              <div class="rounded px-2 py-1.5 bg-[rgba(14,116,240,.08)]"><div class="text-[#637f99]">1#水深</div><div class="text-[#00e4ff] font-bold">11.2 m</div></div>
+              <div class="rounded px-2 py-1.5 bg-[rgba(14,116,240,.08)]"><div class="text-[#637f99]">2#水深</div><div class="text-[#00e4ff] font-bold">11.0 m</div></div>
+              <div class="rounded px-2 py-1.5 bg-[rgba(14,116,240,.08)] col-span-2"><div class="text-[#637f99]">风速 W01</div><div class="text-[#00e4ff] font-bold">4.6 m/s · 东北</div></div>
+            </div>
+            <div class="text-[9px] text-[#637f99] mt-1">水深分泊位；风速为码头前沿中部 W01</div>
+          </div>
+        </div>
+      </div>
+      <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
+        <div class="card flex-1 min-h-0 overflow-auto">
+          <div class="flex items-center gap-2 mb-2"><span class="mark" style="background:#0e74f0"></span><span class="text-[13px] font-bold text-[#36bffa]">作业风险与报警</span><span class="chip ml-auto">未闭环</span></div>
+          <div class="space-y-2 text-[12px]">
+            <div class="rounded border border-[rgba(255,170,0,.35)] bg-[rgba(255,170,0,.08)] p-2 cursor-pointer" onclick="toast('A001')">
+              <div class="flex justify-between text-[10px]"><span class="text-[#ffaa00]">A001 · 13:42</span><span class="text-[#00e4ff]">处理中</span></div>
+              <div class="font-bold mt-1">T2输送驱动轴承温升</div>
+              <div class="text-[10px] text-[#b4c7e7] mt-1">关联 1#作业 · 影响待评估</div>
+            </div>
+            <div class="rounded border border-[rgba(14,116,240,.28)] bg-[rgba(14,116,240,.06)] p-2 cursor-pointer" onclick="toast('A002')">
+              <div class="flex justify-between text-[10px]"><span class="text-[#f53f3f]">A002 · 12:18</span><span class="text-[#ffaa00]">待响应</span></div>
+              <div class="font-bold mt-1">SC-02驱动故障</div>
+              <div class="text-[10px] text-[#b4c7e7] mt-1">卸船环节受限 · 预计16:30恢复</div>
+            </div>
+            <div class="rounded border border-[rgba(14,116,240,.28)] bg-[rgba(14,116,240,.06)] p-2 cursor-pointer" onclick="toast('CAM-03')">
+              <div class="flex justify-between text-[10px]"><span class="text-[#f53f3f]">CAM-03</span><span class="text-[#ffaa00]">离线</span></div>
+              <div class="font-bold mt-1">CAM-03 · 离线，关联2#泊位</div>
+              <div class="text-[10px] text-[#b4c7e7] mt-1">视频点恢复待评估</div>
+            </div>
+          </div>
+        </div>
+        <div class="card shrink-0">
+          <div class="flex items-center gap-2 mb-2"><span class="mark" style="background:#0e74f0"></span><span class="text-[13px] font-bold text-[#36bffa]">当日关键节点</span></div>
+          <div class="space-y-1.5 text-[11px] text-[#b4c7e7]">
+            <div class="flex justify-between"><span>1#完工预计</span><b class="text-[#00e4ff]">15:40</b></div>
+            <div class="flex justify-between"><span>下一艘靠泊</span><b class="text-[#00e4ff]">14:30 · 2#</b></div>
+            <div class="flex justify-between"><span>地磅排队</span><b class="text-[#ffaa00]">8 车</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="shrink-0 h-[5.5%] border-t border-[rgba(14,116,240,.28)] flex items-center justify-center relative bg-[#0a1228]">
+      <div id="theme-foot" class="flex gap-2"></div>
+      <div class="absolute right-4 text-[11px] text-[#637f99]">生产运行 / 码头前沿作业视图</div>
+    </footer>
+    <div id="themes"></div>
+
+  </div>
+</div>
+<script src="wall_domain.js"></script>
+<script src="wall_theme_nav.js"></script>
+<script>
+const THEME_LABEL={'概览':'港区概览','生产':'生产一张图','交通':'港区交通','设备':'设备设施','经营':'经营分析','调度':'智慧调度'};
+function renderThemes(){
+  const el=document.getElementById('theme-foot');
+  if(!el) return;
+  el.innerHTML=Object.keys(THEME_PAGES).map(k=>{
+    const label=THEME_LABEL[k]||k;
+    if(THEME_DISABLED.includes(k)) return `<span class="theme" style="opacity:.4">${label}</span>`;
+    if(k==='生产') return `<button type="button" class="theme on">${label}</button>`;
+    const href=k==='概览'?THEME_PAGES[k]+'?from='+encodeURIComponent('生产'):THEME_PAGES[k];
+    return `<a class="theme" href="${href}">${label}</a>`;
+  }).join('');
+}
+renderThemes();
+initWallTheme('生产');
+document.getElementById('btnPresent').onclick=()=>{document.body.classList.add('present');toast('汇报全屏 · Esc 退出')};
+document.addEventListener('keydown',e=>{if(e.key==='Escape') document.body.classList.remove('present')});
+
+</script>
+</body>
+</html>

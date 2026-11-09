@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>设备设施一张图 · 海南金牌港</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="../vendor/font-awesome/css/all.min.css">
+<script src="../vendor/echarts.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap');
+*{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#030712;color:#fff}
+body{display:flex;flex-direction:column}
+.tool{flex:0 0 auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:6px 10px;background:#0b1220;border-bottom:1px solid #1e293b;font-size:12px;color:#94a3b8;z-index:20}
+.tool a,.tool button{color:#e2e8f0;border:1px solid #334155;background:#1e293b;border-radius:6px;padding:5px 9px;cursor:pointer;text-decoration:none}
+.stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
+.wall{position:relative;aspect-ratio:16/9;width:min(98vw,calc(98vh*16/9));height:min(98vh,calc(98vw*9/16));display:flex;flex-direction:column;overflow:hidden;border:1px solid rgba(84,216,255,.22);box-shadow:0 0 40px rgba(0,0,0,.55);background:linear-gradient(180deg,#050e1c,#0b1c31)}
+body.present .tool{display:none}
+body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
+.card{position:relative;border:1px solid #23435f;border-radius:8px;padding:14px 16px;background:#0b1c31;box-shadow:inset 0 1px 18px rgba(105,207,255,.05);overflow:hidden}
+.mark{width:3px;height:16px;background:#54d8ff;flex-shrink:0;border-radius:1px}
+.chip{font-size:11px;color:#91abc4}
+.theme{min-width:88px;text-align:center;padding:7px 12px;font-size:13px;font-weight:600;border-radius:5px;text-decoration:none;cursor:pointer;border:1px solid #23435f;background:#0a1729;color:#91abc4}
+.theme.on{color:#06202a;background:linear-gradient(180deg,#7ee7f0,#54d8ff);border-color:#54d8ff;font-weight:800}
+.toast{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);background:rgba(8,28,62,.95);border:1px solid #23435f;padding:8px 14px;border-radius:8px;font-size:12px;opacity:0;transition:.2s;z-index:40}
+.toast.show{opacity:1}
+#themes{display:none}
+.bar{height:6px;border-radius:99px;background:rgba(14,116,240,.15);overflow:hidden}
+.bar>i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#0e74f0,#00e4ff)}
+</style>
+</head>
+<body>
+<div class="tool">
+  <span>设备设施一张图 · Figma方案落地</span>
+  <a href="../index.html">入口</a>
+  <a href="pc_wall_command_screen.html?from=%E8%AE%BE%E5%A4%87">概览总览</a>
+  <button type="button" id="btnPresent">汇报全屏</button>
+</div>
+<div class="stage">
+  <div class="wall">
+
+    <header class="shrink-0 h-[7.5%] px-7 flex items-center justify-between border-b border-[#23435f]" style="background:linear-gradient(90deg,#0b1c31,#14304a,#0b1c31)">
+      <div class="w-[300px]">
+        <div class="text-[13px] text-[#91abc4]">一期 · 2×7万吨级通用泊位</div>
+        <div class="text-[12px] text-[#91abc4] mt-1">年设计吞吐 700 万吨</div>
+      </div>
+      <div class="text-center">
+        <h1 class="m-0 text-[22px] font-extrabold tracking-[3px] text-[#54d8ff]">海南金牌港 · 设备设施一张图</h1>
+        <p class="m-0 mt-1 text-[12px] text-[#91abc4]">看清设备状态 · 定位故障与维保责任</p>
+      </div>
+      <div class="w-[300px] text-right">
+        <span class="inline-block px-2 py-0.5 rounded-full text-[11px] bg-[rgba(255,186,90,.12)] text-[#ffba5a] border border-[rgba(255,186,90,.35)]">演示数据</span>
+        <div class="text-[12px] text-[#91abc4] mt-1" id="hd-asof">--</div>
+      </div>
+    </header>
+    <div class="flex-1 min-h-0 grid gap-4 px-6 py-4" style="grid-template-columns:20% minmax(0,1fr) 22%">
+      <div class="min-h-0 flex flex-col gap-4 overflow-hidden">
+        <div class="card shrink-0">
+          <div class="flex items-center gap-2.5 mb-3"><span class="mark"></span><span class="text-[16px] font-bold text-[#e5f2ff]">作业统计</span><span class="chip ml-auto">装卸输送口径</span></div>
+          <div class="grid grid-cols-2 gap-4 mb-3">
+            <div><div class="text-[12px] text-[#91abc4]">今日作业量</div><div class="text-[#54d8ff]"><span class="text-[32px] font-semibold">1.86</span><span class="text-[12px] text-[#91abc4]"> 万吨</span></div></div>
+            <div><div class="text-[12px] text-[#91abc4]">综合利用率</div><div class="text-[#54d8ff]"><span class="text-[32px] font-semibold">68.4</span><span class="text-[12px] text-[#91abc4]"> %</span></div></div>
+          </div>
+          <div class="grid grid-cols-4 gap-1.5">
+            <div class="rounded text-center py-2 bg-[#0a1729] border border-[#23435f]"><div class="text-[20px] text-[#37d5b2]">102</div><div class="text-[11px] text-[#91abc4]">在用</div></div>
+            <div class="rounded text-center py-2 bg-[#0a1729] border border-[#23435f]"><div class="text-[20px] text-[#54d8ff]">39</div><div class="text-[11px] text-[#91abc4]">待用</div></div>
+            <div class="rounded text-center py-2 bg-[#0a1729] border border-[#23435f]"><div class="text-[20px] text-[#ff6c73]">2</div><div class="text-[11px] text-[#91abc4]">故障</div></div>
+            <div class="rounded text-center py-2 bg-[#0a1729] border border-[#23435f]"><div class="text-[20px] text-[#ffba5a]">1</div><div class="text-[11px] text-[#91abc4]">维护</div></div>
+          </div>
+          <div class="text-[11px] text-[#91abc4] mt-2">四态互斥合计144；与在线 / 离线不可相加</div>
+        </div>
+        <div class="card flex-1 min-h-0 overflow-auto">
+          <div class="flex items-center gap-2.5 mb-2"><span class="mark"></span><span class="text-[16px] font-bold text-[#e5f2ff]">设备台账</span><span class="chip ml-auto">台套</span></div>
+          <div class="text-[12px]">
+            <div class="flex bg-[#112b45] border-b border-[#23435f] px-2.5 h-7 items-center text-[#91abc4]"><span class="flex-1">类别</span><span class="w-12 text-right">总数</span><span class="w-12 text-right">在线</span><span class="w-12 text-right">离线</span></div>
+            <div class="flex border-b border-[#23435f] px-2.5 h-8 items-center"><span class="flex-1 text-[#e5f2ff]">卸船机</span><span class="w-12 text-right text-[#e5f2ff]">2</span><span class="w-12 text-right text-[#54d8ff]">2</span><span class="w-12 text-right text-[#e5f2ff]">0</span></div>
+            <div class="flex border-b border-[#23435f] px-2.5 h-8 items-center"><span class="flex-1 text-[#e5f2ff]">输送系统</span><span class="w-12 text-right text-[#e5f2ff]">12</span><span class="w-12 text-right text-[#54d8ff]">12</span><span class="w-12 text-right text-[#e5f2ff]">0</span></div>
+            <div class="flex border-b border-[#23435f] px-2.5 h-8 items-center"><span class="flex-1 text-[#e5f2ff]">供配电及岸电</span><span class="w-12 text-right text-[#e5f2ff]">18</span><span class="w-12 text-right text-[#54d8ff]">18</span><span class="w-12 text-right text-[#e5f2ff]">0</span></div>
+            <div class="flex border-b border-[#23435f] px-2.5 h-8 items-center"><span class="flex-1 text-[#e5f2ff]">闸口与地磅</span><span class="w-12 text-right text-[#e5f2ff]">8</span><span class="w-12 text-right text-[#54d8ff]">8</span><span class="w-12 text-right text-[#e5f2ff]">0</span></div>
+            <div class="flex border-b border-[#23435f] px-2.5 h-8 items-center"><span class="flex-1 text-[#e5f2ff]">监控与通信</span><span class="w-12 text-right text-[#e5f2ff]">80</span><span class="w-12 text-right text-[#54d8ff]">79</span><span class="w-12 text-right text-[#ffba5a]">1</span></div>
+            <div class="flex border-b border-[#23435f] px-2.5 h-8 items-center"><span class="flex-1 text-[#e5f2ff]">照明与充电</span><span class="w-12 text-right text-[#e5f2ff]">24</span><span class="w-12 text-right text-[#54d8ff]">23</span><span class="w-12 text-right text-[#ffba5a]">1</span></div>
+            <div class="flex bg-[#112b45] border-b border-[#23435f] px-2.5 h-8 items-center font-bold"><span class="flex-1 text-[#e5f2ff]">合计</span><span class="w-12 text-right text-[#e5f2ff]">144</span><span class="w-12 text-right text-[#54d8ff]">142</span><span class="w-12 text-right text-[#ffba5a]">2</span></div>
+          </div>
+          <div class="flex justify-between text-[12px] text-[#91abc4] mt-2"><span>在线 <b class="text-[#54d8ff]">142</b></span><span>离线 <b class="text-[#ffba5a]">2</b></span></div>
+        </div>
+        <div class="card shrink-0">
+          <div class="flex items-center gap-2.5 mb-2"><span class="mark"></span><span class="text-[16px] font-bold text-[#e5f2ff]">利用率时间构成</span><span class="chip ml-auto">计划可用时长</span></div>
+          <div class="flex h-5 rounded overflow-hidden mb-2"><div class="bg-[#54d8ff]" style="width:68.4%"></div><div class="bg-[#409bea]" style="width:8.6%"></div><div class="bg-[#ffba5a]" style="width:16%"></div><div class="bg-[#ff6c73]" style="width:7%"></div></div>
+          <div class="space-y-1.5 text-[12px]">
+            <div class="flex justify-between text-[#91abc4]"><span><i class="inline-block w-1.5 h-1.5 rounded-sm bg-[#54d8ff] mr-1"></i>有效作业</span><b class="text-[#54d8ff]">68.4%</b></div>
+            <div class="flex justify-between text-[#91abc4]"><span><i class="inline-block w-1.5 h-1.5 rounded-sm bg-[#409bea] mr-1"></i>空转</span><b class="text-[#409bea]">8.6%</b></div>
+            <div class="flex justify-between text-[#91abc4]"><span><i class="inline-block w-1.5 h-1.5 rounded-sm bg-[#ffba5a] mr-1"></i>待资源</span><b class="text-[#ffba5a]">16%</b></div>
+            <div class="flex justify-between text-[#91abc4]"><span><i class="inline-block w-1.5 h-1.5 rounded-sm bg-[#ff6c73] mr-1"></i>故障停机</span><b class="text-[#ff6c73]">7%</b></div>
+          </div>
+          <div class="text-[11px] text-[#91abc4] mt-2 leading-snug">同一计划可用时长口径，合计100%<br>主因不重复累加</div>
+        </div>
+      </div>
+      <div class="min-h-0 flex flex-col gap-4 overflow-hidden">
+        <div class="card flex-[1.4] min-h-0 relative p-0">
+          <div class="absolute left-0 right-0 top-0 z-10 h-11 px-4 flex items-center justify-between bg-[rgba(11,28,49,.92)] border-b border-[#23435f]">
+            <div class="flex items-center gap-2"><span class="mark"></span><span class="text-[15px] font-bold text-[#e5f2ff]">BIM 设备状态总览</span><span class="text-[11px] text-[#637f99]">SPATIAL OVERVIEW</span></div>
+            <div class="flex gap-1.5">
+              <button type="button" class="px-3 py-1 rounded text-[12px] border border-[#54d8ff] text-[#54d8ff] bg-[#112b45]">全部</button>
+              <button type="button" class="px-3 py-1 rounded text-[12px] border border-[#23435f] text-[#91abc4] bg-[#0a1729]" onclick="toast('筛选：异常设备')">异常</button>
+            </div>
+          </div>
+          <img src="../assets/port-aerial.jpg?v=eq" alt="港区" class="absolute inset-0 w-full h-full object-cover opacity-55">
+          <div class="absolute inset-0" style="background:linear-gradient(180deg,rgba(5,32,68,.25),rgba(5,14,28,.55))"></div>
+          <button type="button" class="absolute left-[24%] top-[28%] px-2 py-1 rounded text-[11px] font-bold bg-[rgba(7,24,46,.95)] border border-[#37d5b2] text-[#37d5b2]" onclick="toast('定位：L01 正常')">L01 正常</button>
+          <button type="button" class="absolute left-[48%] top-[42%] px-2 py-1 rounded text-[11px] font-bold bg-[rgba(7,24,46,.95)] border border-[#ffba5a] text-[#ffba5a]" onclick="toast('定位：L02 受限')">L02 受限</button>
+          <button type="button" class="absolute left-[28%] top-[38%] px-2 py-1 rounded text-[11px] font-bold bg-[rgba(7,24,46,.95)] border border-[#37d5b2] text-[#37d5b2]" onclick="toast('定位：SC-01')">SC-01 运行</button>
+          <button type="button" class="absolute left-[44%] top-[52%] px-2 py-1 rounded text-[11px] font-bold bg-[rgba(7,24,46,.95)] border border-[#ff6c73] text-[#ff6c73]" onclick="toast('定位：SC-02')">SC-02 故障</button>
+          <button type="button" class="absolute left-[34%] top-[56%] px-2 py-1 rounded text-[11px] font-bold bg-[rgba(7,24,46,.95)] border border-[#37d5b2] text-[#37d5b2]" onclick="toast('定位：BM-01')">BM-01 运行</button>
+          <button type="button" class="absolute left-[54%] top-[30%] px-2 py-1 rounded text-[11px] font-bold bg-[rgba(7,24,46,.95)] border border-[#ffba5a] text-[#ffba5a]" onclick="toast('定位：T2 驱动')">T2 驱动 预警</button>
+          <button type="button" class="absolute left-[60%] top-[14%] px-2 py-1 rounded text-[11px] font-bold bg-[rgba(7,24,46,.95)] border border-[#ff6c73] text-[#ff6c73]" onclick="toast('定位：CAM-03')">CAM-03 离线</button>
+        </div>
+        <div class="card shrink-0">
+          <div class="flex items-center gap-2.5 mb-2"><span class="mark"></span><span class="text-[14px] font-bold text-[#e5f2ff]">重点设备监控视频</span><span class="chip ml-auto">横滑演示</span></div>
+          <div class="flex gap-3 overflow-x-auto pb-1">
+            <div class="shrink-0 w-[32%] h-24 rounded border border-[#23435f] bg-[#0a1729] relative"><span class="absolute left-1.5 bottom-1 text-[10px] text-[#e5f2ff]">CAM-01｜1#泊位</span></div>
+            <div class="shrink-0 w-[32%] h-24 rounded border border-[#ffba5a] bg-[#0a1729] relative"><span class="absolute right-1.5 top-1 text-[9px] text-[#ffba5a] bg-[rgba(16,34,55,.93)] px-1 rounded">关联 A001</span><span class="absolute left-1.5 bottom-1 text-[10px] text-[#e5f2ff]">CAM-02｜T2转运</span></div>
+            <div class="shrink-0 w-[32%] h-24 rounded border border-[#23435f] bg-[#0a1729] relative"><span class="absolute left-1.5 bottom-1 text-[10px] text-[#e5f2ff]">CAM-04｜岸电区</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="min-h-0 flex flex-col gap-4 overflow-hidden">
+        <div class="card shrink-0">
+          <div class="flex items-center gap-2.5 mb-2"><span class="mark"></span><span class="text-[16px] font-bold text-[#e5f2ff]">关键设备监测</span><span class="chip ml-auto">读数单一出处</span></div>
+          <div class="space-y-2 text-[12px]">
+            <div class="rounded px-3 py-2 bg-[#0a1729] border border-[#23435f]"><div class="flex justify-between"><span class="font-bold text-[#e5f2ff]">卸船机 SC-01</span><span class="text-[#37d5b2]">● 运行</span></div><div class="text-[#54d8ff] mt-1">负载 72%　电流 180A</div></div>
+            <div class="rounded px-3 py-2 bg-[#0a1729] border border-[#23435f]"><div class="flex justify-between"><span class="font-bold text-[#e5f2ff]">主皮带 BM-01</span><span class="text-[#37d5b2]">● 运行</span></div><div class="text-[#54d8ff] mt-1">带速 2.5m/s　输送 900吨/时</div></div>
+            <div class="rounded px-3 py-2 bg-[#302a24] border border-[#84623a]"><div class="flex justify-between"><span class="font-bold text-[#e5f2ff]">T2 输送驱动</span><span class="text-[#ffba5a]">● 预警</span></div><div class="text-[#ffba5a] mt-1">轴承 78℃　振动 3.2mm/s</div></div>
+          </div>
+          <div class="grid grid-cols-4 gap-1.5 mt-2 text-[11px]">
+            <div class="bg-[#112b45] rounded py-1.5 text-center"><span class="text-[#91abc4]">供电</span> <b class="text-[#37d5b2]">正常</b></div>
+            <div class="bg-[#112b45] rounded py-1.5 text-center"><span class="text-[#91abc4]">岸电</span> <b class="text-[#37d5b2]">就绪</b></div>
+            <div class="bg-[#112b45] rounded py-1.5 text-center"><span class="text-[#91abc4]">除尘</span> <b class="text-[#37d5b2]">运行</b></div>
+            <div class="bg-[#112b45] rounded py-1.5 text-center"><span class="text-[#91abc4]">排水</span> <b class="text-[#54d8ff]">备用</b></div>
+          </div>
+        </div>
+        <div class="card flex-1 min-h-0 overflow-auto">
+          <div class="flex items-center gap-2.5 mb-2"><span class="mark"></span><span class="text-[16px] font-bold text-[#e5f2ff]">设备报警中心</span><span class="chip ml-auto">未闭环 3</span></div>
+          <div class="flex justify-between bg-[#32252e] rounded px-3 h-8 items-center text-[13px] text-[#91abc4] mb-2"><span>待响应 <b class="text-[#ffba5a] text-[17px]">2</b></span><span>处理中 <b class="text-[#54d8ff] text-[17px]">1</b></span></div>
+          <div class="space-y-2">
+            <div class="flex rounded overflow-hidden border border-[#8f6c38] bg-[#28291f] cursor-pointer" onclick="toast('报警 A001')">
+              <div class="w-1 bg-[#ffba5a]"></div>
+              <div class="flex-1 p-2"><div class="flex justify-between text-[11px]"><span class="text-[#ffba5a]">A001 · 13:42</span><span class="text-[#54d8ff]">处理中</span></div><div class="text-[13px] font-bold mt-1 text-[#e5f2ff]">T2输送驱动轴承温升</div><div class="flex justify-between text-[11px] text-[#91abc4] mt-1"><span>关联 L01 · 当前运行 · 风险核查</span><span class="text-[#ffba5a]">解除待评估</span></div></div>
+            </div>
+            <div class="flex rounded overflow-hidden border border-[#23435f] bg-[#0a1729] cursor-pointer" onclick="toast('报警 A002')">
+              <div class="w-1 bg-[#ff6c73]"></div>
+              <div class="flex-1 p-2"><div class="flex justify-between text-[11px]"><span class="text-[#ff6c73]">A002 · 12:18</span><span class="text-[#ffba5a]">待响应</span></div><div class="text-[13px] font-bold mt-1 text-[#e5f2ff]">SC-02驱动故障</div><div class="flex justify-between text-[11px] text-[#91abc4] mt-1"><span>关联 L02 · 卸船环节受限</span><span class="text-[#ff6c73]">预计16:30恢复</span></div></div>
+            </div>
+            <div class="flex rounded overflow-hidden border border-[#23435f] bg-[#0a1729] cursor-pointer" onclick="toast('报警 A003')">
+              <div class="w-1 bg-[#ff6c73]"></div>
+              <div class="flex-1 p-2"><div class="flex justify-between text-[11px]"><span class="text-[#ff6c73]">A003 · 11:05</span><span class="text-[#ffba5a]">待响应</span></div><div class="text-[13px] font-bold mt-1 text-[#e5f2ff]">CAM-03离线</div><div class="flex justify-between text-[11px] text-[#91abc4] mt-1"><span>影响2#泊位该视频点</span><span class="text-[#ff6c73]">恢复待评估</span></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card shrink-0">
+          <div class="flex items-center gap-2.5 mb-2"><span class="mark"></span><span class="text-[16px] font-bold text-[#e5f2ff]">维保设备列表</span><span class="chip ml-auto">预计完成，非已恢复</span></div>
+          <div class="space-y-2 text-[12px]">
+            <div class="flex justify-between items-center rounded px-2.5 h-9 bg-[#0a1729] border border-[#23435f]"><span class="text-[#e5f2ff]">SC-02 卸船机</span><span class="text-[#91abc4]">维修 · 待备件</span><span class="text-[#54d8ff] font-mono">16:30</span></div>
+            <div class="flex justify-between items-center rounded px-2.5 h-9 bg-[#0a1729] border border-[#23435f]"><span class="text-[#e5f2ff]">GL-07 高杆灯</span><span class="text-[#91abc4]">保养 · 进行中</span><span class="text-[#54d8ff] font-mono">15:00</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="shrink-0 h-[6%] border-t border-[#23435f] flex items-center justify-center relative bg-[#0a1729]">
+      <div id="theme-foot" class="flex gap-2"></div>
+      <div class="absolute left-6 text-[12px] text-[#91abc4]">金牌港智慧运营指挥中心</div>
+      <div class="absolute right-6 text-[11px] text-[#91abc4]">演示数据 · <span id="hd-asof2">--</span></div>
+    </footer>
+    <div id="themes"></div>
+
+  </div>
+</div>
+<script src="wall_domain.js"></script>
+<script src="wall_theme_nav.js"></script>
+<script>
+const THEME_LABEL={'概览':'港区概览','生产':'生产一张图','交通':'港区交通','设备':'设备设施','经营':'经营分析','调度':'智慧调度'};
+function renderThemes(){
+  const el=document.getElementById('theme-foot');
+  if(!el) return;
+  el.innerHTML=Object.keys(THEME_PAGES).map(k=>{
+    const label=THEME_LABEL[k]||k;
+    if(THEME_DISABLED.includes(k)) return `<span class="theme" style="opacity:.4">${label}</span>`;
+    if(k==='设备') return `<button type="button" class="theme on">${label}</button>`;
+    const href=k==='概览'?THEME_PAGES[k]+'?from='+encodeURIComponent('设备'):THEME_PAGES[k];
+    return `<a class="theme" href="${href}">${label}</a>`;
+  }).join('');
+}
+renderThemes();
+initWallTheme('设备');
+document.getElementById('btnPresent').onclick=()=>{document.body.classList.add('present');toast('汇报全屏 · Esc 退出')};
+document.addEventListener('keydown',e=>{if(e.key==='Escape') document.body.classList.remove('present')});
+
+setInterval(()=>{const a=document.getElementById('hd-asof');const b=document.getElementById('hd-asof2');if(a&&b)b.textContent=a.textContent},1000);
+
+</script>
+</body>
+</html>
