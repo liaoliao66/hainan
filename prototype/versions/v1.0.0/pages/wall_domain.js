@@ -253,65 +253,174 @@ const MAP_FEATURES = [
   ]},
   { name: '前沿在岗', type: '人员', layer: '人员', x: 24, y: 60, tone: 'person', status: '在岗', track: [
     { time: '08:02', place: '综合楼', x: 44, y: 24 },
+    { time: '08:10', place: '地磅', x: 76, y: 24 },
     { time: '08:16', place: '卡口', x: 84, y: 28 },
-    { time: '08:28', place: '前沿', x: 24, y: 60 }
+    { time: '08:22', place: '廊道口', x: 30, y: 52 },
+    { time: '08:28', place: '前沿', x: 24, y: 60 },
+    { time: '09:05', place: '1#泊位', x: 20, y: 66 }
   ], groups: [
     { title: '基本信息', rows: [['姓名', '周成'], ['工号', 'QG-014'], ['岗位', '卸船指挥'], ['所在区域', '前沿'], ['区域在岗', '12人']] },
     { title: '工班信息', rows: [['班组', '前沿甲班'], ['班次', '白班'], ['时段', '08:00–16:00'], ['当班负责人', '周成']] }
   ]},
   { name: '廊道在岗', type: '人员', layer: '人员', x: 32, y: 48, tone: 'person', status: '在岗', track: [
     { time: '08:05', place: '综合楼', x: 44, y: 24 },
+    { time: '08:12', place: '堆场路口', x: 48, y: 36 },
     { time: '08:20', place: 'T1转接', x: 36, y: 40 },
-    { time: '08:34', place: '廊道', x: 32, y: 48 }
+    { time: '08:28', place: '皮带中段', x: 34, y: 46 },
+    { time: '08:34', place: '廊道', x: 32, y: 48 },
+    { time: '09:15', place: '转接点复核', x: 36, y: 42 }
   ], groups: [
     { title: '基本信息', rows: [['姓名', '林海'], ['工号', 'QG-028'], ['岗位', '皮带巡检'], ['所在区域', '廊道'], ['区域在岗', '6人']] },
     { title: '工班信息', rows: [['班组', '廊道甲班'], ['班次', '白班'], ['时段', '08:00–16:00'], ['当班负责人', '林海']] }
   ]},
   { name: '堆场在岗', type: '人员', layer: '人员', x: 58, y: 34, tone: 'person', status: '在岗', track: [
     { time: '08:10', place: '卡口', x: 84, y: 28 },
+    { time: '08:16', place: '地磅', x: 76, y: 24 },
     { time: '08:22', place: '件杂堆场', x: 64, y: 38 },
-    { time: '08:40', place: '散货堆场', x: 58, y: 34 }
+    { time: '08:30', place: '货位巡查', x: 60, y: 36 },
+    { time: '08:40', place: '散货堆场', x: 58, y: 34 },
+    { time: '09:20', place: '装车位', x: 54, y: 40 }
   ], groups: [
     { title: '基本信息', rows: [['姓名', '陈磊'], ['工号', 'QG-033'], ['岗位', '堆场管理'], ['所在区域', '堆场'], ['区域在岗', '9人']] },
     { title: '工班信息', rows: [['班组', '堆场乙班'], ['班次', '白班'], ['时段', '08:00–16:00'], ['当班负责人', '陈磊']] }
   ]},
   { name: '卡口在岗', type: '人员', layer: '人员', x: 80, y: 34, tone: 'person', status: '在岗', track: [
     { time: '07:55', place: '综合楼', x: 44, y: 24 },
+    { time: '08:02', place: '东门通道', x: 82, y: 30 },
     { time: '08:08', place: '地磅', x: 76, y: 24 },
-    { time: '08:12', place: '卡口', x: 80, y: 34 }
+    { time: '08:12', place: '卡口', x: 80, y: 34 },
+    { time: '08:40', place: '通行复核', x: 86, y: 28 },
+    { time: '09:12', place: '异常车核验', x: 80, y: 34 }
   ], groups: [
     { title: '基本信息', rows: [['姓名', '吴敏'], ['工号', 'QG-041'], ['岗位', '卡口值班'], ['所在区域', '卡口'], ['区域在岗', '4人']] },
     { title: '工班信息', rows: [['班组', '卡口白班'], ['班次', '白班'], ['时段', '08:00–16:00'], ['当班负责人', '吴敏']] }
   ]},
-  { name: '综合楼在岗', type: '人员', layer: '人员', x: 44, y: 24, tone: 'person', status: '在岗', camera: '综合楼监控', groups: [
+  { name: '综合楼在岗', type: '人员', layer: '人员', x: 44, y: 24, tone: 'person', status: '在岗', groups: [
     { title: '基本信息', rows: [['姓名', '赵宁'], ['工号', 'QG-006'], ['岗位', '调度值班'], ['所在区域', '综合楼'], ['区域在岗', '18人']] },
     { title: '工班信息', rows: [['班组', '调度值班'], ['班次', '白班'], ['时段', '08:00–20:00'], ['当班负责人', '赵宁']] }
   ], track: [
     { time: '07:50', place: '综合楼大厅', x: 42, y: 28 },
-    { time: '08:00', place: '调度室', x: 44, y: 24 }
+    { time: '08:00', place: '调度室', x: 44, y: 24 },
+    { time: '08:30', place: '调度台', x: 45, y: 23 },
+    { time: '09:05', place: '值班室门口', x: 43, y: 26 },
+    { time: '09:40', place: '调度室', x: 44, y: 24 }
   ]},
-  { name: '粤A·D1234', type: '车辆', layer: '车辆', x: 46, y: 46, tone: 'ok', status: '行驶', camera: '集疏运通道监控', track: [
+  { name: '粤A·D1234', type: '车辆', layer: '车辆', x: 46, y: 46, tone: 'ok', status: '行驶', track: [
     { time: '09:10', place: '东门卡口', x: 84, y: 28 },
+    { time: '09:14', place: '卡口内通道', x: 80, y: 32 },
     { time: '09:18', place: '地磅#1', x: 76, y: 24 },
     { time: '09:26', place: '散货堆场A', x: 52, y: 42 },
+    { time: '09:32', place: '廊道口', x: 36, y: 50 },
     { time: '09:40', place: '1#泊位前沿', x: 20, y: 68 }
   ], groups: [
-    { title: '车辆', rows: [['车牌', '粤A·D1234'], ['车型', '自卸车'], ['货种', '水泥熟料'], ['状态', '行驶'], ['目的地', '1#泊位'], ['关联指令', 'ZY-1042']] }
+    { title: '车辆', rows: [['车牌', '粤A·D1234'], ['车型', '自卸车'], ['轴数', '6轴'], ['载重', '49吨'], ['状态', '行驶'], ['所属车队', '金港集疏运']] },
+    { title: '司机', rows: [['姓名', '黄强'], ['工号', 'SJ-118'], ['手机', '138****6210'], ['承运商', '金港物流']] },
+    { title: '本次作业', rows: [['指令', 'ZY-1042'], ['货种', '水泥熟料'], ['起讫', '东门→1#泊位'], ['进港', '09:10'], ['状态', '行驶中']] }
   ]},
-  { name: '琼B·C8801', type: '车辆', layer: '车辆', x: 52, y: 52, tone: 'ok', status: '作业', camera: '件杂外运通道监控', track: [
+  { name: '琼B·C8801', type: '车辆', layer: '车辆', x: 52, y: 52, tone: 'ok', status: '作业', track: [
     { time: '09:05', place: '件杂堆场', x: 64, y: 38 },
+    { time: '09:12', place: '装车位', x: 58, y: 44 },
     { time: '09:20', place: '海关查验点', x: 60, y: 50 },
+    { time: '09:28', place: '查验后通道', x: 68, y: 40 },
     { time: '09:32', place: '地磅#1', x: 76, y: 24 },
     { time: '09:45', place: '东门卡口', x: 84, y: 28 }
   ], groups: [
-    { title: '车辆', rows: [['车牌', '琼B·C8801'], ['车型', '平板车'], ['货种', '钢铁件杂'], ['状态', '作业'], ['目的地', '外运出港'], ['关联指令', 'ZY-0988']] }
+    { title: '车辆', rows: [['车牌', '琼B·C8801'], ['车型', '平板车'], ['轴数', '4轴'], ['载重', '32吨'], ['状态', '作业'], ['所属车队', '港投外运']] },
+    { title: '司机', rows: [['姓名', '李伟'], ['工号', 'SJ-206'], ['手机', '139****0845'], ['承运商', '港投物流']] },
+    { title: '本次作业', rows: [['指令', 'ZY-0988'], ['货种', '钢铁件杂'], ['起讫', '件杂堆场→外运出港'], ['进港', '08:52'], ['状态', '作业中']] }
   ]},
-  { name: '粤E·1122', type: '车辆', layer: '车辆', x: 72, y: 30, tone: 'warn', status: '过磅', camera: '地磅通道监控', track: [
+  { name: '粤E·1122', type: '车辆', layer: '车辆', x: 72, y: 30, tone: 'warn', status: '过磅', track: [
     { time: '09:30', place: '石英砂货区', x: 56, y: 44 },
+    { time: '09:36', place: '堆场出口', x: 66, y: 36 },
     { time: '09:42', place: '地磅排队', x: 78, y: 26 },
+    { time: '09:46', place: '过磅准备', x: 77, y: 25 },
     { time: '09:50', place: '地磅#1', x: 76, y: 24 }
   ], groups: [
-    { title: '车辆', rows: [['车牌', '粤E·1122'], ['车型', '自卸车'], ['货种', '石英砂'], ['状态', '过磅'], ['目的地', '出港'], ['关联指令', 'ZY-1051']] }
+    { title: '车辆', rows: [['车牌', '粤E·1122'], ['车型', '自卸车'], ['轴数', '6轴'], ['载重', '49吨'], ['状态', '过磅'], ['所属车队', '海砂专线']] },
+    { title: '司机', rows: [['姓名', '王磊'], ['工号', 'SJ-331'], ['手机', '137****5592'], ['承运商', '海砂运输']] },
+    { title: '本次作业', rows: [['指令', 'ZY-1051'], ['货种', '石英砂'], ['起讫', '石英砂货区→出港'], ['进港', '09:28'], ['状态', '过磅中']] }
+  ]},
+  { name: '琼C·6688', type: '车辆', layer: '车辆', x: 40, y: 50, tone: 'ok', status: '行驶', track: [
+    { time: '09:20', place: '东门卡口', x: 84, y: 28 },
+    { time: '09:28', place: '港区主干道', x: 60, y: 40 },
+    { time: '09:36', place: '1#散货仓库', x: 36, y: 58 },
+    { time: '09:48', place: '仓库装卸位', x: 30, y: 62 }
+  ], groups: [
+    { title: '车辆', rows: [['车牌', '琼C·6688'], ['车型', '自卸车'], ['轴数', '6轴'], ['载重', '49吨'], ['状态', '行驶'], ['所属车队', '金港集疏运']] },
+    { title: '司机', rows: [['姓名', '陈峰'], ['工号', 'SJ-142'], ['手机', '136****7731'], ['承运商', '金港物流']] },
+    { title: '本次作业', rows: [['指令', 'ZY-1060'], ['货种', '河砂'], ['起讫', '东门→1#仓库'], ['进港', '09:18'], ['状态', '行驶中']] }
+  ]},
+  { name: '粤B·9056', type: '车辆', layer: '车辆', x: 58, y: 56, tone: 'warn', status: '排队', track: [
+    { time: '09:40', place: '地磅通道', x: 70, y: 34 },
+    { time: '09:48', place: '地磅排队区', x: 74, y: 30 },
+    { time: '09:55', place: '地磅#1前', x: 75, y: 28 }
+  ], groups: [
+    { title: '车辆', rows: [['车牌', '粤B·9056'], ['车型', '自卸车'], ['轴数', '6轴'], ['载重', '49吨'], ['状态', '排队'], ['所属车队', '海砂专线']] },
+    { title: '司机', rows: [['姓名', '赵敏'], ['工号', 'SJ-258'], ['手机', '135****9022'], ['承运商', '海砂运输']] },
+    { title: '本次作业', rows: [['指令', 'ZY-1066'], ['货种', '石英砂'], ['起讫', '堆场→地磅'], ['进港', '09:35'], ['状态', '排队中']] }
+  ]},
+  { name: '琼A·3310', type: '车辆', layer: '车辆', x: 48, y: 60, tone: 'warn', status: '待核', track: [
+    { time: '09:15', place: '进港闸口', x: 78, y: 36 },
+    { time: '09:25', place: '仓库道路', x: 50, y: 58 },
+    { time: '09:40', place: '受限通道口', x: 46, y: 62 }
+  ], groups: [
+    { title: '车辆', rows: [['车牌', '琼A·3310'], ['车型', '平板车'], ['轴数', '4轴'], ['载重', '32吨'], ['状态', '待核'], ['所属车队', '港投外运']] },
+    { title: '司机', rows: [['姓名', '刘洋'], ['工号', 'SJ-277'], ['手机', '138****4410'], ['承运商', '港投物流']] },
+    { title: '本次作业', rows: [['指令', 'ZY-1033'], ['货种', '钢铁件杂'], ['起讫', '闸口→仓库道路'], ['进港', '09:12'], ['状态', '路线待核']] }
+  ]},
+  { name: '粤D·7721', type: '车辆', layer: '车辆', x: 68, y: 52, tone: 'ok', status: '待离港', track: [
+    { time: '08:50', place: '2#仓库', x: 42, y: 64 },
+    { time: '09:10', place: '出港通道', x: 62, y: 50 },
+    { time: '09:30', place: '出港闸口外场', x: 74, y: 48 }
+  ], groups: [
+    { title: '车辆', rows: [['车牌', '粤D·7721'], ['车型', '集装箱拖挂'], ['轴数', '6轴'], ['载重', '40吨'], ['状态', '待离港'], ['所属车队', '金港集疏运']] },
+    { title: '司机', rows: [['姓名', '周凯'], ['工号', 'SJ-190'], ['手机', '139****2288'], ['承运商', '金港物流']] },
+    { title: '本次作业', rows: [['指令', 'ZY-1018'], ['货种', '件杂'], ['起讫', '2#仓库→出港'], ['进港', '08:40'], ['状态', '待离港']] }
+  ]},
+  { name: '琼D·1208', type: '车辆', layer: '车辆', x: 34, y: 44, tone: 'ok', status: '行驶', track: [
+    { time: '09:22', place: '引桥通道', x: 28, y: 52 },
+    { time: '09:30', place: '2#泊位前沿', x: 32, y: 68 },
+    { time: '09:42', place: '泊位回程道', x: 38, y: 50 }
+  ], groups: [
+    { title: '车辆', rows: [['车牌', '琼D·1208'], ['车型', '自卸车'], ['轴数', '6轴'], ['载重', '49吨'], ['状态', '行驶'], ['所属车队', '港作辅助']] },
+    { title: '司机', rows: [['姓名', '吴斌'], ['工号', 'SJ-088'], ['手机', '137****6650'], ['承运商', '港内车队']] },
+    { title: '本次作业', rows: [['指令', 'ZY-1071'], ['货种', '水泥熟料'], ['起讫', '引桥→2#泊位'], ['进港', '09:20'], ['状态', '行驶中']] }
+  ]},
+  { name: '粤F·4419', type: '车辆', layer: '车辆', x: 56, y: 42, tone: 'ok', status: '作业', track: [
+    { time: '09:00', place: '散货堆场A', x: 52, y: 42 },
+    { time: '09:18', place: '装车位', x: 54, y: 40 },
+    { time: '09:40', place: '堆场出口', x: 60, y: 38 }
+  ], groups: [
+    { title: '车辆', rows: [['车牌', '粤F·4419'], ['车型', '自卸车'], ['轴数', '6轴'], ['载重', '49吨'], ['状态', '作业'], ['所属车队', '金港集疏运']] },
+    { title: '司机', rows: [['姓名', '孙浩'], ['工号', 'SJ-215'], ['手机', '136****1190'], ['承运商', '金港物流']] },
+    { title: '本次作业', rows: [['指令', 'ZY-1048'], ['货种', '水泥熟料'], ['起讫', '堆场装车'], ['进港', '08:55'], ['状态', '作业中']] }
+  ]},
+  { name: '琼E·8833', type: '车辆', layer: '车辆', x: 62, y: 38, tone: 'warn', status: '排队', track: [
+    { time: '09:35', place: '进港外场', x: 80, y: 34 },
+    { time: '09:45', place: 'G01排队', x: 70, y: 38 },
+    { time: '09:55', place: '闸口待放行', x: 66, y: 40 }
+  ], groups: [
+    { title: '车辆', rows: [['车牌', '琼E·8833'], ['车型', '自卸车'], ['轴数', '6轴'], ['载重', '49吨'], ['状态', '排队'], ['所属车队', '海砂专线']] },
+    { title: '司机', rows: [['姓名', '郑涛'], ['工号', 'SJ-304'], ['手机', '135****7801'], ['承运商', '海砂运输']] },
+    { title: '本次作业', rows: [['指令', 'ZY-1078'], ['货种', '河砂'], ['起讫', '外场→进港'], ['进港', '待放行'], ['状态', '闸口排队']] }
+  ]},
+  { name: '粤G·5560', type: '车辆', layer: '车辆', x: 44, y: 36, tone: 'ok', status: '行驶', track: [
+    { time: '09:25', place: '港区主干道', x: 55, y: 42 },
+    { time: '09:33', place: '3#杂货仓库', x: 50, y: 58 },
+    { time: '09:45', place: '仓库回程', x: 46, y: 40 }
+  ], groups: [
+    { title: '车辆', rows: [['车牌', '粤G·5560'], ['车型', '平板车'], ['轴数', '4轴'], ['载重', '32吨'], ['状态', '行驶'], ['所属车队', '港投外运']] },
+    { title: '司机', rows: [['姓名', '何军'], ['工号', 'SJ-166'], ['手机', '138****9033'], ['承运商', '港投物流']] },
+    { title: '本次作业', rows: [['指令', 'ZY-1055'], ['货种', '钢铁件杂'], ['起讫', '主干道→3#仓库'], ['进港', '09:22'], ['状态', '行驶中']] }
+  ]},
+  { name: '琼F·2199', type: '车辆', layer: '车辆', x: 70, y: 28, tone: 'warn', status: '过磅', track: [
+    { time: '09:38', place: '堆场出口', x: 64, y: 36 },
+    { time: '09:46', place: '地磅通道', x: 72, y: 30 },
+    { time: '09:52', place: '地磅#1', x: 76, y: 24 }
+  ], groups: [
+    { title: '车辆', rows: [['车牌', '琼F·2199'], ['车型', '自卸车'], ['轴数', '6轴'], ['载重', '49吨'], ['状态', '过磅'], ['所属车队', '海砂专线']] },
+    { title: '司机', rows: [['姓名', '马超'], ['工号', 'SJ-349'], ['手机', '137****5518'], ['承运商', '海砂运输']] },
+    { title: '本次作业', rows: [['指令', 'ZY-1082'], ['货种', '石英砂'], ['起讫', '堆场→过磅'], ['进港', '09:30'], ['状态', '过磅中']] }
   ]},
   { name: '前沿摄像头', type: '摄像头', layer: '摄像头', x: 18, y: 70, tone: 'ok', status: '在线', camera: '前沿监控', groups: [
     { title: '机位', rows: [['编号', 'CAM-01'], ['区域', '1#泊位前沿'], ['状态', '在线'], ['分辨率', '1080P'], ['用途', '卸船作业盯梢']] }
@@ -324,6 +433,18 @@ const MAP_FEATURES = [
   ]},
   { name: '卡口摄像头', type: '摄像头', layer: '摄像头', x: 86, y: 26, tone: 'ok', status: '在线', camera: '卡口监控', groups: [
     { title: '机位', rows: [['编号', 'CAM-04'], ['区域', '东门卡口'], ['状态', '在线'], ['分辨率', '1080P'], ['用途', '过车抓拍']] }
+  ]},
+  { name: '仓库摄像头', type: '摄像头', layer: '摄像头', x: 42, y: 62, tone: 'ok', status: '在线', camera: '1#仓库监控', groups: [
+    { title: '机位', rows: [['编号', 'CAM-05'], ['区域', '1#仓库'], ['状态', '在线'], ['分辨率', '1080P'], ['用途', '库内作业盯梢']] }
+  ]},
+  { name: '码头摄像头', type: '摄像头', layer: '摄像头', x: 26, y: 74, tone: 'ok', status: '在线', camera: '码头前沿监控', groups: [
+    { title: '机位', rows: [['编号', 'CAM-06'], ['区域', '码头前沿'], ['状态', '在线'], ['分辨率', '1080P'], ['用途', '前沿通行与作业']] }
+  ]},
+  { name: '地磅摄像头', type: '摄像头', layer: '摄像头', x: 74, y: 28, tone: 'ok', status: '在线', camera: '地磅前区监控', groups: [
+    { title: '机位', rows: [['编号', 'CAM-W01'], ['区域', '地磅前区'], ['状态', '在线'], ['分辨率', '1080P'], ['用途', '过磅排队盯梢']] }
+  ]},
+  { name: '主干道摄像头', type: '摄像头', layer: '摄像头', x: 60, y: 46, tone: 'ok', status: '在线', camera: '港区主干道监控', groups: [
+    { title: '机位', rows: [['编号', 'CAM-R01'], ['区域', '港区主干道'], ['状态', '在线'], ['分辨率', '1080P'], ['用途', '主干道通行']] }
   ]},
   { name: '前沿粉尘#1', type: '环境', envKind: '粉尘', layer: '环境', x: 22, y: 68, tone: 'ok', status: '达标', camera: '前沿环保监控',
     groups: [{ title: '监测', rows: [['设备', '粉尘仪'], ['分区', '前沿'], ['TSP', '0.62 mg/m³'], ['PM10', '0.41 mg/m³'], ['限值', '1.0 / 1.5'], ['作业影响', '前沿卸船正常'], ['等级', '达标'], ['采样', '1分钟'], ['优先级', 'P0']] }]},
@@ -717,10 +838,10 @@ function numOf(text) {
 function toneOf(text) {
   const value = String(text || '');
   if (/异常|一级|预警|故障|停机|越界|未闭环|超标/.test(value)) return 'r';
-  if (/查验|关注|二级|三级|待靠|锚地|待机|封闭|待接入|禁作业/.test(value)) return 'y';
-  if (/预留|未接入/.test(value)) return 'm';
+  if (/查验|关注|二级|三级|待靠|锚地|待机|封闭|待接入|禁作业|过磅|行驶|待办|进行中|排队|待核|称重/.test(value)) return 'y';
+  if (/预留|未接入|待离港/.test(value)) return 'm';
   if (/已申报/.test(value)) return 'b';
-  if (/放行|正常|运行|作业|在线|在岗|通行|达标|可作业/.test(value)) return 'g';
+  if (/放行|正常|运行|作业|在线|在岗|通行|达标|可作业|已完成/.test(value)) return 'g';
   return 'm';
 }
 
@@ -1101,32 +1222,635 @@ function vizCustoms(feat) {
   });
 }
 
+function photoCard(title, icon) {
+  return `<div class="pv-photo" role="img" aria-label="${escHtml(title)}">
+    <span class="pv-photo-badge">演示</span>
+    <i class="fa-solid ${icon}"></i>
+    <span>${escHtml(title)}</span>
+  </div>`;
+}
+
+function pvHead(title, extra) {
+  return `<div class="pv-head">${extra || ''}<b>${escHtml(title)}</b></div>`;
+}
+
+function kvGrid(items) {
+  return `<div class="pv-kv">${items.map(([key, val]) => {
+    const tone = /状态|通关|等级|告警|运行|通行|管理|闭环|计入/.test(key) ? toneOf(val) : '';
+    return `<div class="pv-kv-item"><span>${escHtml(key)}</span><b class="${tone}">${escHtml(val == null || val === '' ? '—' : val)}</b></div>`;
+  }).join('')}</div>`;
+}
+
+function personJobRecords(feat) {
+  const rows = rowMap(feat);
+  const role = rows['岗位'] || '人员';
+  const person = {
+    name: rows['姓名'] || '—',
+    code: rows['工号'] || '—',
+    role,
+    team: rows['班组'] || '—',
+    shift: rows['班次'] || '—',
+    area: rows['所在区域'] || '—'
+  };
+  const track = feat.track || [];
+  const trackRange = track.length
+    ? { start: track[0].time, end: track[track.length - 1].time, points: track.map((p) => p.place).join(' → ') }
+    : { start: '—', end: '—', points: '—' };
+  const pack = (order, title, result, start, end, steps, extra) => Object.assign({
+    kind: 'person',
+    order,
+    title,
+    result,
+    start,
+    end,
+    cargo: extra && extra.cargo || '—',
+    route: extra && extra.route || (person.area + '岗位'),
+    planTon: extra && extra.planTon || '—',
+    actualTon: extra && extra.actualTon || '—',
+    person,
+    steps,
+    weigh: extra && extra.weigh || { ticket: '—', gross: '—', net: '—', gateIn: '—', gateOut: '—' },
+    track: extra && extra.track || trackRange
+  }, extra || {});
+  if (/调度/.test(role)) {
+    return [
+      pack('ZY-1042', '盯控前沿卸船', '进行中', '08:02', '进行中', [
+        ['08:02', '接令确认', '已完成'], ['08:18', '盯控前沿卸船', '进行中']
+      ], { cargo: '水泥熟料', route: '调度室→前沿', planTon: '1.2 万t', actualTon: '0.46 万t', weigh: { ticket: '—', gross: '—', net: '—', gateIn: '—', gateOut: '—' }, track: { start: '08:02', end: '09:05', points: '综合楼 → 调度室 → 前沿复核' } }),
+      pack('ZY-1048', '协调疏运计划', '进行中', '09:05', '进行中', [
+        ['09:05', '协调疏运计划', '进行中']
+      ], { cargo: '石英砂', route: '调度室→卡口', planTon: '0.8 万t', actualTon: '0.22 万t', track: { start: '09:05', end: '09:40', points: '调度室 → 值班室门口' } }),
+      pack('ZB-006', '班中交底', '待办', '09:40', '—', [
+        ['09:40', '班中交底', '待办']
+      ], { cargo: '—', route: '调度室', track: { start: '09:40', end: '09:40', points: '调度室' } })
+    ];
+  }
+  if (/卸船|指挥/.test(role)) {
+    return [
+      pack('ZY-1042', '卸船指挥', '进行中', '08:16', '进行中', [
+        ['08:16', '到岗签到', '已完成'], ['08:30', '卸船指挥', '进行中'], ['09:20', '班组协同', '进行中']
+      ], { cargo: '水泥熟料', route: '前沿→1#泊位', planTon: '1.2 万t', actualTon: '0.51 万t', track: { start: '08:16', end: '09:05', points: '卡口 → 廊道口 → 前沿 → 1#泊位' } })
+    ];
+  }
+  if (/巡检|皮带/.test(role)) {
+    return [
+      pack('XJ-031', '廊道巡检', '已完成', '08:20', '08:48', [
+        ['08:20', '廊道巡检', '已完成'], ['08:48', '转接点检查', '已完成']
+      ], { cargo: '—', route: '廊道全线', track: { start: '08:20', end: '08:34', points: 'T1转接 → 皮带中段 → 廊道' } }),
+      pack('XJ-032', '异响复核', '进行中', '09:15', '进行中', [
+        ['09:15', '异响复核', '进行中']
+      ], { cargo: '—', route: '转接点', track: { start: '09:15', end: '09:15', points: '转接点复核' } })
+    ];
+  }
+  if (/堆场/.test(role)) {
+    return [
+      pack('DC-019', '货位盘点', '已完成', '08:22', '08:40', [
+        ['08:22', '货位盘点', '已完成']
+      ], { cargo: '件杂/散货', route: '件杂堆场→散货堆场', track: { start: '08:22', end: '08:40', points: '件杂堆场 → 货位巡查 → 散货堆场' } }),
+      pack('ZY-0988', '装车盯控', '进行中', '08:55', '进行中', [
+        ['08:55', '装车盯控', '进行中']
+      ], { cargo: '钢铁件杂', route: '装车位', planTon: '320 t', actualTon: '180 t', track: { start: '08:55', end: '09:20', points: '散货堆场 → 装车位' } }),
+      pack('DC-020', '货位调整', '待办', '09:30', '—', [
+        ['09:30', '货位调整', '待办']
+      ], { cargo: '散货', route: '散货堆场', track: { start: '09:30', end: '09:30', points: '散货堆场' } })
+    ];
+  }
+  if (/卡口/.test(role)) {
+    return [
+      pack('KK-011', '通行放行', '进行中', '08:08', '进行中', [
+        ['08:08', '开班核验', '已完成'], ['08:35', '通行放行', '进行中']
+      ], { cargo: '过车核验', route: '东门卡口', weigh: { ticket: 'KK-2218', gross: '—', net: '—', gateIn: '08:12', gateOut: '持续' }, track: { start: '08:08', end: '08:40', points: '地磅 → 卡口 → 通行复核' } }),
+      pack('KK-012', '异常车核验', '进行中', '09:12', '进行中', [
+        ['09:12', '异常车核验', '进行中']
+      ], { cargo: '异常车', route: '卡口核验区', track: { start: '09:12', end: '09:12', points: '异常车核验' } })
+    ];
+  }
+  return [
+    pack(rows['关联指令'] || 'ZY-1042', '岗位作业', '进行中', '08:10', '进行中', [
+      ['08:10', '到岗签到', '已完成'], ['08:40', '岗位作业', '进行中'], ['09:20', '班中交接', '待办']
+    ], { track: trackRange })
+  ];
+}
+
+function vehicleJobRecords(feat) {
+  const rows = rowMap(feat);
+  const plate = rows['车牌'] || feat.name;
+  const vehicle = {
+    plate,
+    type: rows['车型'] || '—',
+    axles: rows['轴数'] || '—',
+    load: rows['载重'] || '—',
+    fleet: rows['所属车队'] || '—'
+  };
+  const driver = {
+    name: rows['姓名'] || '—',
+    code: rows['工号'] || '—',
+    phone: rows['手机'] || '—',
+    carrier: rows['承运商'] || '—'
+  };
+  const currentOrder = rows['指令'] || rows['关联指令'] || 'ZY-1042';
+  const currentCargo = rows['货种'] || '散货';
+  const currentRoute = rows['起讫'] || (rows['目的地'] ? ('港内→' + rows['目的地']) : '—');
+  const track = feat.track || [];
+  const liveTrack = track.length
+    ? { start: track[0].time, end: track[track.length - 1].time, points: track.map((p) => p.place).join(' → ') }
+    : { start: '—', end: '—', points: '—' };
+  const mk = (order, cargo, route, enter, finish, result, planTon, actualTon, weigh, trackInfo) => ({
+    kind: 'vehicle',
+    order,
+    title: cargo + '运输',
+    cargo,
+    route,
+    start: enter,
+    end: finish,
+    result,
+    planTon,
+    actualTon,
+    vehicle,
+    driver,
+    weigh: weigh || { ticket: '—', gross: '—', net: '—', gateIn: enter, gateOut: finish },
+    track: trackInfo || liveTrack
+  });
+  return [
+    mk(currentOrder, currentCargo, currentRoute, rows['进港'] || '今天 09:10', '进行中', rows['本次作业·状态'] || rows['状态'] || '进行中', '49 t', '—', {
+      ticket: 'WB-' + currentOrder.slice(-4),
+      gross: '62.4 t',
+      net: '48.6 t',
+      gateIn: rows['进港'] || '09:10',
+      gateOut: '—'
+    }, liveTrack),
+    mk('ZY-0971', currentCargo, '堆场→出港', '昨天 14:40', '昨天 16:20', '已完成', '49 t', '48.2 t', {
+      ticket: 'WB-0971', gross: '61.8 t', net: '48.2 t', gateIn: '14:40', gateOut: '16:18'
+    }, { start: '14:40', end: '16:20', points: '东门卡口 → 地磅 → 堆场 → 出港' }),
+    mk('ZY-0958', '河砂', '河砂货区→出港', '昨天 09:20', '昨天 11:05', '已完成', '49 t', '47.9 t', {
+      ticket: 'WB-0958', gross: '61.1 t', net: '47.9 t', gateIn: '09:20', gateOut: '11:02'
+    }, { start: '09:20', end: '11:05', points: '河砂货区 → 地磅排队 → 地磅 → 卡口' }),
+    mk('ZY-0933', '水泥熟料', '散货堆场→1#泊位', '11/08 13:10', '11/08 15:40', '已完成', '49 t', '48.8 t', {
+      ticket: 'WB-0933', gross: '62.0 t', net: '48.8 t', gateIn: '13:10', gateOut: '15:36'
+    }, { start: '13:10', end: '15:40', points: '卡口 → 地磅 → 散货堆场 → 前沿' }),
+    mk('ZY-0910', plate.includes('8801') ? '钢铁件杂' : '石英砂', '货区→出港', '11/08 07:50', '11/08 09:18', '已完成', '32 t', '31.5 t', {
+      ticket: 'WB-0910', gross: '44.2 t', net: '31.5 t', gateIn: '07:50', gateOut: '09:15'
+    }, { start: '07:50', end: '09:18', points: '货区 → 查验点 → 地磅 → 卡口' })
+  ];
+}
+
+const JOB_PLACE_XY = {
+  '综合楼': [44, 24], '综合楼大厅': [42, 28], '调度室': [44, 24], '调度台': [45, 23], '值班室门口': [43, 26],
+  '卡口': [80, 34], '东门卡口': [84, 28], '东门通道': [82, 30], '卡口内通道': [80, 32], '通行复核': [86, 28], '异常车核验': [80, 34],
+  '地磅': [76, 24], '地磅#1': [76, 24], '地磅排队': [78, 26], '过磅准备': [77, 25],
+  '前沿': [24, 60], '1#泊位': [20, 66], '1#泊位前沿': [20, 68], '廊道': [32, 48], '廊道口': [30, 52], '皮带中段': [34, 46],
+  'T1转接': [36, 40], '转接点复核': [36, 42], '转接点': [36, 42],
+  '件杂堆场': [64, 38], '散货堆场': [58, 34], '散货堆场A': [52, 42], '货位巡查': [60, 36], '装车位': [54, 40],
+  '堆场路口': [48, 36], '堆场出口': [66, 36], '石英砂货区': [56, 44], '河砂货区': [50, 46], '货区': [56, 44],
+  '海关查验点': [60, 50], '查验点': [60, 50], '查验后通道': [68, 40], '出港': [88, 30]
+};
+
+function buildJobTrackPoints(trackInfo, fallbackTrack) {
+  if (fallbackTrack && fallbackTrack.length) {
+    const start = trackInfo && trackInfo.start;
+    const end = trackInfo && trackInfo.end;
+    if (!start && !end) return fallbackTrack.slice();
+    const filtered = filterTrackByTime(fallbackTrack, start === '进行中' ? '' : start, (end === '进行中' || end === '—') ? '' : end);
+    if (filtered.length) return filtered;
+  }
+  const places = String((trackInfo && trackInfo.points) || '').split(/\s*→\s*/).map((s) => s.trim()).filter(Boolean);
+  if (!places.length) return fallbackTrack && fallbackTrack.length ? fallbackTrack.slice() : [];
+  const startMin = timeToMin((trackInfo && trackInfo.start) || '08:00');
+  const endRaw = trackInfo && trackInfo.end;
+  const endMin = (!endRaw || endRaw === '进行中' || endRaw === '—') ? startMin + Math.max(places.length - 1, 1) * 8 : timeToMin(endRaw);
+  const span = Math.max(endMin - startMin, places.length - 1);
+  return places.map((place, i) => {
+    const xy = JOB_PLACE_XY[place] || [40 + i * 6, 36 + (i % 3) * 4];
+    const t = startMin + Math.round((span * i) / Math.max(places.length - 1, 1));
+    const hh = String(Math.floor(t / 60) % 24).padStart(2, '0');
+    const mm = String(t % 60).padStart(2, '0');
+    return { time: hh + ':' + mm, place, x: xy[0], y: xy[1] };
+  });
+}
+
+function jobDetailIdentity(rec, feat) {
+  const status = rec.result || '—';
+  let sub = '';
+  if (rec.kind === 'vehicle') {
+    sub = [(rec.vehicle && rec.vehicle.plate) || (feat && feat.name) || '—', rec.cargo || rec.title || '—'].join(' · ');
+  } else {
+    sub = [(rec.person && rec.person.name) || (feat && feat.name) || '—', rec.title || (rec.person && rec.person.role) || '—'].join(' · ');
+  }
+  return {
+    order: rec.order || '—',
+    sub,
+    status,
+    statusTone: toneOf(status)
+  };
+}
+
+function jobDetailPageHtml(rec, feat) {
+  if (!rec) return '<div class="yg-empty">暂无详情</div>';
+  const trackPoints = buildJobTrackPoints(rec.track, feat && feat.track);
+  const trackFeat = {
+    name: (feat && feat.name ? feat.name + ' · ' : '') + rec.order,
+    type: (feat && feat.type) || (rec.kind === 'person' ? '人员' : '车辆'),
+    track: trackPoints
+  };
+  return `<div class="job-detail-page">
+    ${jobDetailBodyHtml(rec)}
+    <div class="pv-track-row job-detail-track">
+      <div class="pv-block pv-track-main">
+        ${pvHead('本指令轨迹回放')}
+        ${trackReplayPanel(trackFeat, trackFeat.type, { split: true, filter: true })}
+      </div>
+      <div class="pv-track-side">
+        <div class="pv-block fill">
+          ${pvHead('轨迹点记录')}
+          <div class="tr-steps-host" data-role="steps-host"></div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function jobListRowsHtml(records) {
+  if (!records || !records.length) return '<div class="yg-empty">暂无历史作业</div>';
+  const isPerson = records[0].kind === 'person';
+  const headers = isPerson
+    ? ['指令号', '环节', '开始', '结束', '结果', '关联区域', '操作']
+    : ['指令号', '货种', '起讫', '进港', '完成', '结果', '净重', '承运商', '操作'];
+  const body = records.map((rec, i) => {
+    if (isPerson) {
+      return `<tr>
+        <td class="code">${escHtml(rec.order)}</td>
+        <td class="cargo">${escHtml(rec.title || '—')}</td>
+        <td class="code">${escHtml(rec.start || '—')}</td>
+        <td class="code">${escHtml(rec.end || '—')}</td>
+        <td>${pillOf(rec.result || '—')}</td>
+        <td>${escHtml((rec.person && rec.person.area) || rec.route || '—')}</td>
+        <td><button type="button" class="pv-link-btn compact" data-role="job-hist-detail" data-i="${i}"><i class="fa-solid fa-eye"></i> 详情</button></td>
+      </tr>`;
+    }
+    return `<tr>
+      <td class="code">${escHtml(rec.order)}</td>
+      <td class="cargo">${escHtml(rec.cargo || '—')}</td>
+      <td>${escHtml(rec.route || '—')}</td>
+      <td class="code">${escHtml(rec.start || '—')}</td>
+      <td class="code">${escHtml(rec.end || '—')}</td>
+      <td>${pillOf(rec.result || '—')}</td>
+      <td class="code">${escHtml((rec.weigh && rec.weigh.net) || rec.actualTon || '—')}</td>
+      <td>${escHtml((rec.driver && rec.driver.carrier) || '—')}</td>
+      <td><button type="button" class="pv-link-btn compact" data-role="job-hist-detail" data-i="${i}"><i class="fa-solid fa-eye"></i> 详情</button></td>
+    </tr>`;
+  }).join('');
+  return compactTable(headers, body);
+}
+
+function jobDetailBodyHtml(rec) {
+  if (!rec) return '<div class="yg-empty">暂无详情</div>';
+  const main = `<div class="pv-ov-sec">${pvHead('作业主档')}${kvGrid([
+    ['货种', rec.cargo || '—'],
+    ['起讫', rec.route || '—'],
+    ['计划量', rec.planTon || '—'],
+    ['实绩', rec.actualTon || '—'],
+    ['开始', rec.start || '—'],
+    ['结束', rec.end || '—']
+  ])}</div>`;
+
+  let objectCard = '';
+  if (rec.kind === 'vehicle') {
+    const v = rec.vehicle || {};
+    const d = rec.driver || {};
+    objectCard = `<div class="pv-ov-sec">
+      ${pvHead('运力对象')}
+      <div class="pv-ov-split">
+        <div>
+          <div class="pv-ov-sub">车辆</div>
+          ${kvGrid([
+            ['车牌', v.plate || '—'],
+            ['车型', v.type || '—'],
+            ['轴数', v.axles || '—'],
+            ['载重', v.load || '—'],
+            ['车队', v.fleet || '—']
+          ])}
+        </div>
+        <div>
+          <div class="pv-ov-sub">司机</div>
+          ${kvGrid([
+            ['姓名', d.name || '—'],
+            ['工号', d.code || '—'],
+            ['手机', d.phone || '—'],
+            ['承运商', d.carrier || '—']
+          ])}
+        </div>
+      </div>
+    </div>`;
+  } else {
+    const p = rec.person || {};
+    const stepsHtml = (rec.steps && rec.steps.length)
+      ? compactTable(['时间', '环节', '状态'], rec.steps.map(([t, step, st]) =>
+        `<tr><td class="code">${escHtml(t)}</td><td class="cargo">${escHtml(step)}</td><td>${pillOf(st)}</td></tr>`
+      ).join(''))
+      : '<div class="yg-empty soft">暂无环节明细</div>';
+    objectCard = `<div class="pv-ov-sec">
+      ${pvHead('人员岗位')}
+      ${kvGrid([
+        ['姓名', p.name || '—'],
+        ['工号', p.code || '—'],
+        ['岗位', p.role || '—'],
+        ['班组', p.team || '—'],
+        ['班次', p.shift || '—'],
+        ['区域', p.area || '—']
+      ])}
+      <div class="pv-ov-sub mt">作业环节</div>
+      ${stepsHtml}
+    </div>`;
+  }
+
+  const weigh = rec.weigh || {};
+  const hasWeigh = ['ticket', 'gross', 'net', 'gateIn', 'gateOut'].some((k) => weigh[k] && weigh[k] !== '—');
+  const weighCard = `<div class="pv-ov-sec">
+    ${pvHead('过磅 / 卡口')}
+    ${hasWeigh ? kvGrid([
+      ['过磅票', weigh.ticket || '—'],
+      ['毛重', weigh.gross || '—'],
+      ['净重', weigh.net || '—'],
+      ['进卡', weigh.gateIn || '—'],
+      ['出卡', weigh.gateOut || '—']
+    ]) : '<div class="yg-empty soft">本指令暂无过磅/卡口数据</div>'}
+  </div>`;
+
+  return `<div class="job-detail-top">${main}${objectCard}${weighCard}</div>`;
+}
+
+const JobArchive = {
+  feat: null,
+  records: [],
+  active: 0,
+  detailOpen: false,
+  listOpen: false,
+  bindAll() { /* 兼容旧调用；历史作业改由顶栏入口打开 */ },
+  setFeature(feat) {
+    this.feat = feat || null;
+    if (!feat) {
+      this.records = [];
+      return;
+    }
+    if (feat.type === '人员') this.records = personJobRecords(feat);
+    else if (feat.type === '车辆') this.records = vehicleJobRecords(feat);
+    else this.records = [];
+  },
+  ensureListModal() {
+    let mask = document.getElementById('job-hist-modal');
+    if (mask) return mask;
+    mask = document.createElement('div');
+    mask.id = 'job-hist-modal';
+    mask.className = 'job-hist-mask';
+    mask.setAttribute('role', 'dialog');
+    mask.setAttribute('aria-modal', 'true');
+    mask.innerHTML = `<div class="job-hist-modal" data-role="job-hist-shell">
+      <div class="job-hist-hd">
+        <div>
+          <div class="job-hist-kicker">历史作业记录 · 大窗</div>
+          <h4 data-role="job-hist-title">历史作业</h4>
+        </div>
+        <button type="button" class="job-hist-x" data-role="job-hist-close" aria-label="关闭">×</button>
+      </div>
+      <div class="job-hist-bd" data-role="job-hist-body"></div>
+      <div class="job-hist-ft">居中大窗展示近5条记录；点「详情」打开指令详情大窗（全量字段 + 轨迹）。关闭详情即返回本列表。</div>
+    </div>`;
+    document.body.appendChild(mask);
+    mask.addEventListener('click', (e) => {
+      if (e.target === mask || e.target.closest('[data-role="job-hist-close"]')) this.closeList();
+      const detailBtn = e.target.closest('[data-role="job-hist-detail"]');
+      if (detailBtn) this.openDetail(Number(detailBtn.dataset.i) || 0);
+    });
+    return mask;
+  },
+  ensureDetailModal() {
+    let mask = document.getElementById('job-detail-modal');
+    if (mask) return mask;
+    mask = document.createElement('div');
+    mask.id = 'job-detail-modal';
+    mask.className = 'job-hist-mask job-detail-mask';
+    mask.setAttribute('role', 'dialog');
+    mask.setAttribute('aria-modal', 'true');
+    mask.innerHTML = `<div class="job-hist-modal job-detail-modal">
+      <div class="job-hist-hd job-detail-hd">
+        <div class="job-detail-id">
+          <div class="job-hist-kicker">指令详情 · 全量关联 + 轨迹</div>
+          <div class="job-detail-id-row">
+            <h4 data-role="job-detail-title">指令详情</h4>
+            <span class="job-detail-status" data-role="job-detail-status">—</span>
+          </div>
+          <div class="job-detail-sub" data-role="job-detail-sub">—</div>
+        </div>
+        <button type="button" class="job-hist-x" data-role="job-detail-close" aria-label="关闭">×</button>
+      </div>
+      <div class="job-hist-bd" data-role="job-detail-body"></div>
+      <div class="job-hist-ft">关闭本窗即返回历史作业列表。Esc 同效。</div>
+    </div>`;
+    document.body.appendChild(mask);
+    mask.addEventListener('click', (e) => {
+      if (e.target === mask || e.target.closest('[data-role="job-detail-close"]')) this.closeDetail();
+    });
+    return mask;
+  },
+  openList(feat) {
+    if (feat) this.setFeature(feat);
+    if (!this.feat || (this.feat.type !== '人员' && this.feat.type !== '车辆')) {
+      if (typeof toast === 'function') toast('仅人员/车辆支持历史作业');
+      return;
+    }
+    this.closeDetail(true);
+    const mask = this.ensureListModal();
+    const title = mask.querySelector('[data-role="job-hist-title"]');
+    const body = mask.querySelector('[data-role="job-hist-body"]');
+    if (title) title.textContent = this.feat.name + ' · 历史作业';
+    if (body) body.innerHTML = jobListRowsHtml(this.records);
+    mask.classList.add('show');
+    mask.classList.remove('is-hidden');
+    this.listOpen = true;
+  },
+  hideList() {
+    const mask = document.getElementById('job-hist-modal');
+    if (mask) {
+      mask.classList.remove('show');
+      mask.classList.add('is-hidden');
+    }
+  },
+  showList() {
+    const mask = this.ensureListModal();
+    mask.classList.add('show');
+    mask.classList.remove('is-hidden');
+    this.listOpen = true;
+  },
+  closeList() {
+    this.closeDetail(true);
+    const mask = document.getElementById('job-hist-modal');
+    if (mask) {
+      mask.classList.remove('show');
+      mask.classList.remove('is-hidden');
+    }
+    this.listOpen = false;
+    return true;
+  },
+  openDetail(index) {
+    this.active = index;
+    const rec = this.records[index];
+    if (!rec) return;
+    this.hideList();
+    let mask = this.ensureDetailModal();
+    if (!mask.querySelector('[data-role="job-detail-sub"]')) {
+      mask.remove();
+      mask = this.ensureDetailModal();
+    }
+    const id = jobDetailIdentity(rec, this.feat);
+    const title = mask.querySelector('[data-role="job-detail-title"]');
+    const sub = mask.querySelector('[data-role="job-detail-sub"]');
+    const status = mask.querySelector('[data-role="job-detail-status"]');
+    const body = mask.querySelector('[data-role="job-detail-body"]');
+    if (title) title.textContent = id.order;
+    if (sub) sub.textContent = id.sub;
+    if (status) {
+      status.textContent = id.status;
+      status.className = 'job-detail-status ' + id.statusTone;
+    }
+    if (body) {
+      body.innerHTML = jobDetailPageHtml(rec, this.feat);
+      if (typeof TrackReplay !== 'undefined' && TrackReplay.bindAll) {
+        TrackReplay.stop();
+        TrackReplay.bindAll(body);
+      }
+    }
+    mask.classList.add('show');
+    this.detailOpen = true;
+  },
+  closeDetail(skipRestore) {
+    const mask = document.getElementById('job-detail-modal');
+    if (!mask || !this.detailOpen) {
+      if (!skipRestore && this.listOpen) this.showList();
+      return false;
+    }
+    if (typeof TrackReplay !== 'undefined' && TrackReplay.stop) TrackReplay.stop();
+    mask.classList.remove('show');
+    const body = mask.querySelector('[data-role="job-detail-body"]');
+    if (body) body.innerHTML = '';
+    this.detailOpen = false;
+    if (!skipRestore) this.showList();
+    return true;
+  },
+  closeTop() {
+    if (this.detailOpen) return this.closeDetail();
+    if (this.listOpen) return this.closeList();
+    return false;
+  }
+};
+
+if (typeof document !== 'undefined') {
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && JobArchive.closeTop()) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, true);
+}
+
 function vizPerson(feat) {
   const rows = rowMap(feat);
   const name = rows['姓名'] || '—';
-  const status = feat.status || '在岗';
   const count = String(rows['区域在岗'] || '—').replace('人', '');
-  return detailLayout({
-    camHtml: camPanel(Object.assign({}, feat, { camera: feat.camera || ((rows['所在区域'] || '现场') + '监控') }), rows['岗位'] || '人员', status),
-    status,
-    note: '在岗态势 · 轨迹回放',
-    tilesHtml: vtiles([['姓名', name], ['工号', rows['工号'] || '—'], ['岗位', rows['岗位'] || '—'], ['区域在岗', count + '人'], ['班组', rows['班组'] || '—'], ['班次', rows['班次'] || '—']]),
-    listTitle: '轨迹回放 · 人员 · 演示',
-    listHtml: trackReplayPanel(feat, '人员')
-  });
+  return `<div class="viz pv-detail" data-job-kind="person">
+    <div class="pv-identity person">
+      <div class="pv-photos">
+        ${photoCard('人员照片', 'fa-user')}
+      </div>
+      <div class="pv-id-main">
+        <div class="pv-id-title">
+          <strong>${escHtml(name)}</strong>
+          <span class="pv-id-sub">${escHtml(rows['岗位'] || '人员')} · ${escHtml(rows['工号'] || '—')}</span>
+        </div>
+        ${kvGrid([
+          ['班组', rows['班组'] || '—'],
+          ['班次', rows['班次'] || '—'],
+          ['时段', rows['时段'] || '—'],
+          ['所在区域', rows['所在区域'] || '—'],
+          ['区域在岗', count + '人'],
+          ['当班负责人', rows['当班负责人'] || name]
+        ])}
+      </div>
+    </div>
+    <div class="pv-track-row">
+      <div class="pv-block pv-track-main">
+        ${pvHead('轨迹回放')}
+        ${trackReplayPanel(feat, '人员', { split: true, filter: true })}
+      </div>
+      <div class="pv-track-side">
+        <div class="pv-block fill">
+          ${pvHead('轨迹点记录')}
+          <div class="tr-steps-host" data-role="steps-host"></div>
+        </div>
+      </div>
+    </div>
+  </div>`;
 }
 
 function vizVehicle(feat) {
   const rows = rowMap(feat);
   const status = rows['状态'] || feat.status || '行驶';
-  return detailLayout({
-    camHtml: camPanel(feat, rows['车型'] || '车辆', status),
-    status,
-    note: '在港车辆 · 轨迹回放',
-    tilesHtml: vtiles([['车牌', rows['车牌'] || feat.name], ['车型', rows['车型'] || '—'], ['货种', rows['货种'] || '—'], ['目的地', rows['目的地'] || '—'], ['关联指令', rows['关联指令'] || '—']]),
-    listTitle: '轨迹回放 · 车辆 · 演示',
-    listHtml: trackReplayPanel(feat, '车辆')
-  });
+  const plate = rows['车牌'] || feat.name;
+  const jobStatus = rows['本次作业·状态'] || rows['状态'] || status;
+  return `<div class="viz pv-detail" data-job-kind="vehicle">
+    <div class="pv-identity">
+      <div class="pv-photos row">
+        ${photoCard('车辆照片', 'fa-truck')}
+        ${photoCard('司机照片', 'fa-id-card')}
+      </div>
+      <div class="pv-id-main">
+        <div class="pv-id-title">
+          <strong>${escHtml(plate)}</strong>
+          <span class="pv-id-sub">${escHtml(rows['车型'] || '车辆')} · ${escHtml(rows['所属车队'] || '—')}</span>
+        </div>
+        <div class="pv-id-cols">
+          <div>
+            ${pvHead('车辆信息')}
+            ${kvGrid([
+              ['轴数', rows['轴数'] || '—'],
+              ['载重', rows['载重'] || '—'],
+              ['车队', rows['所属车队'] || '—']
+            ])}
+          </div>
+          <div>
+            ${pvHead('司机信息')}
+            ${kvGrid([
+              ['姓名', rows['姓名'] || '—'],
+              ['工号', rows['工号'] || '—'],
+              ['手机', rows['手机'] || '—'],
+              ['承运商', rows['承运商'] || '—']
+            ])}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pv-block">
+      ${pvHead('本次作业')}
+      ${kvGrid([
+        ['指令', rows['指令'] || rows['关联指令'] || '—'],
+        ['货种', rows['货种'] || '—'],
+        ['起讫', rows['起讫'] || ((rows['目的地'] ? ('港内→' + rows['目的地']) : '—'))],
+        ['进港', rows['进港'] || '—'],
+        ['状态', jobStatus]
+      ])}
+    </div>
+    <div class="pv-track-row">
+      <div class="pv-block pv-track-main">
+        ${pvHead('最新轨迹回放')}
+        ${trackReplayPanel(feat, '车辆', { split: true, filter: true })}
+      </div>
+      <div class="pv-track-side">
+        <div class="pv-block fill">
+          ${pvHead('轨迹点记录')}
+          <div class="tr-steps-host" data-role="steps-host"></div>
+        </div>
+      </div>
+    </div>
+  </div>`;
 }
 
 function vizAlert(feat) {
@@ -1214,26 +1938,467 @@ function vizZone(feat) {
   });
 }
 
+function camHistTimeOptions() {
+  return [
+    ['今天 09:10', '今天 09:25'],
+    ['今天 08:30', '今天 08:45'],
+    ['今天 07:50', '今天 08:05'],
+    ['昨天 16:20', '昨天 16:35'],
+    ['昨天 11:00', '昨天 11:15']
+  ];
+}
+
+function camAiShotSrc(index) {
+  const shots = [
+    '../assets/figma/eq-cam1.png',
+    '../assets/figma/eq-cam2.png',
+    '../assets/figma/eq-cam3.png',
+    '../assets/figma/cam01.png',
+    '../assets/figma/cam02.png',
+    '../assets/figma/traf-cam1.png',
+    '../assets/dispatch/cam01.jpg'
+  ];
+  return shots[index % shots.length];
+}
+
+function camAiAlarmRows(feat) {
+  const rows = rowMap(feat);
+  const area = rows['区域'] || feat.name || '监控区';
+  const code = rows['编号'] || feat.name || 'CAM';
+  const offline = /离线|中断|故障/.test(String(rows['状态'] || feat.status || ''));
+  const base = [
+    ['今天 09:42:18', 'AI-INV-0918', '区域入侵', '一级', area + ' · 警戒线内侧', '行人', '未闭环', '待值班确认', '抓拍帧 #1842', code],
+    ['今天 09:18:06', 'AI-HEL-0744', '未戴安全帽', '二级', area + ' · 作业面', '作业人员', '处置中', '已通知班组', '抓拍帧 #1760', code],
+    ['今天 08:55:41', 'AI-REF-0612', '未穿反光衣', '二级', area + ' · 通道口', '过往人员', '已闭环', '现场已纠正', '抓拍帧 #1695', code],
+    ['昨天 16:28:12', 'AI-INV-0588', '区域入侵', '二级', area + ' · 禁入区', '非授权进入', '已闭环', '驱离完成', '抓拍帧 #1520', code],
+    ['昨天 14:05:33', 'AI-HEL-0491', '未戴安全帽', '二级', area + ' · 装卸点', '司机下车', '已闭环', '口头警告', '抓拍帧 #1408', code],
+    ['昨天 11:22:07', 'AI-REF-0386', '未穿反光衣', '关注', area + ' · 巡检路径', '巡检人员', '已闭环', '补穿完成', '抓拍帧 #1333', code],
+    ['11/08 17:40:25', 'AI-GAT-0270', '人员聚集', '关注', area + ' · 卡口外侧', '车辆排队', '已闭环', '疏导完成', '抓拍帧 #1210', code]
+  ];
+  if (offline) return base.slice(3);
+  return base;
+}
+
+function camAiAlarmListHtml(feat) {
+  const aiRows = camAiAlarmRows(feat);
+  if (!aiRows.length) return '<div class="yg-empty">本机位暂无 AI 报警</div>';
+  return `<div class="cam-ai-list">${aiRows.map((row, i) => {
+    const [time, id, type, level, place, target, st, action, shot, cam] = row;
+    return `<article class="cam-ai-row">
+      <div class="cam-ai-shot-wrap">
+        <img class="cam-ai-shot" src="${camAiShotSrc(i)}" alt="${escHtml(shot)}">
+        <span class="cam-ai-shot-lab">${escHtml(shot)}</span>
+      </div>
+      <div class="cam-ai-fields">
+        <div><b>时间</b><span class="code">${escHtml(time)}</span></div>
+        <div><b>报警编号</b><span class="code">${escHtml(id)}</span></div>
+        <div><b>类型</b><span>${escHtml(type)}</span></div>
+        <div><b>等级</b>${pillOf(level)}</div>
+        <div><b>位置</b><span>${escHtml(place)}</span></div>
+        <div><b>目标</b><span>${escHtml(target)}</span></div>
+        <div><b>状态</b>${pillOf(st)}</div>
+        <div><b>处置</b><span>${escHtml(action)}</span></div>
+        <div><b>机位</b><span class="code">${escHtml(cam)}</span></div>
+      </div>
+    </article>`;
+  }).join('')}</div>`;
+}
+
 function vizCamera(feat) {
   const rows = rowMap(feat);
   const status = rows['状态'] || feat.status || '在线';
-  const list = compactTable(['项目', '内容'], [
+  const online = !/离线|中断|故障/.test(String(status));
+  const name = camNameOf(feat, '摄像头');
+  const src = camSrcOf(feat);
+  const area = rows['区域'] || feat.name || '';
+  const ranges = camHistTimeOptions();
+  const startOpts = ranges.map((r, i) => `<option value="${escHtml(r[0])}" ${i === 0 ? 'selected' : ''}>${escHtml(r[0])}</option>`).join('');
+  const endOpts = ranges.map((r, i) => `<option value="${escHtml(r[1])}" ${i === 0 ? 'selected' : ''}>${escHtml(r[1])}</option>`).join('');
+  const infoHtml = kvGrid([
     ['编号', rows['编号'] || '—'],
+    ['名称', feat.name || '—'],
     ['区域', rows['区域'] || '—'],
     ['状态', status],
     ['分辨率', rows['分辨率'] || '—'],
     ['用途', rows['用途'] || '—'],
-    ['说明', rows['说明'] || '演示机位']
-  ].map((row) => `<tr><td class="cargo">${escHtml(row[0])}</td><td>${escHtml(row[1])}</td></tr>`).join(''));
-  return detailLayout({
-    camHtml: camPanel(feat, '摄像头', status),
-    status,
-    note: '视频机位 · 港区概览叠加（泊位/设备等见 BIM）',
-    meterHtml: `<div class="vmeter"><div class="vmeter-fill ${toneOf(status)}" style="width:${/离线|中断|故障/.test(status) ? 12 : 88}%"></div></div>`,
-    tilesHtml: vtiles([['编号', rows['编号'] || '—'], ['区域', rows['区域'] || '—'], ['状态', status], ['用途', rows['用途'] || '—']]),
-    listTitle: '机位档案 · 演示',
-    listHtml: list
-  });
+    ['机位', name],
+    ['说明', rows['说明'] || '港区概览叠加机位']
+  ]);
+  const aiHtml = camAiAlarmListHtml(feat);
+  return `<div class="viz cam-view" data-cam-mode="live">
+    <div class="cam-pane on" data-pane="live">
+      <div class="cam-live-stage ${online ? '' : 'offline'}" role="img" aria-label="${escHtml(name)}">
+        <img class="cam-live-photo" src="${src}" alt="${escHtml(name)}">
+        <div class="cam-live-scan"></div>
+        <span class="cam-live-rec">${online ? 'LIVE' : 'OFFLINE'}</span>
+        <span class="cam-live-tag ${toneOf(status)}">${escHtml(status)}</span>
+        <div class="cam-live-caption">
+          <b>${escHtml(name)}</b>
+          <span>${escHtml(area)} · 实时监控</span>
+        </div>
+      </div>
+      <div class="cam-live-note">${online ? '点击右上角可查看历史视频、AI报警或基础信息' : '机位离线，仍可查看历史视频、AI报警与基础信息'}</div>
+    </div>
+    <div class="cam-pane" data-pane="hist">
+      <div class="cam-hist-only">
+        <div class="tr-filter cam-hist-filter">
+          <span class="tr-filter-lab">时间范围</span>
+          <label>起<select data-role="cam-hist-start">${startOpts}</select></label>
+          <span class="tr-filter-sep">—</span>
+          <label>止<select data-role="cam-hist-end">${endOpts}</select></label>
+          <button type="button" class="tr-filter-btn" data-role="cam-hist-apply">筛选</button>
+          <button type="button" class="tr-filter-btn ghost" data-role="cam-hist-reset">重置</button>
+        </div>
+        <div class="cam-live-stage hist fill" data-role="cam-hist-stage">
+          <img class="cam-live-photo" src="${src}" alt="历史回放">
+          <span class="cam-live-rec hist">REC</span>
+          <div class="cam-live-caption">
+            <b data-role="cam-hist-title">${escHtml(ranges[0][0])} → ${escHtml(ranges[0][1])}</b>
+            <span>${escHtml(area)} · 演示录像 · 非实况</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="cam-pane" data-pane="ai">
+      <div class="pv-block cam-ai-card">
+        ${pvHead('AI报警 · 本机位')}
+        ${aiHtml}
+      </div>
+    </div>
+    <div class="cam-pane" data-pane="info">
+      <div class="pv-block cam-info-card">
+        ${pvHead('摄像头基础信息')}
+        ${infoHtml}
+      </div>
+    </div>
+  </div>`;
+}
+
+const CamView = {
+  mode: 'live',
+  setMode(mode) {
+    const next = (mode === 'hist' || mode === 'info' || mode === 'ai') ? mode : 'live';
+    this.mode = next;
+    const root = document.getElementById('ov-modal');
+    if (root) root.classList.toggle('cam-ai-scroll', next === 'ai');
+    const view = root && root.querySelector('.cam-view');
+    if (view) {
+      view.dataset.camMode = next;
+      view.querySelectorAll('.cam-pane').forEach((pane) => {
+        pane.classList.toggle('on', pane.dataset.pane === next);
+      });
+    }
+    ['live', 'hist', 'ai', 'info'].forEach((key) => {
+      const btn = document.getElementById('ovm-cam-' + key);
+      if (btn) btn.classList.toggle('on', key === next);
+    });
+    const body = document.getElementById('ovm-body');
+    if (body && next === 'ai') body.scrollTop = 0;
+    const ft = root && root.querySelector('.ovm-ft');
+    if (ft) {
+      ft.textContent = next === 'live'
+        ? '默认实时监控；右上角可切换历史视频 / AI报警 / 基础信息。Esc 关闭。'
+        : next === 'hist'
+          ? '仅按时间筛选回放；无片段列表。Esc 关闭。'
+          : next === 'ai'
+            ? '本机位 AI 报警全量列表（含抓拍图）；整窗滚动浏览。Esc 关闭。'
+            : '基础信息来自机位档案演示数据。Esc 关闭。';
+    }
+  },
+  applyHistFilter(root) {
+    const startSel = root.querySelector('[data-role="cam-hist-start"]');
+    const endSel = root.querySelector('[data-role="cam-hist-end"]');
+    const title = root.querySelector('[data-role="cam-hist-title"]');
+    const start = startSel ? startSel.value : '';
+    const end = endSel ? endSel.value : '';
+    if (start && end) {
+      const sKey = start.replace(/[^\d]/g, '');
+      const eKey = end.replace(/[^\d]/g, '');
+      if (sKey && eKey && sKey > eKey) {
+        if (typeof toast === 'function') toast('起止时间颠倒，请重选');
+        return;
+      }
+    }
+    if (title) title.textContent = (start || '—') + ' → ' + (end || '—');
+    if (typeof toast === 'function') toast('已按时间筛选历史视频');
+  },
+  bind(scope) {
+    const root = scope || document.getElementById('ovm-body');
+    if (!root) return;
+    const applyBtn = root.querySelector('[data-role="cam-hist-apply"]');
+    const resetBtn = root.querySelector('[data-role="cam-hist-reset"]');
+    const startSel = root.querySelector('[data-role="cam-hist-start"]');
+    const endSel = root.querySelector('[data-role="cam-hist-end"]');
+    if (applyBtn) {
+      applyBtn.addEventListener('click', () => this.applyHistFilter(root));
+    }
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        if (startSel && startSel.options.length) startSel.selectedIndex = 0;
+        if (endSel && endSel.options.length) endSel.selectedIndex = 0;
+        this.applyHistFilter(root);
+      });
+    }
+  }
+};
+
+function envKindIcon(kind) {
+  if (kind === '粉尘') return 'fa-smog';
+  if (kind === '噪声') return 'fa-volume-high';
+  if (kind === '气象') return 'fa-cloud-sun';
+  if (kind === '风速') return 'fa-wind';
+  if (kind === '潮位') return 'fa-water';
+  if (kind === '抑尘') return 'fa-shower';
+  return 'fa-leaf';
+}
+
+function envSplitVal(raw) {
+  const text = String(raw == null || raw === '' ? '—' : raw);
+  const matched = text.match(/^(-?\d+(?:\.\d+)?)\s*(.*)$/);
+  if (!matched) return { value: text, unit: '' };
+  return { value: matched[1], unit: matched[2] || '' };
+}
+
+function envCurrentMetrics(feat) {
+  const rows = rowMap(feat);
+  const kind = feat.envKind || '监测';
+  const reserved = feat.status === '预留' || rows['等级'] === '预留';
+  if (reserved) return [];
+  if (kind === '粉尘') {
+    return [
+      { label: 'TSP', raw: rows['TSP'], limit: '预警 1.0 · 超标 1.5', tone: toneOf(rows['等级'] || feat.status) },
+      { label: 'PM10', raw: rows['PM10'], limit: '限值见台账', tone: toneOf(rows['等级'] || feat.status) },
+      { label: '等级', raw: rows['等级'] || feat.status, limit: '相对限值判定', tone: toneOf(rows['等级'] || feat.status) },
+      { label: '采样周期', raw: rows['采样'] || '1分钟', limit: '实时采样', tone: 'm' }
+    ];
+  }
+  if (kind === '噪声') {
+    return [
+      { label: '当前噪声', raw: rows['当前'], limit: `昼限 ${rows['昼限'] || '70'} · 夜限 ${rows['夜限'] || '55'}`, tone: toneOf(rows['等级'] || feat.status) },
+      { label: '时段', raw: rows['时段'] || '昼间', limit: '按时段限值', tone: 'm' },
+      { label: '等级', raw: rows['等级'] || feat.status, limit: '相对昼/夜限', tone: toneOf(rows['等级'] || feat.status) },
+      { label: '作业影响', raw: rows['作业影响'] || '—', limit: '', tone: 'm' }
+    ];
+  }
+  if (kind === '气象') {
+    return [
+      { label: '气温', raw: rows['气温'], limit: '', tone: 'm' },
+      { label: '湿度', raw: rows['湿度'], limit: '', tone: 'm' },
+      { label: '风速', raw: rows['风速'], limit: rows['风向'] || '', tone: 'm' },
+      { label: '雨量', raw: rows['雨量'], limit: '', tone: 'm' },
+      { label: '能见度', raw: rows['能见度'], limit: '', tone: 'm' },
+      { label: '作业影响', raw: rows['作业影响'] || '—', limit: '', tone: toneOf(rows['等级'] || feat.status) }
+    ];
+  }
+  if (kind === '风速') {
+    return [
+      { label: '瞬时风速', raw: rows['瞬时风速'], limit: `禁作业阈 ${rows['禁作业阈'] || '13.8 m/s'}`, tone: toneOf(rows['等级'] || feat.status) },
+      { label: '1分钟均风', raw: rows['1分钟均风'], limit: '作业判定参考', tone: 'm' },
+      { label: '等级', raw: rows['等级'] || feat.status, limit: '相对禁作业阈', tone: toneOf(rows['等级'] || feat.status) },
+      { label: '关联设备', raw: rows['关联'] || '—', limit: '', tone: 'm' }
+    ];
+  }
+  if (kind === '潮位') {
+    return [
+      { label: '潮高', raw: rows['潮高'], limit: rows['趋势'] || '', tone: toneOf(rows['等级'] || feat.status) },
+      { label: '高潮预报', raw: rows['高潮预报'], limit: '', tone: 'm' },
+      { label: '等级', raw: rows['等级'] || feat.status, limit: '靠离泊窗口', tone: toneOf(rows['等级'] || feat.status) },
+      { label: '作业影响', raw: rows['作业影响'] || '—', limit: '', tone: 'm' }
+    ];
+  }
+  if (kind === '抑尘') {
+    return [
+      { label: '运行状态', raw: rows['状态'] || feat.status, limit: '', tone: toneOf(rows['状态'] || feat.status) },
+      { label: rows['压力'] ? '压力' : '最近启动', raw: rows['压力'] || rows['最近启动'] || '—', limit: '', tone: 'm' },
+      { label: rows['覆盖货位'] ? '覆盖货位' : '关联粉尘', raw: rows['覆盖货位'] || rows['关联粉尘'] || '—', limit: '', tone: 'm' },
+      { label: '作业影响', raw: rows['作业影响'] || rows['建议'] || '—', limit: '', tone: toneOf(feat.status) }
+    ];
+  }
+  return Object.keys(rows)
+    .filter((key) => !['设备', '分区', '优先级', '说明'].includes(key))
+    .slice(0, 6)
+    .map((key) => ({ label: key, raw: rows[key], limit: '', tone: /状态|等级/.test(key) ? toneOf(rows[key]) : 'm' }));
+}
+
+function envMetricsHtml(feat) {
+  const items = envCurrentMetrics(feat);
+  if (!items.length) return '<div class="yg-empty">当前点位未接入监测数据</div>';
+  return `<div class="env-metrics">${items.map((item) => {
+    const split = envSplitVal(item.raw);
+    const isPlain = !/^-?\d/.test(String(item.raw || ''));
+    return `<div class="env-metric ${item.tone || 'm'}">
+      <span class="lab">${escHtml(item.label)}</span>
+      <b class="val">${isPlain ? escHtml(String(item.raw || '—')) : `${escHtml(split.value)}${split.unit ? `<small>${escHtml(split.unit)}</small>` : ''}`}</b>
+      ${item.limit ? `<em class="lim">${escHtml(item.limit)}</em>` : ''}
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function envHistDataRows(feat) {
+  const rows = rowMap(feat);
+  const kind = feat.envKind || '监测';
+  const reserved = feat.status === '预留' || rows['等级'] === '预留';
+  if (reserved) return [];
+  const zone = rows['分区'] || feat.name || '监测区';
+  if (kind === '粉尘') {
+    const base = numOf(rows['TSP']) || 0.8;
+    const warn = /关注|超标/.test(String(rows['等级'] || feat.status || ''));
+    return [
+      ['今天 10:28', 'TSP', `${(base).toFixed(2)} mg/m³`, '1.0 / 1.5', warn ? '超预警' : '正常', zone],
+      ['今天 09:40', 'TSP', `${Math.max(0.2, base - 0.12).toFixed(2)} mg/m³`, '1.0 / 1.5', base - 0.12 >= 1 ? '超预警' : '正常', zone],
+      ['今天 08:15', 'PM10', rows['PM10'] || '0.50 mg/m³', '台账限值', '正常', zone],
+      ['昨天 18:20', 'TSP', `${Math.max(0.2, base - 0.28).toFixed(2)} mg/m³`, '1.0 / 1.5', '正常', zone],
+      ['昨天 14:05', 'TSP', `${(base + 0.08).toFixed(2)} mg/m³`, '1.0 / 1.5', (base + 0.08) >= 1 ? '超预警' : '正常', zone],
+      ['昨天 09:30', 'PM10', '0.44 mg/m³', '台账限值', '正常', zone]
+    ];
+  }
+  if (kind === '噪声') {
+    const cur = numOf(rows['当前']) || 66;
+    const day = numOf(rows['昼限'] || '70');
+    return [
+      ['今天 10:12', '噪声', `${cur.toFixed(1)} dB(A)`, `昼限 ${day}`, cur >= day ? '超预警' : '正常', zone],
+      ['今天 08:40', '噪声', `${(cur - 2.1).toFixed(1)} dB(A)`, `昼限 ${day}`, '正常', zone],
+      ['昨天 21:15', '噪声', '52.8 dB(A)', `夜限 ${rows['夜限'] || '55'}`, '正常', zone],
+      ['昨天 16:30', '噪声', `${(cur + 1.2).toFixed(1)} dB(A)`, `昼限 ${day}`, (cur + 1.2) >= day ? '超预警' : '正常', zone],
+      ['昨天 11:05', '噪声', '64.2 dB(A)', `昼限 ${day}`, '正常', zone]
+    ];
+  }
+  if (kind === '风速') {
+    const cur = numOf(rows['瞬时风速']) || 6.8;
+    const lim = numOf(rows['禁作业阈'] || '13.8');
+    return [
+      ['今天 10:35', '瞬时风速', `${cur.toFixed(1)} m/s`, `${lim} m/s`, cur >= lim * 0.85 ? '接近限值' : '正常', zone],
+      ['今天 09:20', '1分钟均风', rows['1分钟均风'] || '5.9 m/s', `${lim} m/s`, '正常', zone],
+      ['昨天 17:40', '瞬时风速', `${(cur + 1.4).toFixed(1)} m/s`, `${lim} m/s`, '正常', zone],
+      ['昨天 13:10', '瞬时风速', '8.2 m/s', `${lim} m/s`, '正常', zone],
+      ['昨天 08:55', '瞬时风速', '5.1 m/s', `${lim} m/s`, '正常', zone]
+    ];
+  }
+  if (kind === '潮位') {
+    return [
+      ['今天 10:00', '潮高', rows['潮高'] || '2.36 m', rows['高潮预报'] || '—', '正常', zone],
+      ['今天 06:00', '潮高', '1.82 m', rows['高潮预报'] || '—', '正常', zone],
+      ['昨天 21:40', '潮高', '3.05 m', '高潮窗口', '关注', zone],
+      ['昨天 15:20', '潮高', '2.10 m', rows['高潮预报'] || '—', '正常', zone],
+      ['昨天 09:00', '潮高', '1.65 m', rows['高潮预报'] || '—', '正常', zone]
+    ];
+  }
+  if (kind === '气象') {
+    return [
+      ['今天 10:00', '风速', rows['风速'] || '4.2 m/s', '作业参考', '正常', zone],
+      ['今天 10:00', '能见度', rows['能见度'] || '12 km', '作业参考', '正常', zone],
+      ['今天 08:00', '气温', rows['气温'] || '28.6℃', '—', '正常', zone],
+      ['昨天 18:00', '雨量', '0 mm/h', '露天作业', '正常', zone],
+      ['昨天 12:00', '湿度', '74%', '—', '正常', zone]
+    ];
+  }
+  if (kind === '抑尘') {
+    const running = /运行/.test(String(rows['状态'] || feat.status || ''));
+    return [
+      ['今天 10:20', '运行状态', rows['状态'] || feat.status || '—', '联动粉尘', running ? '抑尘中' : '待机', zone],
+      ['今天 09:50', '启停', running ? '启动' : '待机保持', rows['压力'] || rows['最近启动'] || '—', '正常', zone],
+      ['今天 08:30', '运行状态', '待机', '联动粉尘', '正常', zone],
+      ['昨天 16:40', '启停', '启动', rows['覆盖货位'] || rows['关联粉尘'] || '—', '抑尘中', zone],
+      ['昨天 11:15', '运行状态', '待机', '—', '正常', zone]
+    ];
+  }
+  return [
+    ['今天 10:00', '监测值', '—', '—', '正常', zone],
+    ['昨天 16:00', '监测值', '—', '—', '正常', zone]
+  ];
+}
+
+function envHistDataHtml(feat) {
+  const list = envHistDataRows(feat);
+  if (!list.length) return '<div class="yg-empty">近 24 小时暂无历史监测数据</div>';
+  return compactTable(
+    ['时间', '指标', '数值', '阈值/参考', '判定', '分区'],
+    list.map((row) => {
+      const [time, metric, value, limit, judge, zone] = row;
+      return `<tr>
+        <td class="code">${escHtml(time)}</td>
+        <td>${escHtml(metric)}</td>
+        <td class="code">${escHtml(value)}</td>
+        <td>${escHtml(limit)}</td>
+        <td>${pillOf(judge)}</td>
+        <td>${escHtml(zone)}</td>
+      </tr>`;
+    }).join('')
+  );
+}
+
+function envHistAlarmRows(feat) {
+  const rows = rowMap(feat);
+  const kind = feat.envKind || '监测';
+  const zone = rows['分区'] || feat.name || '监测区';
+  const name = feat.name || '环境点位';
+  const reserved = feat.status === '预留' || rows['等级'] === '预留';
+  if (reserved) return [];
+  if (kind === '粉尘') {
+    const hot = /关注|超标/.test(String(rows['等级'] || feat.status || ''));
+    return [
+      ...(hot ? [['今天 10:28:06', 'ENV-DUST-1028', 'TSP超预警值', '二级', zone, `TSP ${rows['TSP'] || '1.18 mg/m³'}`, '监测中', '建议启雾炮', '抓拍帧 #3921', name]] : []),
+      ['昨天 15:42:18', 'ENV-DUST-1542', 'TSP超预警值', '二级', zone, 'TSP 1.12 mg/m³', '已闭环', '启雾炮后回落', '抓拍帧 #3610', name],
+      ['昨天 09:18:44', 'ENV-DUST-0918', 'PM10关注', '关注', zone, 'PM10 0.92 mg/m³', '已闭环', '覆盖核查完成', '抓拍帧 #3402', name],
+      ['11/08 17:05:22', 'ENV-DUST-1705', 'TSP超预警值', '二级', zone, 'TSP 1.21 mg/m³', '已闭环', '喷淋联动', '抓拍帧 #3188', name]
+    ];
+  }
+  if (kind === '噪声') {
+    return [
+      ['昨天 16:30:12', 'ENV-NOI-1630', '噪声超昼限', '关注', zone, `${rows['当前'] || '66.4 dB(A)'}`, '已闭环', '疏导车辆', '抓拍帧 #2811', name],
+      ['11/08 22:18:40', 'ENV-NOI-2218', '噪声接近夜限', '关注', zone, '54.2 dB(A)', '已闭环', '夜间管控', '抓拍帧 #2604', name]
+    ];
+  }
+  if (kind === '风速') {
+    return [
+      ['今天 10:35:08', 'ENV-WIND-1035', '风速接近限值', '作业限制', zone, `瞬时 ${rows['瞬时风速'] || '6.8 m/s'}`, '监测中', '调度关注', '抓拍帧 #4112', name],
+      ['昨天 17:40:25', 'ENV-WIND-1740', '风速接近限值', '关注', zone, '瞬时 8.2 m/s', '已闭环', '窗口恢复', '抓拍帧 #3905', name]
+    ];
+  }
+  if (kind === '潮位') {
+    return [
+      ['昨天 21:40:00', 'ENV-TIDE-2140', '高潮窗口关注', '关注', zone, rows['高潮预报'] || '3.1 m', '已闭环', '靠离泊提示', '抓拍帧 #2750', name]
+    ];
+  }
+  if (kind === '气象') {
+    return [
+      ['11/08 14:20:16', 'ENV-WX-1420', '能见度下降关注', '关注', zone, '能见度 4 km', '已闭环', '露天作业提示', '抓拍帧 #2440', name]
+    ];
+  }
+  if (kind === '抑尘') {
+    const running = /运行/.test(String(rows['状态'] || feat.status || ''));
+    return [
+      ...(running ? [['今天 09:50:12', 'ENV-DUSTCTL-0950', '抑尘联动启动', '关注', zone, rows['关联粉尘'] || rows['覆盖货位'] || name, '处置中', '阀组运行中', '抓拍帧 #4028', name]] : []),
+      ['昨天 16:40:33', 'ENV-DUSTCTL-1640', '抑尘联动启动', '关注', zone, rows['关联粉尘'] || '堆场粉尘#1', '已闭环', '粉尘回落后停机', '抓拍帧 #3780', name],
+      ['11/08 11:22:09', 'ENV-DUSTCTL-1122', '喷淋压力偏低', '二级', zone, rows['压力'] || '0.28 MPa', '已闭环', '阀组检修', '抓拍帧 #3516', name]
+    ];
+  }
+  return [];
+}
+
+function envHistAlarmHtml(feat) {
+  const list = envHistAlarmRows(feat);
+  if (!list.length) return '<div class="yg-empty">近周期暂无监测报警</div>';
+  return `<div class="cam-ai-list env-alarm-list">${list.map((row, i) => {
+    const [time, id, type, level, place, target, st, action, shot, device] = row;
+    return `<article class="cam-ai-row">
+      <div class="cam-ai-shot-wrap">
+        <img class="cam-ai-shot" src="${camAiShotSrc(i + 2)}" alt="${escHtml(shot)}">
+        <span class="cam-ai-shot-lab">${escHtml(shot)}</span>
+      </div>
+      <div class="cam-ai-fields">
+        <div><b>时间</b><span class="code">${escHtml(time)}</span></div>
+        <div><b>报警编号</b><span class="code">${escHtml(id)}</span></div>
+        <div><b>类型</b><span>${escHtml(type)}</span></div>
+        <div><b>等级</b>${pillOf(level)}</div>
+        <div><b>位置</b><span>${escHtml(place)}</span></div>
+        <div><b>监测值</b><span>${escHtml(target)}</span></div>
+        <div><b>状态</b>${pillOf(st)}</div>
+        <div><b>处置</b><span>${escHtml(action)}</span></div>
+        <div><b>设备</b><span class="code">${escHtml(device)}</span></div>
+      </div>
+    </article>`;
+  }).join('')}</div>`;
 }
 
 function vizEnv(feat) {
@@ -1241,45 +2406,64 @@ function vizEnv(feat) {
   const kind = feat.envKind || rows['设备'] || '环境监测';
   const level = rows['等级'] || feat.status || '—';
   const reserved = level === '预留' || feat.status === '预留';
-  const tiles = Object.keys(rows)
-    .filter((key) => !['设备', '分区', '优先级', '说明'].includes(key))
-    .slice(0, 6)
-    .map((key) => [key, rows[key]]);
-  if (rows['设备']) tiles.unshift(['设备', rows['设备']]);
-  if (rows['分区']) tiles.splice(1, 0, ['分区', rows['分区']]);
-  const uniq = [];
-  const seen = new Set();
-  tiles.forEach((item) => {
-    if (seen.has(item[0])) return;
-    seen.add(item[0]);
-    uniq.push(item);
-  });
-  const meterVal = reserved ? 0 : (
-    kind === '粉尘' ? Math.min(100, Math.round((numOf(rows['TSP']) / 1.5) * 100)) :
-    kind === '噪声' ? Math.min(100, Math.round((numOf(rows['当前']) / numOf(rows['昼限'] || '70')) * 100)) :
-    kind === '风速' ? Math.min(100, Math.round((numOf(rows['瞬时风速']) / numOf(rows['禁作业阈'] || '13.8')) * 100)) :
-    level === '关注' ? 78 : level === '超标' ? 96 : 42
-  );
-  const listRows = [
-    ['设备类型', kind],
-    ['作业影响', rows['作业影响'] || rows['建议'] || '—'],
+  const status = feat.status || level;
+  const name = camNameOf(feat, kind + '监控');
+  const src = camSrcOf(feat);
+  const online = !/离线|中断|故障|预留/.test(String(status));
+  const baseKv = [
+    ['设备名称', feat.name || '—'],
+    ['设备类型', rows['设备'] || kind],
+    ['监测类型', kind],
+    ['分区', rows['分区'] || '—'],
+    ['状态', status],
+    ['关联机位', name],
     ['优先级', rows['优先级'] || '—'],
-    ['采样', rows['采样'] || '—'],
-    ['说明', rows['说明'] || (reserved ? '灰态预留，未接入生产' : '模拟监测')]
+    ['作业影响', rows['作业影响'] || rows['建议'] || (reserved ? '未接入生产' : '—')]
   ];
-  const list = compactTable(['项目', '内容'], listRows.map((row) => `<tr class="${reserved ? 'watch' : ''}"><td class="cargo">${escHtml(row[0])}</td><td>${escHtml(row[1])}</td></tr>`).join(''));
-  return detailLayout({
-    camHtml: camPanel(feat, kind + '监测', level),
-    status: level,
-    note: reserved ? '作业环境 · 预留点位（灰态）' : `作业环境 · ${kind} · 对生产影响`,
-    meterHtml: reserved
-      ? '<div class="yg-tip">本期未启用，仅展示点位与接入预留</div>'
-      : `<div class="vmeter"><div class="vmeter-fill ${toneOf(level)}" style="width:${meterVal}%"></div><i class="vtick" style="left:70%"><b>关注</b></i><i class="vtick hot" style="left:90%"><b>超标</b></i></div>`,
-    tilesHtml: vtiles(uniq.slice(0, 8)),
-    eventHtml: yardEventBlock(feat),
-    listTitle: `作业影响 · ${kind} · 演示`,
-    listHtml: list
-  });
+  const histTable = envHistDataHtml(feat);
+  const alarmList = envHistAlarmHtml(feat);
+  return `<div class="viz pv-detail env-detail">
+    <div class="pv-identity person">
+      <div class="pv-photos">
+        ${photoCard('监测设备', envKindIcon(kind))}
+      </div>
+      <div class="pv-id-main">
+        <div class="pv-id-title">
+          <strong>${escHtml(feat.name || '环境点位')}</strong>
+          <span class="pv-id-sub">${escHtml(kind)} · ${escHtml(rows['分区'] || '港区')} · ${escHtml(status)}</span>
+        </div>
+        ${pvHead('设备基础信息')}
+        ${kvGrid(baseKv)}
+      </div>
+    </div>
+    <div class="pv-block env-video-block">
+      ${pvHead('监控视频')}
+      <div class="cam-live-stage env-video ${online ? '' : 'offline'}" role="img" aria-label="${escHtml(name)}">
+        <img class="cam-live-photo" src="${src}" alt="${escHtml(name)}">
+        <div class="cam-live-scan"></div>
+        <span class="cam-live-rec">${online ? 'LIVE' : (reserved ? 'IDLE' : 'OFFLINE')}</span>
+        <span class="cam-live-tag ${toneOf(status)}">${escHtml(status)}</span>
+        <div class="cam-live-caption">
+          <b>${escHtml(name)}</b>
+          <span>${escHtml(kind)}监测 · ${escHtml(status)}</span>
+        </div>
+      </div>
+      ${reserved ? '<div class="cam-live-note">预留点位，视频与测点待接入</div>' : ''}
+    </div>
+    <div class="pv-block">
+      ${pvHead('当前监测数据')}
+      ${envMetricsHtml(feat)}
+    </div>
+    <div class="pv-block">
+      ${pvHead('历史监测数据 · 近24小时')}
+      <div class="env-hist-table">${histTable}</div>
+    </div>
+    <div class="pv-block">
+      ${pvHead('历史监测报警')}
+      <div class="env-alarm-note">报警含现场抓拍；监测数据本身仅指标，不含图</div>
+      ${alarmList}
+    </div>
+  </div>`;
 }
 
 function vizFallback(feat) {
@@ -1335,7 +2519,50 @@ function trackBounds(track) {
   };
 }
 
-function trackReplayPanel(feat, kind) {
+function timeToMin(text) {
+  const m = String(text || '').match(/(\d{1,2}):(\d{2})/);
+  if (!m) return 0;
+  return Number(m[1]) * 60 + Number(m[2]);
+}
+
+function filterTrackByTime(track, startTime, endTime) {
+  if (!track || !track.length) return [];
+  const start = startTime == null || startTime === '' ? null : timeToMin(startTime);
+  const end = endTime == null || endTime === '' ? null : timeToMin(endTime);
+  return track.filter((point) => {
+    const t = timeToMin(point.time);
+    if (start != null && t < start) return false;
+    if (end != null && t > end) return false;
+    return true;
+  });
+}
+
+function trackStepsHtml(track) {
+  if (!track.length) return '<div class="yg-empty">该时段无轨迹点</div>';
+  return `<div class="tr-timeline">${track.map((p, i) =>
+    `<button type="button" class="tr-step ${i === 0 ? 'on' : ''}" data-role="step" data-i="${i}">
+      <i class="tr-dot-idx">${i + 1}</i>
+      <span class="tr-step-body"><b>${escHtml(p.time)}</b><em>${escHtml(p.place)}</em></span>
+    </button>`
+  ).join('')}</div>`;
+}
+
+function trackFilterHtml(track) {
+  const times = track.map((p) => p.time);
+  const uniq = Array.from(new Set(times));
+  const opts = (selected) => uniq.map((t) => `<option value="${escHtml(t)}" ${t === selected ? 'selected' : ''}>${escHtml(t)}</option>`).join('');
+  return `<div class="tr-filter">
+    <span class="tr-filter-lab">时间范围</span>
+    <label>起<select data-role="t-start">${opts(uniq[0])}</select></label>
+    <span class="tr-filter-sep">—</span>
+    <label>止<select data-role="t-end">${opts(uniq[uniq.length - 1])}</select></label>
+    <button type="button" class="tr-filter-btn" data-role="t-apply">筛选</button>
+    <button type="button" class="tr-filter-btn ghost" data-role="t-reset">重置</button>
+  </div>`;
+}
+
+function trackReplayPanel(feat, kind, opts) {
+  const options = opts || {};
   const track = feat.track || [];
   if (!track.length) return '<div class="yg-empty">暂无轨迹点</div>';
   const id = 'tr-' + String(feat.name || 'obj').replace(/[^\w\u4e00-\u9fa5]/g, '');
@@ -1346,13 +2573,21 @@ function trackReplayPanel(feat, kind) {
   const first = track[0];
   const last = track[track.length - 1];
   const tone = kind === '车辆' ? 'car' : 'person';
-  return `<div class="tr-panel ${tone}" id="${id}" data-feat="${escHtml(feat.name)}" data-kind="${escHtml(kind)}">
+  const splitCls = options.split ? ' split' : '';
+  const filterBlock = options.filter ? trackFilterHtml(track) : '';
+  const stepsBlock = options.split
+    ? ''
+    : `<div class="tr-steps" data-role="steps">${trackStepsHtml(track)}</div>`;
+  const trackJson = JSON.stringify(track).replace(/</g, '\\u003c');
+  return `<div class="tr-panel ${tone}${splitCls}" id="${id}" data-feat="${escHtml(feat.name)}" data-kind="${escHtml(kind)}" data-split="${options.split ? '1' : '0'}" data-filter="${options.filter ? '1' : '0'}">
+    <script type="application/json" data-role="tr-data">${trackJson}</script>
+    ${filterBlock}
     <div class="tr-map">
       <svg class="tr-svg" viewBox="${bounds.minX} ${bounds.minY} ${bounds.w} ${bounds.h}" preserveAspectRatio="xMidYMid meet">
-        <polyline class="tr-path-bg" points="${points}"></polyline>
-        <polyline class="tr-path" points="${points}"></polyline>
-        ${nodes}${labels}
-        <g class="tr-mover" transform="translate(${first.x},${first.y})">
+        <polyline class="tr-path-bg" data-role="path-bg" points="${points}"></polyline>
+        <polyline class="tr-path" data-role="path" points="${points}"></polyline>
+        <g data-role="nodes">${nodes}${labels}</g>
+        <g class="tr-mover" data-role="mover" transform="translate(${first.x},${first.y})">
           <circle class="tr-halo" r="3.2"></circle>
           <circle class="tr-dot" r="1.8"></circle>
         </g>
@@ -1372,7 +2607,7 @@ function trackReplayPanel(feat, kind) {
       </select>
       <span class="tr-pct" data-role="pct">0%</span>
     </div>
-    <div class="tr-steps">${track.map((p, i) => `<button type="button" class="tr-step ${i === 0 ? 'on' : ''}" data-role="step" data-i="${i}"><b>${i + 1}</b><span>${escHtml(p.time)}</span><em>${escHtml(p.place)}</em></button>`).join('')}</div>
+    ${stepsBlock}
   </div>`;
 }
 
@@ -1391,24 +2626,46 @@ const TrackReplay = {
   bindAll(scope) {
     (scope || document).querySelectorAll('.tr-panel').forEach((panel) => this.bind(panel));
   },
+  stepsHost(root) {
+    if (root.dataset.split !== '1') return root.querySelector('[data-role="steps"]') || root.querySelector('.tr-steps');
+    const wrap = root.closest('.pv-track-row') || root.parentElement || document;
+    return wrap.querySelector('[data-role="steps-host"]');
+  },
   bind(root) {
     if (!root || root.dataset.bound === '1') return;
     root.dataset.bound = '1';
-    const feat = findMapFeature(root.dataset.feat);
-    const track = (feat && feat.track) || [];
-    if (!track.length) return;
+    let inlineTrack = [];
+    try {
+      const raw = root.querySelector('[data-role="tr-data"]');
+      inlineTrack = raw ? JSON.parse(raw.textContent || '[]') : [];
+    } catch (err) {
+      inlineTrack = [];
+    }
+    const mapFeat = typeof findMapFeature === 'function' ? findMapFeature(root.dataset.feat) : null;
+    const fullTrack = (inlineTrack && inlineTrack.length) ? inlineTrack : ((mapFeat && mapFeat.track) || []);
+    if (!fullTrack.length) return;
+    const feat = mapFeat || {
+      name: root.dataset.feat || '轨迹',
+      type: root.dataset.kind || '车辆',
+      track: fullTrack.slice()
+    };
     const state = {
       root,
       feat,
-      track,
+      fullTrack,
+      track: fullTrack.slice(),
       playing: false,
       speed: 1,
       t: 0,
-      duration: Math.max(4, track.length * 1.6) * 1000
+      duration: Math.max(4, fullTrack.length * 1.6) * 1000
     };
     const toggle = root.querySelector('[data-role="toggle"]');
     const range = root.querySelector('[data-role="range"]');
     const speed = root.querySelector('[data-role="speed"]');
+    const startSel = root.querySelector('[data-role="t-start"]');
+    const endSel = root.querySelector('[data-role="t-end"]');
+    const applyBtn = root.querySelector('[data-role="t-apply"]');
+    const resetBtn = root.querySelector('[data-role="t-reset"]');
     toggle.addEventListener('click', () => {
       if (state.playing) this.pause(state);
       else this.play(state);
@@ -1420,16 +2677,76 @@ const TrackReplay = {
     speed.addEventListener('change', () => {
       state.speed = Number(speed.value) || 1;
     });
-    root.querySelectorAll('[data-role="step"]').forEach((btn) => {
+    if (applyBtn) {
+      applyBtn.addEventListener('click', () => {
+        const start = startSel ? startSel.value : '';
+        const end = endSel ? endSel.value : '';
+        if (start && end && timeToMin(start) > timeToMin(end)) {
+          toast('起止时间颠倒，请重选');
+          return;
+        }
+        this.applyFilter(state, start, end);
+      });
+    }
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        if (startSel) startSel.value = fullTrack[0].time;
+        if (endSel) endSel.value = fullTrack[fullTrack.length - 1].time;
+        this.applyFilter(state, '', '');
+      });
+    }
+    this.mountSteps(state);
+    this.paintPath(state);
+    this.render(state);
+    this.play(state);
+  },
+  applyFilter(state, start, end) {
+    const next = (start || end) ? filterTrackByTime(state.fullTrack, start, end) : state.fullTrack.slice();
+    if (!next.length) {
+      toast('该时段无轨迹点');
+      return;
+    }
+    this.pause(state);
+    state.track = next;
+    state.t = 0;
+    state.duration = Math.max(4, next.length * 1.6) * 1000;
+    this.mountSteps(state);
+    this.paintPath(state);
+    this.render(state);
+  },
+  mountSteps(state) {
+    const host = this.stepsHost(state.root);
+    if (!host) return;
+    host.innerHTML = trackStepsHtml(state.track);
+    host.querySelectorAll('[data-role="step"]').forEach((btn) => {
       btn.addEventListener('click', () => {
         const i = Number(btn.dataset.i) || 0;
-        state.t = track.length <= 1 ? 1 : i / (track.length - 1);
+        state.t = state.track.length <= 1 ? 1 : i / (state.track.length - 1);
         this.render(state);
         this.pause(state);
       });
     });
-    this.render(state);
-    this.play(state);
+  },
+  paintPath(state) {
+    const track = state.track;
+    const bounds = trackBounds(track);
+    const svg = state.root.querySelector('.tr-svg');
+    if (svg) svg.setAttribute('viewBox', `${bounds.minX} ${bounds.minY} ${bounds.w} ${bounds.h}`);
+    const points = track.map((p) => `${p.x},${p.y}`).join(' ');
+    const pathBg = state.root.querySelector('[data-role="path-bg"]');
+    const path = state.root.querySelector('[data-role="path"]');
+    if (pathBg) pathBg.setAttribute('points', points);
+    if (path) path.setAttribute('points', points);
+    const nodes = state.root.querySelector('[data-role="nodes"]');
+    if (nodes) {
+      nodes.innerHTML = track.map((p, i) =>
+        `<circle class="tr-node" data-i="${i}" cx="${p.x}" cy="${p.y}" r="1.4"></circle><text class="tr-lab" x="${p.x}" y="${Math.max(bounds.minY + 3, p.y - 2.2)}" text-anchor="middle">${i + 1}</text>`
+      ).join('');
+    }
+    const first = track[0];
+    const last = track[track.length - 1];
+    const clock = state.root.querySelector('[data-role="clock"]');
+    if (clock) clock.textContent = `${first.time} → ${last.time}`;
   },
   play(state) {
     this.stop();
@@ -1463,6 +2780,7 @@ const TrackReplay = {
     if (btn) btn.className = 'fa-solid fa-play';
   },
   sample(track, t) {
+    if (!track.length) return { x: 0, y: 0, place: '—', time: '—', index: 0 };
     if (track.length === 1) return { x: track[0].x, y: track[0].y, place: track[0].place, time: track[0].time, index: 0 };
     const max = track.length - 1;
     const pos = t * max;
@@ -1480,7 +2798,7 @@ const TrackReplay = {
   },
   render(state) {
     const sample = this.sample(state.track, state.t);
-    const mover = state.root.querySelector('.tr-mover');
+    const mover = state.root.querySelector('[data-role="mover"]') || state.root.querySelector('.tr-mover');
     if (mover) mover.setAttribute('transform', `translate(${sample.x},${sample.y})`);
     const place = state.root.querySelector('[data-role="place"]');
     const clock = state.root.querySelector('[data-role="clock"]');
@@ -1490,11 +2808,13 @@ const TrackReplay = {
     if (clock) clock.textContent = sample.time;
     if (range) range.value = String(Math.round(state.t * 1000));
     if (pctEl) pctEl.textContent = Math.round(state.t * 100) + '%';
-    state.root.querySelectorAll('[data-role="step"]').forEach((btn, i) => {
+    const host = this.stepsHost(state.root) || state.root;
+    host.querySelectorAll('[data-role="step"]').forEach((btn, i) => {
       btn.classList.toggle('on', i === sample.index);
       btn.classList.toggle('done', i < sample.index);
     });
-    showPoiTrack(state.feat, sample);
+    const filteredFeat = Object.assign({}, state.feat, { track: state.track });
+    showPoiTrack(filteredFeat, sample);
   }
 };
 
@@ -1534,4 +2854,5 @@ function bindTrackReplayInDrill() {
   const dims = document.getElementById('d-dims');
   if (!dims) return;
   TrackReplay.bindAll(dims);
+  if (typeof JobArchive !== 'undefined' && JobArchive.bindAll) JobArchive.bindAll(dims);
 }

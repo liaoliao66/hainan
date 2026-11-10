@@ -1,13 +1,23 @@
-/** 设备详情弹窗 · 13 种模板演示档案（对齐《设备详情弹窗方案_V1》） */
+/** 设备详情弹窗 · 5 页签（基础信息 / 作业监控 / 监控视频 / 维修保养 / 历史作业） */
 (function (global) {
   const TABS = [
-    { id: 'overview', name: '设备概览' },
-    { id: 'base', name: '基础信息' },
-    { id: 'monitor', name: '实时监测' },
+    { id: 'base', name: '设备基础信息' },
+    { id: 'workmon', name: '作业监控' },
     { id: 'video', name: '监控视频' },
     { id: 'maint', name: '维修保养' },
-    { id: 'work', name: '作业信息' }
+    { id: 'history', name: '历史作业' }
   ];
+
+  /** 按台账分类一套演示图 */
+  const CATEGORY_IMG = {
+    '卸船设备': '../assets/cam-berth.jpg',
+    '输送设备': '../assets/cam-belt.jpg',
+    '供配电及岸电': '../assets/cam-power.jpg',
+    '闸口与地磅': '../assets/cam-gate.jpg',
+    '监控与通信': '../assets/cam-equip.jpg',
+    '照明与充电': '../assets/cam-equip.jpg',
+    '公辅保障': '../assets/cam-equip.jpg'
+  };
 
   const ALIAS = {
     'T2驱动': 'T2-DRV',
@@ -28,7 +38,7 @@
     '输送系统': 'BM-01',
     '供配电及岸电': 'PD-01',
     '闸口与地磅': 'GT-01',
-    '监控与通信': 'CAM-03',
+    '监控与通信': 'NET-01',
     '照明与充电': 'GL-07',
     'GL-07 高杆灯': 'GL-07',
     '高杆灯': 'GL-07',
@@ -83,7 +93,7 @@
   }
 
   function workBox(w) {
-    if (!w) return '<div class="eqm-tip">暂无作业/服务记录</div>';
+    if (!w) return '<div class="eqm-tip">暂无本次作业信息</div>';
     let html = '';
     if (w.task) html += `<div class="eqm-work-title">${w.task}</div>`;
     if (w.progress != null) {
@@ -91,12 +101,80 @@
         <div class="b"><i style="width:${w.progress}%"></i></div></div>`;
     }
     if (w.lines) html += w.lines.map((l) => `<div class="eqm-line">${l}</div>`).join('');
-    return html || '<div class="eqm-tip">暂无作业/服务记录</div>';
+    return html || '<div class="eqm-tip">暂无本次作业信息</div>';
   }
 
   function listTable(headers, rows) {
     return `<table class="eqm-tbl"><thead><tr>${headers.map((h) => `<th>${h}</th>`).join('')}</tr></thead>
       <tbody>${rows.map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+  }
+
+  function photoBox(d) {
+    const src = CATEGORY_IMG[d.category] || '../assets/cam-equip.jpg';
+    return `<div class="eqm-photo">
+      <img src="${src}" alt="${d.category || '设备'}">
+      <div class="cap">${d.category || '设备'} · 类型示意</div>
+    </div>`;
+  }
+
+  function statusBox(d) {
+    const comm = (d.base && d.base['通信状态']) || '—';
+    return `<div class="eqm-card"><h5>当前状态</h5>
+      <div class="eqm-kv"><span class="k">运行状态</span><span class="v">${d.status || '—'}</span></div>
+      <div class="eqm-kv"><span class="k">通信状态</span><span class="v">${comm}</span></div>
+      <div class="eqm-kv"><span class="k">健康等级</span><span class="v">${d.health || '待配置'}</span></div>
+      <div class="eqm-kv"><span class="k">采集时刻</span><span class="v">${d.healthTime || '—'}</span></div>
+    </div>`;
+  }
+
+  function histRowsOf(d) {
+    if (d.histRows && d.histRows.length) return d.histRows;
+    const cur = d.workRows || [];
+    const seed = [
+      [d.id + '-H01', '例行协同作业', '已完成', '2026-11-07 16:20'],
+      [d.id + '-H02', '班次交接核验', '已完成', '2026-11-06 18:05'],
+      [d.id + '-H03', '计划负荷运行', '已完成', '2026-11-05 11:40'],
+      [d.id + '-H04', '巡检联动作业', '已闭环', '2026-11-04 09:15']
+    ];
+    const fromCur = cur.slice(0, 2).map((r, i) => [
+      r[0] || (d.id + '-C' + (i + 1)),
+      r[1] || '作业记录',
+      r[2] || '—',
+      r[3] || '近期'
+    ]);
+    return fromCur.concat(seed).slice(0, 5);
+  }
+
+  /** 设备传输数据流水：每次上报的测点快照（演示 6 条） */
+  function telemetryRowsOf(d) {
+    if (d.telemetryRows && d.telemetryRows.length) return { headers: d.telemetryHeaders, rows: d.telemetryRows };
+    const metrics = d.metrics || [];
+    const headers = ['采集时刻'].concat(metrics.map((m) => m.label + (m.unit ? `(${m.unit})` : '')));
+    const baseTime = d.healthTime ? new Date(String(d.healthTime).replace(/-/g, '/')) : new Date('2026/11/08 14:00:00');
+    const rows = [];
+    for (let i = 0; i < 6; i++) {
+      const t = new Date(baseTime.getTime() - i * 60 * 1000);
+      const pad = (n) => String(n).padStart(2, '0');
+      const stamp = `${t.getFullYear()}-${pad(t.getMonth() + 1)}-${pad(t.getDate())} ${pad(t.getHours())}:${pad(t.getMinutes())}:${pad(t.getSeconds())}`;
+      const cells = metrics.map((m) => {
+        const raw = String(m.value);
+        if (raw === '--' || raw === '' || /[\u4e00-\u9fa5]/.test(raw)) return raw || '—';
+        const num = parseFloat(raw);
+        if (Number.isNaN(num)) return raw;
+        const jitter = (1 - i * 0.012) + ((i % 2) ? 0.008 : -0.006);
+        const next = num * jitter;
+        const fixed = Number.isInteger(num) ? String(Math.max(0, Math.round(next))) : next.toFixed(String(raw).includes('.') ? (String(raw).split('.')[1] || '').length || 1 : 1);
+        return fixed;
+      });
+      rows.push([stamp].concat(cells));
+    }
+    return { headers, rows };
+  }
+
+  function isCameraDevice(id, d) {
+    if (/^CAM-/i.test(String(id || ''))) return true;
+    if (d && d.category === '监控与通信' && /摄像|摄像机|摄像头/.test(String(d.name || ''))) return true;
+    return false;
   }
 
   const DEVICES = {
@@ -355,7 +433,7 @@
   };
 
   let activeId = '';
-  let activeTab = 'overview';
+  let activeTab = 'base';
   let onLocate = null;
 
   function resolveId(raw) {
@@ -366,28 +444,29 @@
   }
 
   function renderTabBody(d) {
-    if (activeTab === 'overview') {
-      return `<div class="eqm-grid">
+    if (activeTab === 'base') {
+      return `<div class="eqm-grid eqm-base-grid">
         <div class="eqm-col">
-          <div class="eqm-card"><h5>基础信息</h5>${kv(d.base)}</div>
-          <div class="eqm-card"><h5>维修保养摘要</h5>${maintBox(d.maint)}</div>
+          <div class="eqm-card"><h5>设备图片</h5>${photoBox(d)}</div>
+          ${statusBox(d)}
         </div>
         <div class="eqm-col">
-          <div class="eqm-card"><h5>实时监测</h5>${metricsHtml(d.metrics, '14:00:00')}</div>
-          <div class="eqm-card"><h5>监控视频</h5>${videoBox(d.video)}</div>
-          <div class="eqm-card"><h5>当前作业 / 服务信息</h5>${workBox(d.work)}</div>
+          <div class="eqm-card"><h5>基础信息</h5>${kv(Object.assign({}, d.base, d.extraBase || {}))}</div>
         </div>
       </div>`;
     }
-    if (activeTab === 'base') {
-      return `<div class="eqm-card"><h5>完整台账</h5>${kv(Object.assign({}, d.base, d.extraBase || {}))}</div>`;
-    }
-    if (activeTab === 'monitor') {
-      return `<div class="eqm-card"><h5>最新测点</h5>${metricsHtml(d.metrics, '14:00:00')}
-        <div class="eqm-kv"><span class="k">健康等级</span><span class="v">${d.health || '待配置'}</span></div>
-        <div class="eqm-kv"><span class="k">评估时间</span><span class="v">${d.healthTime || '--'}</span></div>
-        <div class="eqm-line" style="margin-top:8px">${d.trends || '趋势待接入'}</div>
-        <div class="eqm-tip">数据质量：演示有效 · 规则缺失时显示待配置</div>
+    if (activeTab === 'workmon') {
+      const tel = telemetryRowsOf(d);
+      return `<div class="eqm-stack">
+        <div class="eqm-card"><h5>本次作业信息</h5>${workBox(d.work)}</div>
+        <div class="eqm-card"><h5>实时监控</h5>${metricsHtml(d.metrics, d.healthTime ? String(d.healthTime).slice(-8) : '14:00:00')}
+          <div class="eqm-kv"><span class="k">健康等级</span><span class="v">${d.health || '待配置'}</span></div>
+          <div class="eqm-line" style="margin-top:8px">${d.trends || '趋势待接入'}</div>
+        </div>
+        <div class="eqm-card"><h5>传输数据</h5>
+          <div class="eqm-tip" style="margin:0 0 6px">按采集时刻展示设备每次上报的测点快照 · 演示最近 6 次</div>
+          <div class="eqm-scroll">${listTable(tel.headers, tel.rows)}</div>
+        </div>
       </div>`;
     }
     if (activeTab === 'video') {
@@ -402,9 +481,9 @@
         <div class="eqm-tip">预计完成 ≠ 已恢复可用；恢复以验收/复核为准</div>
       </div>`;
     }
-    return `<div class="eqm-card"><h5>作业 / 服务记录</h5>${workBox(d.work)}
-      ${listTable(['对象', '内容', '状态', '说明'], d.workRows || [['—', '—', '—', '—']])}
-      <div class="eqm-tip">按时间与任务查询能力演示占位</div>
+    return `<div class="eqm-card"><h5>历史作业</h5>
+      ${listTable(['作业编号', '作业内容', '状态', '时间/结果'], histRowsOf(d))}
+      <div class="eqm-tip">演示数据 3～5 条；正式环境按时间与任务查询接入</div>
     </div>`;
   }
 
@@ -429,8 +508,13 @@
       if (typeof toast === 'function') toast((rawId || '对象') + ' · 暂无详情模板');
       return false;
     }
+    const d = DEVICES[id];
+    /* 摄像头不走设备详情，优先打开概览摄像头详情 */
+    if (isCameraDevice(id, d) && global.OvDetail && document.getElementById('ov-modal')) {
+      return global.OvDetail.open(id);
+    }
     activeId = id;
-    activeTab = entry === 'alarm' ? 'monitor' : entry === 'maint' ? 'maint' : 'overview';
+    activeTab = entry === 'alarm' ? 'workmon' : entry === 'maint' ? 'maint' : 'base';
     const root = document.getElementById('eq-modal');
     if (!root) return false;
     root.classList.add('show');
@@ -468,6 +552,8 @@
   global.EqDetail = {
     DEVICES,
     ALIAS,
+    CATEGORY_IMG,
+    TABS,
     resolveId,
     open,
     close,

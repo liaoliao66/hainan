@@ -251,6 +251,65 @@ function bindVideos() {
       }
     });
   });
+  bindVidRails();
+}
+
+function bindVidRails() {
+  document.querySelectorAll('[data-vid-rail]').forEach((rail) => {
+    if (rail._railBound) return;
+    rail._railBound = true;
+    const wrap = rail.closest('.vid-rail-wrap');
+    const prev = wrap && wrap.querySelector('[data-rail-prev]');
+    const next = wrap && wrap.querySelector('[data-rail-next]');
+    const step = () => Math.max(160, Math.floor(rail.clientWidth * 0.72));
+    const sync = () => {
+      const max = rail.scrollWidth - rail.clientWidth - 2;
+      if (prev) prev.disabled = rail.scrollLeft <= 2;
+      if (next) next.disabled = rail.scrollLeft >= max;
+    };
+    if (prev) {
+      prev.addEventListener('click', () => {
+        rail.scrollBy({ left: -step(), behavior: 'smooth' });
+      });
+    }
+    if (next) {
+      next.addEventListener('click', () => {
+        rail.scrollBy({ left: step(), behavior: 'smooth' });
+      });
+    }
+    rail.addEventListener('scroll', sync, { passive: true });
+    window.addEventListener('resize', sync);
+    requestAnimationFrame(sync);
+  });
+  bindVidCamClicks();
+}
+
+/** 底部摄像头条：打开与港区概览同款摄像头详情 */
+function openWallCamera(raw) {
+  if (typeof OvDetail === 'undefined' || !OvDetail.open) {
+    toast('暂无摄像头详情能力');
+    return false;
+  }
+  if (!document.getElementById('ov-modal')) {
+    toast('当前页未挂载详情弹窗');
+    return false;
+  }
+  const ok = OvDetail.open(raw);
+  if (!ok) toast((raw || '摄像头') + ' · 暂无详情');
+  return ok;
+}
+
+function bindVidCamClicks() {
+  document.querySelectorAll('[data-vid-rail] .vid-rail-item[data-cam]').forEach((item) => {
+    if (item._camBound) return;
+    item._camBound = true;
+    item.style.cursor = 'pointer';
+    item.addEventListener('click', (e) => {
+      if (e.target.closest('[data-rail-prev],[data-rail-next]')) return;
+      const cam = item.getAttribute('data-cam');
+      if (cam) openWallCamera(cam);
+    });
+  });
 }
 
 function bindLayers() {

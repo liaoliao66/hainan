@@ -7,6 +7,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="../vendor/font-awesome/css/all.min.css">
 <link rel="stylesheet" href="wall_scrollbar.css">
+<link rel="stylesheet" href="wall_common.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;600&display=swap');
 *{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;box-sizing:border-box}
@@ -40,6 +41,15 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 .util-hit{cursor:pointer}.util-hit:hover{outline:1px solid rgba(84,216,255,.45)}
 .maint-hit{cursor:pointer}.maint-hit:hover{border-color:#54d8ff!important}
 .vid-hit{cursor:pointer}.vid-hit:hover{border-color:#54d8ff!important}
+.vid-rail-wrap{display:flex;align-items:stretch;gap:8px;min-width:0}
+.vid-rail{display:flex;gap:10px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;flex:1;min-width:0;scrollbar-width:thin;padding-bottom:2px}
+.vid-rail-item{flex:0 0 calc((100% - 40px)/4.2);min-width:168px;max-width:240px;scroll-snap-align:start;border-radius:6px;overflow:hidden;border:1px solid #23435f;background:#0a1729;cursor:pointer}
+.vid-rail-item.warn{border-color:#ffba5a}
+.vid-rail-item.err{border-color:#ff6c73}
+.vid-rail-item:hover{border-color:#54d8ff}
+.vid-rail-btn{flex:0 0 32px;width:32px;border:1px solid rgba(84,216,255,.4);border-radius:6px;background:rgba(84,216,255,.08);color:#54d8ff;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.vid-rail-btn:hover{background:rgba(84,216,255,.18)}
+.vid-rail-btn:disabled{opacity:.35;cursor:default}
 :root{--blue:#0E74F0;--blue-light:#36BFFA;--cyan:#00E4FF;--red:#F53F3F;--yellow:#FFAA00;--green:#00C48C;--gray:#B4C7E7;--muted:rgba(180,199,231,.72);--line:rgba(14,116,240,.18)}
 .pill{display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;border:1px solid transparent;white-space:nowrap}
 .pill.g{color:#00c48c;background:rgba(0,196,140,.12);border-color:rgba(0,196,140,.35)}
@@ -50,6 +60,21 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 .eq-modal-mask{display:none;position:fixed;inset:0;z-index:70;background:rgba(2,8,20,.62);align-items:center;justify-content:center;padding:1.5vmin}
 .eq-modal-mask.show{display:flex}
 .eq-modal{width:min(94vw,1180px);height:min(82vh,760px);display:flex;flex-direction:column;overflow:hidden;border-radius:10px;background:linear-gradient(165deg,rgba(8,28,62,.98),rgba(6,18,42,.98));border:1px solid rgba(0,228,255,.35);box-shadow:0 0 40px rgba(0,0,0,.55)}
+.ov-modal-mask{display:none;position:fixed;inset:0;z-index:90;background:rgba(2,8,20,.62);align-items:center;justify-content:center;padding:1.5vmin}
+.ov-modal-mask.show{display:flex}
+.ov-modal{position:relative;width:min(94vw,1180px);height:min(82vh,760px);display:flex;flex-direction:column;overflow:hidden;border-radius:10px;background:linear-gradient(165deg,rgba(8,28,62,.98),rgba(6,18,42,.98));border:1px solid rgba(0,228,255,.35);box-shadow:0 0 40px rgba(0,0,0,.55)}
+.ovm-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid rgba(14,116,240,.18);flex-shrink:0;background:rgba(8,28,62,.96)}
+.ovm-hd .left{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+.ovm-hd h4{margin:0;font-size:15px;color:#00e4ff;font-weight:800;letter-spacing:.04em}
+.ovm-hd .acts{display:flex;align-items:center;gap:6px}
+.ovm-hd .acts button{font-size:12px;padding:5px 10px;border-radius:4px;cursor:pointer;font-weight:600;border:1px solid rgba(14,116,240,.4);background:rgba(14,116,240,.2);color:#36bffa}
+.ovm-hd .acts #ovm-history{border-color:rgba(0,228,255,.4);background:rgba(0,228,255,.12);color:#9ec5ff}
+.ovm-hd .acts .ovm-cam-btn{border-color:rgba(0,228,255,.35);background:rgba(0,228,255,.08);color:#9ec5ff}
+.ovm-hd .acts .ovm-cam-btn.on{border-color:rgba(0,228,255,.55);background:rgba(0,228,255,.2);color:#e7f7ff;font-weight:700}
+.ovm-hd .acts .ovm-cam-btn[hidden],.ovm-hd .acts .ovm-history[hidden]{display:none!important}
+.ovm-hd .x{width:30px;padding:0;font-size:16px;line-height:28px;text-align:center;color:#e8f6ff}
+.ovm-bd{padding:12px 16px 14px;flex:1;min-height:0;overflow:auto}
+.ovm-ft{padding:0 16px 12px;font-size:11px;color:rgba(180,199,231,.55);flex-shrink:0}
 .eqm-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--line);flex-shrink:0;background:rgba(8,28,62,.96)}
 .eqm-hd .left{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
 .eqm-hd h4{margin:0;font-size:15px;color:var(--cyan);font-weight:800;letter-spacing:.04em}
@@ -61,9 +86,15 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 .eqm-tabs button.on{background:rgba(14,116,240,.45);border-color:rgba(0,228,255,.4);color:#fff}
 .eqm-bd{padding:12px 16px 14px;flex:1;min-height:0;overflow:auto}
 .eqm-grid{display:grid;grid-template-columns:.9fr 1.2fr;gap:10px}
+.eqm-base-grid{grid-template-columns:minmax(200px,.85fr) 1.15fr}
+.eqm-stack{display:flex;flex-direction:column;gap:10px;min-width:0}
+.eqm-scroll{overflow:auto;max-height:28vh}
 .eqm-col{display:flex;flex-direction:column;gap:10px;min-width:0}
 .eqm-card{border:1px solid rgba(14,116,240,.22);border-radius:6px;padding:10px 12px;background:rgba(14,116,240,.06)}
 .eqm-card h5{margin:0 0 8px;font-size:13px;color:var(--blue-light);font-weight:700;border-left:3px solid var(--blue);padding-left:7px}
+.eqm-photo{position:relative;aspect-ratio:4/3;border-radius:5px;overflow:hidden;border:1px solid rgba(14,116,240,.28);background:#0a1220}
+.eqm-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.eqm-photo .cap{position:absolute;left:0;right:0;bottom:0;padding:6px 8px;font-size:11px;font-weight:600;color:#e8f6ff;background:linear-gradient(transparent,rgba(2,8,20,.82))}
 .eqm-kv{display:flex;justify-content:space-between;gap:10px;padding:3px 0;border-bottom:1px solid rgba(14,116,240,.08);font-size:12px}
 .eqm-kv .k{color:var(--muted)}.eqm-kv .v{color:#e8f6ff;font-weight:600;text-align:right}
 .eqm-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
@@ -98,7 +129,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 .eqm-tbl th{text-align:left;color:var(--blue-light);padding:4px;background:rgba(14,116,240,.14)}
 .eqm-tbl td{padding:4px;border-bottom:1px solid rgba(14,116,240,.1);color:var(--gray)}
 .eqm-ft{padding:0 16px 12px;font-size:11px;color:rgba(180,199,231,.55);flex-shrink:0}
-@media (max-width:1000px){.eqm-grid{grid-template-columns:1fr}.eqm-metrics{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:1000px){.eqm-grid,.eqm-base-grid{grid-template-columns:1fr}.eqm-metrics{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -262,31 +293,55 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
           <div class="flex items-center gap-2.5 mb-3">
             <span class="mark"></span>
             <span class="text-[18px] font-bold text-[#e5f2ff]">重点设备监控视频</span>
-            <span class="chip ml-auto">3路 · 全部为模拟画面，非现场证据</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[11px] font-bold text-[#00e4ff]" style="background:rgba(14,116,240,.18);border:1px solid rgba(0,228,255,.3)">6路</span>
+            <a class="ml-auto inline-flex items-center justify-center w-8 h-8 rounded border border-[rgba(0,228,255,.4)] bg-[rgba(0,228,255,.1)] text-[#00e4ff] hover:bg-[rgba(0,228,255,.2)]" href="pc_wall_command_screen.html?filter=%E6%91%84%E5%83%8F%E5%A4%B4&from=%E8%AE%BE%E5%A4%87" title="进入监控系统" aria-label="进入监控系统"><i class="fa-solid fa-arrow-right"></i></a>
           </div>
-          <div class="grid grid-cols-3 gap-3">
-            <div class="vid-hit rounded border border-[#23435f] overflow-hidden bg-[#0a1729]" data-eq="CAM-01">
-              <div class="relative h-[9.5vh] min-h-[96px]">
-                <img src="../assets/figma/eq-cam1.png" alt="CAM-01" class="absolute inset-0 w-full h-full object-cover">
-                <span class="absolute left-2 top-2 text-[11px] font-bold text-[#ffba5a] bg-[rgba(16,34,55,.93)] border border-[#ffba5a] px-1.5 py-1 rounded">模拟画面</span>
+          <div class="vid-rail-wrap">
+            <button type="button" class="vid-rail-btn" data-rail-prev aria-label="上一组"><i class="fa-solid fa-chevron-left"></i></button>
+            <div class="vid-rail" data-vid-rail>
+              <div class="vid-rail-item" data-cam="CAM-01" title="打开摄像头详情">
+                <div class="relative h-[9.5vh] min-h-[96px]">
+                  <img src="../assets/figma/eq-cam1.png" alt="CAM-01" class="absolute inset-0 w-full h-full object-cover">
+                </div>
+                <div class="h-[38px] px-2.5 flex items-center text-[13px] font-medium text-[#e5f2ff]">CAM-01｜1#泊位卸船机</div>
               </div>
-              <div class="h-[38px] px-2.5 flex items-center text-[13px] font-medium text-[#e5f2ff]">CAM-01｜1#泊位卸船机</div>
-            </div>
-            <div class="vid-hit rounded border border-[#ffba5a] overflow-hidden bg-[#0a1729]" data-eq="CAM-02">
-              <div class="relative h-[9.5vh] min-h-[96px]">
-                <img src="../assets/figma/eq-cam2.png" alt="CAM-02" class="absolute inset-0 w-full h-full object-cover">
-                <span class="absolute left-2 top-2 text-[11px] font-bold text-[#ffba5a] bg-[rgba(16,34,55,.93)] border border-[#ffba5a] px-1.5 py-1 rounded">模拟画面</span>
-                <span class="absolute right-2 top-2 text-[11px] text-[#ffba5a] bg-[rgba(16,34,55,.93)] px-1.5 py-1 rounded">关联 A001</span>
+              <div class="vid-rail-item warn" data-cam="CAM-02" title="打开摄像头详情">
+                <div class="relative h-[9.5vh] min-h-[96px]">
+                  <img src="../assets/figma/eq-cam2.png" alt="CAM-02" class="absolute inset-0 w-full h-full object-cover">
+                </div>
+                <div class="h-[38px] px-2.5 flex items-center text-[13px] font-medium text-[#e5f2ff]">CAM-02｜T2转运站</div>
               </div>
-              <div class="h-[38px] px-2.5 flex items-center text-[13px] font-medium text-[#e5f2ff]">CAM-02｜T2转运站</div>
-            </div>
-            <div class="vid-hit rounded border border-[#23435f] overflow-hidden bg-[#0a1729]" data-eq="CAM-04">
-              <div class="relative h-[9.5vh] min-h-[96px]">
-                <img src="../assets/figma/eq-cam3.png" alt="CAM-04" class="absolute inset-0 w-full h-full object-cover">
-                <span class="absolute left-2 top-2 text-[11px] font-bold text-[#ffba5a] bg-[rgba(16,34,55,.93)] border border-[#ffba5a] px-1.5 py-1 rounded">模拟画面</span>
+              <div class="vid-rail-item err" data-cam="CAM-03" title="打开摄像头详情">
+                <div class="relative h-[9.5vh] min-h-[96px] bg-[#071018] flex flex-col items-center justify-center text-center">
+                  <i class="fa-solid fa-video-slash text-[#637f99] text-xl mb-1"></i>
+                  <div class="text-[12px] text-[#b4c7e7]">设备离线</div>
+                  <div class="text-[10px] text-[rgba(180,199,231,.55)]">信号中断</div>
+                </div>
+                <div class="h-[38px] px-2.5 flex items-center justify-between text-[13px] font-medium text-[#e5f2ff]">
+                  <span>CAM-03｜2#泊位</span>
+                  <span class="text-[11px] text-[#ff6c73] font-bold">OFFLINE</span>
+                </div>
               </div>
-              <div class="h-[38px] px-2.5 flex items-center text-[13px] font-medium text-[#e5f2ff]">CAM-04｜岸电设备区</div>
+              <div class="vid-rail-item" data-cam="CAM-04" title="打开摄像头详情">
+                <div class="relative h-[9.5vh] min-h-[96px]">
+                  <img src="../assets/figma/eq-cam3.png" alt="CAM-04" class="absolute inset-0 w-full h-full object-cover">
+                </div>
+                <div class="h-[38px] px-2.5 flex items-center text-[13px] font-medium text-[#e5f2ff]">CAM-04｜岸电设备区</div>
+              </div>
+              <div class="vid-rail-item" data-cam="CAM-05" title="打开摄像头详情">
+                <div class="relative h-[9.5vh] min-h-[96px]">
+                  <img src="../assets/figma/cam05.png" alt="CAM-05" class="absolute inset-0 w-full h-full object-cover">
+                </div>
+                <div class="h-[38px] px-2.5 flex items-center text-[13px] font-medium text-[#e5f2ff]">CAM-05｜1#仓库区</div>
+              </div>
+              <div class="vid-rail-item" data-cam="CAM-06" title="打开摄像头详情">
+                <div class="relative h-[9.5vh] min-h-[96px]">
+                  <img src="../assets/figma/cam06.png" alt="CAM-06" class="absolute inset-0 w-full h-full object-cover">
+                </div>
+                <div class="h-[38px] px-2.5 flex items-center text-[13px] font-medium text-[#e5f2ff]">CAM-06｜码头前沿</div>
+              </div>
             </div>
+            <button type="button" class="vid-rail-btn" data-rail-next aria-label="下一组"><i class="fa-solid fa-chevron-right"></i></button>
           </div>
         </div>
       </div>
@@ -404,7 +459,6 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
         <span class="pill m">演示数据</span>
       </div>
       <div class="acts">
-        <button type="button" id="eqm-locate"><i class="fa-solid fa-location-crosshairs"></i> 定位设备</button>
         <button type="button" class="x" id="eqm-close" aria-label="关闭">×</button>
       </div>
     </div>
@@ -414,9 +468,32 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
   </div>
 </div>
 
+<div class="ov-modal-mask" id="ov-modal" role="dialog" aria-modal="true">
+  <div class="ov-modal">
+    <div class="ovm-hd">
+      <div class="left">
+        <h4 id="ovm-title">对象详情</h4>
+        <span class="pill g" id="ovm-status">—</span>
+        <span class="pill b" id="ovm-type">—</span>
+      </div>
+      <div class="acts">
+        <button type="button" id="ovm-history" class="ovm-history" hidden><i class="fa-solid fa-clock-rotate-left"></i> 历史作业</button>
+        <button type="button" id="ovm-cam-live" class="ovm-cam-btn" hidden><i class="fa-solid fa-video"></i> 实时监控</button>
+        <button type="button" id="ovm-cam-hist" class="ovm-cam-btn" hidden><i class="fa-solid fa-film"></i> 历史视频</button>
+        <button type="button" id="ovm-cam-ai" class="ovm-cam-btn" hidden><i class="fa-solid fa-shield-halved"></i> AI报警</button>
+        <button type="button" id="ovm-cam-info" class="ovm-cam-btn" hidden><i class="fa-solid fa-circle-info"></i> 基础信息</button>
+        <button type="button" class="x" id="ovm-close" aria-label="关闭">×</button>
+      </div>
+    </div>
+    <div class="ovm-bd" id="ovm-body"></div>
+    <div class="ovm-ft">默认实时监控；右上角可切换历史视频 / AI报警 / 基础信息。Esc 关闭。</div>
+  </div>
+</div>
+
 <script src="wall_domain.js"></script>
-<script src="wall_theme_nav.js"></script>
 <script src="wall_eq_detail.js"></script>
+<script src="wall_ov_detail.js"></script>
+<script src="wall_theme_nav.js"></script>
 <script>
 const THEME_LABEL={'概览':'港区概览','生产':'生产运行','交通':'港区交通','设备':'设备设施','经营':'经营分析','调度':'智慧调度'};
 function renderThemes(){
@@ -432,10 +509,12 @@ function renderThemes(){
 }
 renderThemes();
 initWallTheme('设备');
+OvDetail.bind();
 
 document.getElementById('btnPresent').onclick=()=>{document.body.classList.add('present');toast('汇报全屏 · Esc 退出')};
 document.addEventListener('keydown',e=>{
   if(e.key!=='Escape') return;
+  if(document.getElementById('ov-modal')?.classList.contains('show')) return;
   if(document.getElementById('eq-modal')?.classList.contains('show')) return;
   document.body.classList.remove('present');
 });
@@ -503,8 +582,9 @@ document.querySelector('.wall').addEventListener('click',e=>{
     openEq(maint.getAttribute('data-eq'),'maint');
     return;
   }
+  if(e.target.closest('[data-vid-rail]')) return;
   const hit=e.target.closest('[data-eq]');
-  if(!hit || hit.closest('#eq-modal')) return;
+  if(!hit || hit.closest('#eq-modal') || hit.closest('#ov-modal')) return;
   openEq(hit.getAttribute('data-eq'),'bim');
 });
 </script>

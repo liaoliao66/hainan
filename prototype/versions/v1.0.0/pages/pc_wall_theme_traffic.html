@@ -7,6 +7,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="../vendor/font-awesome/css/all.min.css">
 <link rel="stylesheet" href="wall_scrollbar.css">
+<link rel="stylesheet" href="wall_common.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;600&display=swap');
 *{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;box-sizing:border-box}
@@ -30,7 +31,6 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 .tag.warn{border-color:rgba(255,170,0,.55);color:#fa0}
 .tag.err{border-color:rgba(245,63,63,.65);color:#ff9a9a}
 .tag.ok{border-color:rgba(0,196,140,.55);color:#00c48c}
-.tag.veh{border-color:rgba(0,228,255,.45);color:#e8f6ff}
 .wh{position:absolute;padding:4px 7px;border-radius:3px;font-size:10px;color:#b4c7e7;background:rgba(8,28,62,.75);border:1px dashed rgba(14,116,240,.35);white-space:nowrap;z-index:2}
 .dot{width:5px;height:5px;border-radius:50%;display:inline-block}
 .line{width:10px;height:3px;border-radius:2px;display:inline-block}
@@ -46,6 +46,52 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 .chip-btn.on{background:rgba(14,116,240,.45);border-color:rgba(0,228,255,.4);color:#fff;font-weight:700}
 .mini-act{height:15px;padding:0 7px;border:1px solid rgba(14,116,240,.28);background:rgba(14,116,240,.12);border-radius:3px;color:#b4c7e7;font-size:9px;cursor:pointer}
 .mini-act:hover{border-color:#00e4ff;color:#00e4ff}
+.vid-rail-wrap{display:flex;align-items:stretch;gap:6px;min-width:0}
+.vid-rail{display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;flex:1;min-width:0;scrollbar-width:thin;padding-bottom:2px}
+.vid-rail-item{flex:0 0 calc((100% - 32px)/4.2);min-width:148px;max-width:220px;scroll-snap-align:start;border-radius:4px;overflow:hidden;border:1px solid rgba(14,116,240,.28);background:#0a1220}
+.vid-rail-item.warn{border-color:rgba(255,170,0,.4)}
+.vid-rail-item.err{border-color:rgba(245,63,63,.4)}
+.vid-rail-btn{flex:0 0 28px;width:28px;border:1px solid rgba(0,228,255,.35);border-radius:4px;background:rgba(0,228,255,.08);color:#00e4ff;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.vid-rail-btn:hover{background:rgba(0,228,255,.18)}
+.vid-rail-btn:disabled{opacity:.35;cursor:default}
+.veh-pin{position:absolute;left:0;top:0;z-index:4;display:flex;flex-direction:column;align-items:center;gap:2px;padding:0;border:0;background:transparent;cursor:pointer;transform:translate(-50%,-35%);transition:left .32s linear,top .32s linear;filter:drop-shadow(0 2px 4px rgba(0,0,0,.45))}
+.veh-pin.on{z-index:7}
+.veh-pin.moving{z-index:5}
+.veh-pin .veh-body{position:relative;width:30px;height:18px;border-radius:5px 8px 4px 4px;display:flex;align-items:center;justify-content:center;color:#f4f7fb;background:linear-gradient(180deg,#3a87c8 0%,#1d5f9a 55%,#164a78 100%);border:1px solid rgba(180,220,255,.45);box-shadow:inset 0 1px 0 rgba(255,255,255,.22),inset 0 -2px 0 rgba(0,0,0,.18);transform-origin:50% 50%;will-change:transform}
+.veh-pin .veh-body::before{content:"";position:absolute;left:3px;top:3px;width:8px;height:7px;border-radius:2px;background:rgba(180,230,255,.35);border:1px solid rgba(220,240,255,.25)}
+.veh-pin .veh-body::after{content:"";position:absolute;left:4px;right:4px;bottom:-3px;height:3px;border-radius:2px;background:rgba(15,23,42,.55)}
+.veh-pin .veh-body i.fa-truck{font-size:11px;position:relative;z-index:1;transform:scaleX(-1);text-shadow:0 1px 1px rgba(0,0,0,.35)}
+.veh-pin .veh-dot{position:absolute;right:-2px;top:-2px;width:7px;height:7px;border-radius:50%;border:1px solid rgba(7,14,28,.7);z-index:2}
+.veh-pin .veh-plate{font-size:9px;font-weight:700;line-height:1.2;padding:1px 5px;border-radius:3px;color:#e8f6ff;background:rgba(7,14,28,.9);border:1px solid rgba(148,163,184,.35);letter-spacing:.02em;white-space:nowrap;font-variant-numeric:tabular-nums}
+.veh-pin.ok .veh-body{background:linear-gradient(180deg,#2fbf8f 0%,#1a8f6a 55%,#147556 100%);border-color:rgba(160,240,210,.45)}
+.veh-pin.ok .veh-dot{background:#00c48c}
+.veh-pin.ok .veh-plate{border-color:rgba(0,196,140,.4)}
+.veh-pin.warn .veh-body{background:linear-gradient(180deg,#e0b04a 0%,#c48a18 55%,#9a6a10 100%);border-color:rgba(255,220,140,.45)}
+.veh-pin.warn .veh-dot{background:#fa0}
+.veh-pin.warn .veh-plate{border-color:rgba(255,170,0,.45);color:#ffe7b0}
+.veh-pin.veh .veh-body{background:linear-gradient(180deg,#4aa3e0 0%,#2176b8 55%,#185a90 100%)}
+.veh-pin.veh .veh-dot{background:#00e4ff}
+.veh-pin.veh .veh-plate{border-color:rgba(0,228,255,.4)}
+.veh-pin.on .veh-plate{border-color:#00e4ff;box-shadow:0 0 0 1px rgba(0,228,255,.35)}
+.veh-pin.on .veh-body{outline:2px solid rgba(0,228,255,.55);outline-offset:1px}
+.veh-pin.pulse .veh-body{animation:vehBodyPulse 1.8s ease-in-out infinite}
+@keyframes vehBodyPulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.18)}}
+.veh-pin .veh-face{display:flex;flex-direction:column;align-items:center;gap:2px}
+.ov-modal-mask{display:none;position:fixed;inset:0;z-index:90;background:rgba(2,8,20,.62);align-items:center;justify-content:center;padding:1.5vmin}
+.ov-modal-mask.show{display:flex}
+.ov-modal{position:relative;width:min(94vw,1180px);height:min(82vh,760px);display:flex;flex-direction:column;overflow:hidden;border-radius:10px;background:linear-gradient(165deg,rgba(8,28,62,.98),rgba(6,18,42,.98));border:1px solid rgba(0,228,255,.35);box-shadow:0 0 40px rgba(0,0,0,.55)}
+.ovm-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid rgba(14,116,240,.18);flex-shrink:0;background:rgba(8,28,62,.96)}
+.ovm-hd .left{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+.ovm-hd h4{margin:0;font-size:15px;color:#00e4ff;font-weight:800;letter-spacing:.04em}
+.ovm-hd .acts{display:flex;align-items:center;gap:6px}
+.ovm-hd .acts button{font-size:12px;padding:5px 10px;border-radius:4px;cursor:pointer;font-weight:600;border:1px solid rgba(14,116,240,.4);background:rgba(14,116,240,.2);color:#36bffa}
+.ovm-hd .acts #ovm-history{border-color:rgba(0,228,255,.4);background:rgba(0,228,255,.12);color:#9ec5ff}
+.ovm-hd .acts .ovm-cam-btn{border-color:rgba(0,228,255,.35);background:rgba(0,228,255,.08);color:#9ec5ff}
+.ovm-hd .acts .ovm-cam-btn.on{border-color:rgba(0,228,255,.55);background:rgba(0,228,255,.2);color:#e7f7ff;font-weight:700}
+.ovm-hd .acts .ovm-cam-btn[hidden],.ovm-hd .acts .ovm-history[hidden]{display:none!important}
+.ovm-hd .x{width:30px;padding:0;font-size:16px;line-height:28px;text-align:center;color:#e8f6ff}
+.ovm-bd{padding:12px 16px 14px;flex:1;min-height:0;overflow:auto}
+.ovm-ft{padding:0 16px 12px;font-size:11px;color:rgba(180,199,231,.55);flex-shrink:0}
 .map-chip{height:17px;padding:0 7px;border-radius:3px;font-size:9px;border:1px solid rgba(255,255,255,.12);background:rgba(8,28,62,.85);color:#b4c7e7;cursor:pointer}
 .map-chip.warn{border-color:rgba(255,170,0,.45);color:#fa0}
 .map-chip.ok{border-color:rgba(0,196,140,.45);color:#00c48c}
@@ -215,10 +261,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
             <button type="button" class="tag warn" style="left:65.6%;top:40%" data-layer="闸口" onclick="toast('定位：G01 进港闸口')">G01 进港闸口</button>
             <button type="button" class="tag ok" style="left:71.3%;top:50%" data-layer="闸口" onclick="toast('定位：G02 出港闸口')">G02 出港闸口</button>
             <button type="button" class="tag err" style="left:54.6%;top:55.9%" data-layer="地磅" onclick="toast('定位：W01 地磅区')">W01 地磅区</button>
-            <button type="button" class="tag veh" style="left:51.9%;top:48%" data-layer="车辆" onclick="toast('定位：示例车01 · 行驶')">示例车01 · 行驶</button>
-            <button type="button" class="tag veh" style="left:55.6%;top:60.3%" data-layer="车辆" onclick="toast('定位：示例车02 · 称重')">示例车02 · 称重</button>
-            <button type="button" class="tag warn" style="left:44.4%;top:57.9%" data-layer="车辆" onclick="toast('定位：示例车03 · 待核')">示例车03 · 待核</button>
-            <button type="button" class="tag veh" style="left:66.5%;top:54.7%" data-layer="车辆" onclick="toast('定位：示例车04 · 待离港')">示例车04 · 待离港</button>
+            <div id="trafVehLayer" aria-label="在港车辆"></div>
 
             <div class="absolute left-2 bottom-2 z-10 flex items-center gap-3 px-2 py-1 rounded-[3px] text-[9px] text-[#b4c7e7]" style="background:rgba(8,28,62,.55);border:1px solid rgba(14,116,240,.18)">
               <span class="inline-flex items-center gap-1"><i class="line bg-[#00c48c]"></i>畅通</span>
@@ -236,32 +279,50 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
           <div class="flex items-center gap-1.5 mb-2">
             <span class="mark"></span>
             <span class="text-[12px] font-bold text-[#36bffa]">重点交通节点视频</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[9px] font-bold text-[#00e4ff]" style="background:rgba(14,116,240,.18);border:1px solid rgba(0,228,255,.3)">3路</span>
-            <span class="chip ml-auto">中央列内 · 模拟画面</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[9px] font-bold text-[#00e4ff]" style="background:rgba(14,116,240,.18);border:1px solid rgba(0,228,255,.3)">6路</span>
+            <a class="ml-auto inline-flex items-center justify-center w-7 h-7 rounded border border-[rgba(0,228,255,.4)] bg-[rgba(0,228,255,.1)] text-[#00e4ff] hover:bg-[rgba(0,228,255,.2)]" href="pc_wall_command_screen.html?filter=%E6%91%84%E5%83%8F%E5%A4%B4&from=%E4%BA%A4%E9%80%9A" title="进入监控系统" aria-label="进入监控系统"><i class="fa-solid fa-arrow-right"></i></a>
           </div>
-          <div class="grid grid-cols-3 gap-2">
-            <div class="rounded overflow-hidden" style="border:1px solid rgba(255,170,0,.4)">
-              <div class="relative h-[9vh] min-h-[88px] bg-[#0a1220]">
-                <img src="../assets/figma/traf-cam1.png" alt="G01" class="absolute inset-0 w-full h-full object-cover">
-                <span class="absolute left-1.5 top-1.5 text-[9px] font-bold text-[#fa0] bg-[rgba(16,34,55,.93)] border border-[#fa0] px-1 rounded">模拟画面</span>
+          <div class="vid-rail-wrap">
+            <button type="button" class="vid-rail-btn" data-rail-prev aria-label="上一组"><i class="fa-solid fa-chevron-left"></i></button>
+            <div class="vid-rail" data-vid-rail>
+              <div class="vid-rail-item warn" data-cam="G01" title="打开摄像头详情">
+                <div class="relative h-[9vh] min-h-[88px] bg-[#0a1220]">
+                  <img src="../assets/figma/traf-cam1.png" alt="G01" class="absolute inset-0 w-full h-full object-cover">
+                </div>
+                <div class="h-[30px] px-2 flex items-center text-[12px] text-[#e8f6ff]">G01｜进港闸口</div>
               </div>
-              <div class="h-[30px] px-2 flex items-center text-[12px] text-[#e8f6ff]">G01｜进港闸口</div>
-            </div>
-            <div class="rounded overflow-hidden" style="border:1px solid rgba(245,63,63,.4)">
-              <div class="relative h-[9vh] min-h-[88px] bg-[#0a1220]">
-                <img src="../assets/figma/traf-cam2.png" alt="W01" class="absolute inset-0 w-full h-full object-cover">
-                <span class="absolute left-1.5 top-1.5 text-[9px] font-bold text-[#fa0] bg-[rgba(16,34,55,.93)] border border-[#fa0] px-1 rounded">模拟画面</span>
-                <span class="absolute right-1.5 top-1.5 text-[9px] text-[#ff9a9a] bg-[rgba(16,34,55,.93)] px-1 rounded">关联 T001</span>
+              <div class="vid-rail-item err" data-cam="W01" title="打开摄像头详情">
+                <div class="relative h-[9vh] min-h-[88px] bg-[#0a1220]">
+                  <img src="../assets/figma/traf-cam2.png" alt="W01" class="absolute inset-0 w-full h-full object-cover">
+                </div>
+                <div class="h-[30px] px-2 flex items-center text-[12px] text-[#e8f6ff]">W01｜地磅前区</div>
               </div>
-              <div class="h-[30px] px-2 flex items-center text-[12px] text-[#e8f6ff]">W01｜地磅前区</div>
-            </div>
-            <div class="rounded overflow-hidden" style="border:1px solid rgba(14,116,240,.28)">
-              <div class="relative h-[9vh] min-h-[88px] bg-[#0a1220]">
-                <img src="../assets/figma/traf-cam3.png" alt="R01" class="absolute inset-0 w-full h-full object-cover">
-                <span class="absolute left-1.5 top-1.5 text-[9px] font-bold text-[#fa0] bg-[rgba(16,34,55,.93)] border border-[#fa0] px-1 rounded">模拟画面</span>
+              <div class="vid-rail-item" data-cam="R01" title="打开摄像头详情">
+                <div class="relative h-[9vh] min-h-[88px] bg-[#0a1220]">
+                  <img src="../assets/figma/traf-cam3.png" alt="R01" class="absolute inset-0 w-full h-full object-cover">
+                </div>
+                <div class="h-[30px] px-2 flex items-center text-[12px] text-[#e8f6ff]">R01｜港区主干道</div>
               </div>
-              <div class="h-[30px] px-2 flex items-center text-[12px] text-[#e8f6ff]">R01｜港区主干道</div>
+              <div class="vid-rail-item" data-cam="G02" title="打开摄像头详情">
+                <div class="relative h-[9vh] min-h-[88px] bg-[#0a1220]">
+                  <img src="../assets/figma/cam04.png" alt="G02" class="absolute inset-0 w-full h-full object-cover">
+                </div>
+                <div class="h-[30px] px-2 flex items-center text-[12px] text-[#e8f6ff]">G02｜出港闸口</div>
+              </div>
+              <div class="vid-rail-item" data-cam="R02" title="打开摄像头详情">
+                <div class="relative h-[9vh] min-h-[88px] bg-[#0a1220]">
+                  <img src="../assets/figma/cam05.png" alt="R02" class="absolute inset-0 w-full h-full object-cover">
+                </div>
+                <div class="h-[30px] px-2 flex items-center text-[12px] text-[#e8f6ff]">R02｜疏港通道</div>
+              </div>
+              <div class="vid-rail-item" data-cam="R03" title="打开摄像头详情">
+                <div class="relative h-[9vh] min-h-[88px] bg-[#0a1220]">
+                  <img src="../assets/figma/cam06.png" alt="R03" class="absolute inset-0 w-full h-full object-cover">
+                </div>
+                <div class="h-[30px] px-2 flex items-center text-[12px] text-[#e8f6ff]">R03｜施工路段</div>
+              </div>
             </div>
+            <button type="button" class="vid-rail-btn" data-rail-next aria-label="下一组"><i class="fa-solid fa-chevron-right"></i></button>
           </div>
         </div>
       </div>
@@ -277,20 +338,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
           <div class="text-[9px] font-bold text-[#36bffa] flex items-center text-center py-1 rounded-[3px] mb-1" style="background:rgba(14,116,240,.14)">
             <span class="w-[88px]">车辆</span><span class="w-[90px]">作业去向</span><span class="w-[110px]">状态</span><span class="flex-1">权限</span>
           </div>
-          <div class="text-[10px] space-y-0">
-            <div class="flex items-center py-1.5 border-b cursor-pointer" style="border-color:rgba(14,116,240,.08)" onclick="toast('车辆详情：示例车01')">
-              <b class="w-[88px] text-[#00e4ff] text-center">示例车01</b><span class="w-[90px] text-[#b4c7e7] text-center">1#仓库</span><span class="w-[110px] text-center"><span class="pill b">行驶中</span></span><span class="flex-1 text-center"><span class="pill g">有效</span></span>
-            </div>
-            <div class="flex items-center py-1.5 border-b cursor-pointer" style="border-color:rgba(14,116,240,.08);background:rgba(14,116,240,.04)" onclick="toast('车辆详情：示例车02')">
-              <b class="w-[88px] text-[#00e4ff] text-center">示例车02</b><span class="w-[90px] text-[#b4c7e7] text-center">W01地磅</span><span class="w-[110px] text-center"><span class="pill b">称重中</span></span><span class="flex-1 text-center"><span class="pill g">有效</span></span>
-            </div>
-            <div class="flex items-center py-1.5 border-b cursor-pointer" style="border-color:rgba(14,116,240,.08)" onclick="toast('车辆详情：示例车03')">
-              <b class="w-[88px] text-[#00e4ff] text-center">示例车03</b><span class="w-[90px] text-[#b4c7e7] text-center">仓库道路</span><span class="w-[110px] text-center"><span class="pill w">路线待核</span></span><span class="flex-1 text-center"><span class="pill w">待核</span></span>
-            </div>
-            <div class="flex items-center py-1.5 border-b cursor-pointer" style="border-color:rgba(14,116,240,.08);background:rgba(14,116,240,.04)" onclick="toast('车辆详情：示例车04')">
-              <b class="w-[88px] text-[#00e4ff] text-center">示例车04</b><span class="w-[90px] text-[#b4c7e7] text-center">出港闸口</span><span class="w-[110px] text-center"><span class="pill n">待离港</span></span><span class="flex-1 text-center"><span class="pill g">有效</span></span>
-            </div>
-          </div>
+          <div class="text-[10px] space-y-0" id="trafVehList"></div>
         </div>
 
         <div class="card shrink-0 p-3">
@@ -331,24 +379,24 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
                 <button type="button" class="mini-act" onclick="event.stopPropagation();toast('调取地磅视频')">视频</button>
               </div>
             </div>
-            <div class="rounded p-2 cursor-pointer" style="background:rgba(8,28,62,.6);border:1px solid rgba(14,116,240,.2)" onclick="toast('预警 T002')">
-              <div class="flex justify-between text-[11px]"><span class="text-[#fa0] font-bold">T002 · 示例车03 任务路线待核</span><span class="pill w">核查中</span></div>
-              <div class="text-[10px] text-[#b4c7e7] mt-1.5 leading-relaxed">原因：任务 YS-003 权限与路线需核验<br>影响：暂缓进入受限通道</div>
+            <div class="rounded p-2 cursor-pointer" style="background:rgba(8,28,62,.6);border:1px solid rgba(14,116,240,.2)" onclick="openTrafVeh('琼A·3310')">
+              <div class="flex justify-between text-[11px]"><span class="text-[#fa0] font-bold">T002 · 琼A·3310 任务路线待核</span><span class="pill w">核查中</span></div>
+              <div class="text-[10px] text-[#b4c7e7] mt-1.5 leading-relaxed">原因：任务 ZY-1033 权限与路线需核验<br>影响：暂缓进入受限通道</div>
               <div class="text-[10px] text-[#b4c7e7] mt-1 leading-relaxed">进展：核查中<br>预期：恢复待评估 · 责任：闸口值班</div>
               <div class="flex gap-1 mt-2">
-                <button type="button" class="mini-act" onclick="event.stopPropagation();toast('定位 示例车03')">定位</button>
+                <button type="button" class="mini-act" onclick="event.stopPropagation();focusTrafVeh('琼A·3310')">定位</button>
                 <button type="button" class="mini-act" onclick="event.stopPropagation();toast('调取关联视频')">视频</button>
-                <button type="button" class="mini-act" onclick="event.stopPropagation();toast('车辆详情：示例车03')">车辆</button>
+                <button type="button" class="mini-act" onclick="event.stopPropagation();openTrafVeh('琼A·3310')">车辆</button>
               </div>
             </div>
-            <div class="rounded p-2 cursor-pointer" style="background:rgba(8,28,62,.6);border:1px solid rgba(14,116,240,.2)" onclick="toast('预警 T003')">
-              <div class="flex justify-between text-[11px]"><span class="text-[#ff9a9a] font-bold">T003 · 示例车06 非作业区停留</span><span class="pill r">待现场核查</span></div>
-              <div class="text-[10px] text-[#b4c7e7] mt-1.5 leading-relaxed">原因：原因待核<br>影响：影响局部通行</div>
+            <div class="rounded p-2 cursor-pointer" style="background:rgba(8,28,62,.6);border:1px solid rgba(14,116,240,.2)" onclick="openTrafVeh('粤D·7721')">
+              <div class="flex justify-between text-[11px]"><span class="text-[#ff9a9a] font-bold">T003 · 粤D·7721 非作业区停留</span><span class="pill r">待现场核查</span></div>
+              <div class="text-[10px] text-[#b4c7e7] mt-1.5 leading-relaxed">原因：待离港外场停留偏长<br>影响：影响局部通行</div>
               <div class="text-[10px] text-[#b4c7e7] mt-1 leading-relaxed">进展：待现场核查<br>预期：处置待评估 · 责任：现场巡查</div>
               <div class="flex gap-1 mt-2">
-                <button type="button" class="mini-act" onclick="event.stopPropagation();toast('定位 示例车06')">定位</button>
+                <button type="button" class="mini-act" onclick="event.stopPropagation();focusTrafVeh('粤D·7721')">定位</button>
                 <button type="button" class="mini-act" onclick="event.stopPropagation();toast('调取关联视频')">视频</button>
-                <button type="button" class="mini-act" onclick="event.stopPropagation();toast('车辆详情：示例车06')">车辆</button>
+                <button type="button" class="mini-act" onclick="event.stopPropagation();openTrafVeh('粤D·7721')">车辆</button>
               </div>
             </div>
           </div>
@@ -368,7 +416,30 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
   </div>
 </div>
 
+<div class="ov-modal-mask" id="ov-modal" role="dialog" aria-modal="true">
+  <div class="ov-modal">
+    <div class="ovm-hd">
+      <div class="left">
+        <h4 id="ovm-title">对象详情</h4>
+        <span class="pill g" id="ovm-status">—</span>
+        <span class="pill b" id="ovm-type">—</span>
+      </div>
+      <div class="acts">
+        <button type="button" id="ovm-history" class="ovm-history" hidden><i class="fa-solid fa-clock-rotate-left"></i> 历史作业</button>
+        <button type="button" id="ovm-cam-live" class="ovm-cam-btn" hidden><i class="fa-solid fa-video"></i> 实时监控</button>
+        <button type="button" id="ovm-cam-hist" class="ovm-cam-btn" hidden><i class="fa-solid fa-film"></i> 历史视频</button>
+        <button type="button" id="ovm-cam-ai" class="ovm-cam-btn" hidden><i class="fa-solid fa-shield-halved"></i> AI报警</button>
+        <button type="button" id="ovm-cam-info" class="ovm-cam-btn" hidden><i class="fa-solid fa-circle-info"></i> 基础信息</button>
+        <button type="button" class="x" id="ovm-close" aria-label="关闭">×</button>
+      </div>
+    </div>
+    <div class="ovm-bd" id="ovm-body"></div>
+    <div class="ovm-ft">港区交通车辆详情复用概览档案；支持轨迹与历史作业。Esc 关闭。</div>
+  </div>
+</div>
+
 <script src="wall_domain.js"></script>
+<script src="wall_ov_detail.js"></script>
 <script src="wall_theme_nav.js"></script>
 <script>
 const THEME_LABEL={'概览':'港区概览','生产':'生产运行','交通':'港区交通','设备':'设备设施','经营':'经营分析','调度':'智慧调度'};
@@ -385,9 +456,15 @@ function renderThemes(){
 }
 renderThemes();
 initWallTheme('交通');
+OvDetail.bind();
 
 document.getElementById('btnPresent').onclick=()=>{document.body.classList.add('present');toast('汇报全屏 · Esc 退出')};
-document.addEventListener('keydown',e=>{if(e.key==='Escape') document.body.classList.remove('present')});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    if(document.getElementById('ov-modal')?.classList.contains('show')) return;
+    document.body.classList.remove('present');
+  }
+});
 
 function pad(n){return String(n).padStart(2,'0')}
 function tickFooter(){
@@ -416,6 +493,148 @@ const structJob=document.getElementById('structJob');
 const structType=document.getElementById('structType');
 structJob.onclick=()=>{structJob.classList.add('on');structType.classList.remove('on');structPanel.innerHTML=jobHtml;toast('结构口径：作业状态')};
 structType.onclick=()=>{structType.classList.add('on');structJob.classList.remove('on');structPanel.innerHTML=typeHtml;toast('结构口径：车辆类型')};
+
+/** 交通图车辆落点与动态轨迹（演示） */
+const TRAF_VEH = [
+  { name:'粤A·D1234', x:52, y:48, dest:'1#泊位', auth:'有效', move:[[52,48],[48,46],[44,48],[48,50],[52,48]], period:16000 },
+  { name:'琼B·C8801', x:56, y:58, dest:'件杂外运', auth:'有效', move:[[56,58],[54,56],[58,55],[60,58],[56,58]], period:18000 },
+  { name:'粤E·1122', x:55, y:54, dest:'W01地磅', auth:'有效', pulse:true },
+  { name:'琼C·6688', x:36, y:58, dest:'1#仓库', auth:'有效', move:[[36,58],[40,55],[38,52],[34,55],[36,58]], period:15000 },
+  { name:'粤B·9056', x:58, y:52, dest:'地磅排队', auth:'有效', pulse:true },
+  { name:'琼A·3310', x:44, y:58, dest:'仓库道路', auth:'待核', pulse:true },
+  { name:'粤D·7721', x:68, y:52, dest:'出港闸口', auth:'有效' },
+  { name:'琼D·1208', x:30, y:50, dest:'2#泊位', auth:'有效', move:[[30,50],[34,48],[38,52],[34,54],[30,50]], period:14000 },
+  { name:'粤F·4419', x:50, y:42, dest:'散货堆场', auth:'有效', move:[[50,42],[52,40],[54,42],[52,44],[50,42]], period:17000 },
+  { name:'琼E·8833', x:64, y:40, dest:'G01闸口', auth:'有效', pulse:true },
+  { name:'粤G·5560', x:46, y:40, dest:'3#仓库', auth:'有效', move:[[46,40],[50,38],[52,42],[48,44],[46,40]], period:15500 },
+  { name:'琼F·2199', x:70, y:32, dest:'W01地磅', auth:'有效', pulse:true }
+];
+
+function trafVehTone(status){
+  if(/过磅|排队|待核|称重/.test(status||'')) return 'warn';
+  if(/待离港/.test(status||'')) return 'veh';
+  if(/作业/.test(status||'')) return 'ok';
+  return 'veh';
+}
+function trafStatusPill(status){
+  if(/待核/.test(status)) return 'w';
+  if(/过磅|排队|称重/.test(status)) return 'b';
+  if(/待离港/.test(status)) return 'n';
+  if(/作业/.test(status)) return 'g';
+  return 'b';
+}
+function openTrafVeh(name){
+  focusTrafVeh(name);
+  const ok=OvDetail.open(name);
+  if(!ok) toast((name||'车辆')+' · 暂无详情');
+}
+function focusTrafVeh(name){
+  document.querySelectorAll('#trafVehLayer .veh-pin').forEach(el=>{
+    el.classList.toggle('on', el.dataset.n===name);
+  });
+  const hit=document.querySelector(`#trafVehLayer .veh-pin[data-n="${CSS.escape(name)}"]`);
+  if(hit) toast('已定位：'+name+' · '+ (hit.dataset.s||''));
+}
+
+function mountTrafVehicles(){
+  const layer=document.getElementById('trafVehLayer');
+  const list=document.getElementById('trafVehList');
+  if(!layer) return;
+  layer.innerHTML='';
+  const rows=[];
+  /* 右侧仅展示重点 4 条，地图仍挂全量车辆 */
+  const LIST_KEYS=['粤A·D1234','粤E·1122','琼A·3310','粤D·7721'];
+  TRAF_VEH.forEach((item, idx)=>{
+    const feat=findMapFeature(item.name);
+    if(!feat) return;
+    const st=feat.status||'行驶';
+    const tone=trafVehTone(st);
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.className='veh-pin '+tone+(item.pulse?' pulse':'')+(item.move?' moving':'');
+    btn.style.left=item.x+'%';
+    btn.style.top=item.y+'%';
+    btn.dataset.n=item.name;
+    btn.dataset.s=st;
+    btn.dataset.layer='车辆';
+    btn.title=item.name+' · '+st;
+    if(item.move){
+      btn.dataset.move=JSON.stringify(item.move);
+      btn.dataset.period=String(item.period||16000);
+      btn.dataset.phase=String((idx*0.13)%1);
+      btn.dataset.lx=String(item.x);
+      btn.dataset.ly=String(item.y);
+    }
+    btn.innerHTML=`<span class="veh-face"><span class="veh-plate">${item.name}</span><span class="veh-body"><i class="fa-solid fa-truck"></i><i class="veh-dot"></i></span></span>`;
+    btn.addEventListener('click',()=>openTrafVeh(item.name));
+    layer.appendChild(btn);
+  });
+  LIST_KEYS.forEach((name, idx)=>{
+    const item=TRAF_VEH.find(v=>v.name===name);
+    const feat=findMapFeature(name);
+    if(!item||!feat) return;
+    const st=feat.status||'行驶';
+    const authPill=/待核/.test(item.auth||'')?'w':'g';
+    const stPill=trafStatusPill(st);
+    const alt=idx%2===1?'background:rgba(14,116,240,.04)':'';
+    rows.push(`<div class="flex items-center py-1.5 border-b cursor-pointer" style="border-color:rgba(14,116,240,.08);${alt}" data-veh="${name}">
+      <b class="w-[88px] text-[#00e4ff] text-center">${name}</b>
+      <span class="w-[90px] text-[#b4c7e7] text-center">${item.dest||'—'}</span>
+      <span class="w-[110px] text-center"><span class="pill ${stPill}">${st}</span></span>
+      <span class="flex-1 text-center"><span class="pill ${authPill}">${item.auth||'有效'}</span></span>
+    </div>`);
+  });
+  if(list){
+    list.innerHTML=rows.join('');
+    list.querySelectorAll('[data-veh]').forEach(row=>{
+      row.addEventListener('click',()=>openTrafVeh(row.getAttribute('data-veh')));
+    });
+  }
+}
+
+function lerp(a,b,t){return a+(b-a)*t}
+function pointOnPath(path, t){
+  if(!path||!path.length) return null;
+  if(path.length===1) return path[0];
+  const n=path.length-1;
+  const x=t*n;
+  const i=Math.min(n-1, Math.floor(x));
+  const u=x-i;
+  return [lerp(path[i][0], path[i+1][0], u), lerp(path[i][1], path[i+1][1], u)];
+}
+function headingDeg(dx, dy){
+  if(Math.abs(dx)<0.01 && Math.abs(dy)<0.01) return null;
+  // 地图 y 向下，图标默认朝右；转成 CSS rotate
+  return Math.atan2(dy, dx) * 180 / Math.PI;
+}
+function animateTrafVeh(ts){
+  document.querySelectorAll('#trafVehLayer .veh-pin[data-move]').forEach(el=>{
+    let path;
+    try{ path=JSON.parse(el.dataset.move);}catch(e){ return; }
+    const period=+el.dataset.period||16000;
+    const phase=+el.dataset.phase||0;
+    const t=((ts/period)+phase)%1;
+    const ping=t<0.5?t*2:1-((t-0.5)*2);
+    const pt=pointOnPath(path, ping);
+    if(!pt) return;
+    const lx=+el.dataset.lx;
+    const ly=+el.dataset.ly;
+    const dx=pt[0]-lx;
+    const dy=pt[1]-ly;
+    el.style.left=pt[0].toFixed(2)+'%';
+    el.style.top=pt[1].toFixed(2)+'%';
+    el.dataset.lx=String(pt[0]);
+    el.dataset.ly=String(pt[1]);
+    const body=el.querySelector('.veh-body');
+    const deg=headingDeg(dx, dy);
+    if(body && deg!=null) body.style.transform='rotate('+deg.toFixed(1)+'deg)';
+  });
+  requestAnimationFrame(animateTrafVeh);
+}
+
+mountTrafVehicles();
+requestAnimationFrame(animateTrafVeh);
+OvDetail.setLocateHandler((name)=>focusTrafVeh(name));
 </script>
 </body>
 </html>

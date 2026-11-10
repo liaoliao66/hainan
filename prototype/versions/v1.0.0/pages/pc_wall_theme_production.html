@@ -7,6 +7,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="../vendor/font-awesome/css/all.min.css">
 <link rel="stylesheet" href="wall_scrollbar.css">
+<link rel="stylesheet" href="wall_common.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;600&display=swap');
 *{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;box-sizing:border-box}
@@ -42,8 +43,35 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 .bar>i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#0e74f0,#00e4ff)}
 .mini-act{height:17px;padding:0 7px;border:1px solid rgba(14,116,240,.28);background:rgba(14,116,240,.12);border-radius:3px;color:#b4c7e7;font-size:11px;cursor:pointer}
 .mini-act:hover{border-color:#00e4ff;color:#00e4ff}
-.prod-right{min-height:0;display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;gap:6px;overflow:hidden}
+.vid-rail-wrap{display:flex;align-items:stretch;gap:6px;min-width:0}
+.vid-rail{display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;flex:1;min-width:0;scrollbar-width:thin;padding-bottom:2px}
+.vid-rail-item{flex:0 0 calc((100% - 32px)/4.2);min-width:148px;max-width:220px;scroll-snap-align:start;border-radius:4px;overflow:hidden;border:1px solid rgba(14,116,240,.28);background:#0a1220;cursor:pointer}
+.vid-rail-item.warn{border-color:rgba(255,170,0,.45)}
+.vid-rail-item.err{border-color:rgba(245,63,63,.45)}
+.vid-rail-item:hover{border-color:rgba(0,228,255,.55)}
+.vid-rail-btn{flex:0 0 28px;width:28px;border:1px solid rgba(0,228,255,.35);border-radius:4px;background:rgba(0,228,255,.08);color:#00e4ff;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.vid-rail-btn:hover{background:rgba(0,228,255,.18)}
+.vid-rail-btn:disabled{opacity:.35;cursor:default}
+.ov-modal-mask{display:none;position:fixed;inset:0;z-index:90;background:rgba(2,8,20,.62);align-items:center;justify-content:center;padding:1.5vmin}
+.ov-modal-mask.show{display:flex}
+.ov-modal{position:relative;width:min(94vw,1180px);height:min(82vh,760px);display:flex;flex-direction:column;overflow:hidden;border-radius:10px;background:linear-gradient(165deg,rgba(8,28,62,.98),rgba(6,18,42,.98));border:1px solid rgba(0,228,255,.35);box-shadow:0 0 40px rgba(0,0,0,.55)}
+.ovm-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid rgba(14,116,240,.18);flex-shrink:0;background:rgba(8,28,62,.96)}
+.ovm-hd .left{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+.ovm-hd h4{margin:0;font-size:15px;color:#00e4ff;font-weight:800;letter-spacing:.04em}
+.ovm-hd .acts{display:flex;align-items:center;gap:6px}
+.ovm-hd .acts button{font-size:12px;padding:5px 10px;border-radius:4px;cursor:pointer;font-weight:600;border:1px solid rgba(14,116,240,.4);background:rgba(14,116,240,.2);color:#36bffa}
+.ovm-hd .acts #ovm-history{border-color:rgba(0,228,255,.4);background:rgba(0,228,255,.12);color:#9ec5ff}
+.ovm-hd .acts .ovm-cam-btn{border-color:rgba(0,228,255,.35);background:rgba(0,228,255,.08);color:#9ec5ff}
+.ovm-hd .acts .ovm-cam-btn.on{border-color:rgba(0,228,255,.55);background:rgba(0,228,255,.2);color:#e7f7ff;font-weight:700}
+.ovm-hd .acts .ovm-cam-btn[hidden],.ovm-hd .acts .ovm-history[hidden]{display:none!important}
+.ovm-hd .x{width:30px;padding:0;font-size:16px;line-height:28px;text-align:center;color:#e8f6ff}
+.ovm-bd{padding:12px 16px 14px;flex:1;min-height:0;overflow:auto}
+.ovm-ft{padding:0 16px 12px;font-size:11px;color:rgba(180,199,231,.55);flex-shrink:0}
+.prod-right{min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto auto;gap:6px;overflow:hidden}
 .prod-right .card{overflow:hidden;min-height:0}
+.prod-right .card-eq{display:flex;flex-direction:column;min-height:0}
+.prod-right .card-eq .eq-compact{flex:1;min-height:0;overflow:auto}
+.prod-right .card-env{align-self:stretch;height:auto;flex:none}
 .alarm-compact{display:flex;flex-direction:column;gap:4px}
 .alarm-row{display:grid;grid-template-columns:64px 1fr auto;gap:6px;align-items:center;padding:5px 7px;border-radius:4px;cursor:pointer;border:1px solid rgba(14,116,240,.2);background:rgba(8,28,62,.6)}
 .alarm-row.hot{border-color:rgba(143,108,56,.6);background:rgba(40,41,31,.9)}
@@ -243,56 +271,54 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
             <span class="mark"></span>
             <span class="text-[12px] font-bold text-[#36bffa]">关联视频监控</span>
             <span class="px-1.5 py-0.5 rounded-full text-[9px] font-bold text-[#00e4ff]" style="background:rgba(14,116,240,.18);border:1px solid rgba(0,228,255,.3)">6路</span>
-            <span class="chip ml-auto">模拟画面 · 点选报警联动</span>
+            <a class="ml-auto inline-flex items-center justify-center w-7 h-7 rounded border border-[rgba(0,228,255,.4)] bg-[rgba(0,228,255,.1)] text-[#00e4ff] hover:bg-[rgba(0,228,255,.2)]" href="pc_wall_command_screen.html?filter=%E6%91%84%E5%83%8F%E5%A4%B4&from=%E7%94%9F%E4%BA%A7" title="进入监控系统" aria-label="进入监控系统"><i class="fa-solid fa-arrow-right"></i></a>
           </div>
-          <div class="grid grid-cols-6 gap-2">
-            <div class="rounded overflow-hidden" style="border:1px solid rgba(14,116,240,.28)">
-              <div class="relative h-[7.5vh] min-h-[72px] bg-[#0a1220]">
-                <img src="../assets/figma/cam01.png" alt="CAM-01" class="absolute inset-0 w-full h-full object-cover">
-                <span class="absolute left-1 top-1 text-[9px] font-bold text-[#fa0] bg-[rgba(16,34,55,.93)] border border-[#fa0] px-1 rounded">模拟</span>
+          <div class="vid-rail-wrap">
+            <button type="button" class="vid-rail-btn" data-rail-prev aria-label="上一组"><i class="fa-solid fa-chevron-left"></i></button>
+            <div class="vid-rail" data-vid-rail>
+              <div class="vid-rail-item" data-cam="CAM-01" title="打开摄像头详情">
+                <div class="relative h-[7.5vh] min-h-[72px] bg-[#0a1220]">
+                  <img src="../assets/figma/cam01.png" alt="CAM-01" class="absolute inset-0 w-full h-full object-cover">
+                </div>
+                <div class="h-7 px-2 flex items-center text-[10px] text-[#e8f6ff]">CAM-01 · 1#泊位</div>
               </div>
-              <div class="h-7 px-2 flex items-center text-[10px] text-[#e8f6ff]">CAM-01 · 1#泊位</div>
+              <div class="vid-rail-item warn" data-cam="CAM-02" title="打开摄像头详情">
+                <div class="relative h-[7.5vh] min-h-[72px] bg-[#0a1220]">
+                  <img src="../assets/figma/cam02.png" alt="CAM-02" class="absolute inset-0 w-full h-full object-cover">
+                </div>
+                <div class="h-7 px-2 flex items-center text-[10px] text-[#e8f6ff]">CAM-02 · T2转运</div>
+              </div>
+              <div class="vid-rail-item err" data-cam="CAM-03" title="打开摄像头详情">
+                <div class="relative h-[7.5vh] min-h-[72px] bg-[#071018] flex flex-col items-center justify-center text-center">
+                  <i class="fa-solid fa-video-slash text-[#637f99] text-lg mb-1"></i>
+                  <div class="text-[11px] text-[#b4c7e7]">设备离线</div>
+                  <div class="text-[9px] text-[rgba(180,199,231,.55)]">信号中断</div>
+                </div>
+                <div class="h-7 px-2 flex items-center justify-between text-[10px] text-[#e8f6ff]">
+                  <span>CAM-03 · 2#泊位</span>
+                  <span class="text-[9px] text-[#ff9a9a] font-bold">OFFLINE</span>
+                </div>
+              </div>
+              <div class="vid-rail-item" data-cam="CAM-04" title="打开摄像头详情">
+                <div class="relative h-[7.5vh] min-h-[72px] bg-[#0a1220]">
+                  <img src="../assets/figma/cam04.png" alt="CAM-04" class="absolute inset-0 w-full h-full object-cover">
+                </div>
+                <div class="h-7 px-2 flex items-center text-[10px] text-[#e8f6ff]">CAM-04 · 闸口入口</div>
+              </div>
+              <div class="vid-rail-item" data-cam="CAM-05" title="打开摄像头详情">
+                <div class="relative h-[7.5vh] min-h-[72px] bg-[#0a1220]">
+                  <img src="../assets/figma/cam05.png" alt="CAM-05" class="absolute inset-0 w-full h-full object-cover">
+                </div>
+                <div class="h-7 px-2 flex items-center text-[10px] text-[#e8f6ff]">CAM-05 · 1#仓库</div>
+              </div>
+              <div class="vid-rail-item" data-cam="CAM-06" title="打开摄像头详情">
+                <div class="relative h-[7.5vh] min-h-[72px] bg-[#0a1220]">
+                  <img src="../assets/figma/cam06.png" alt="CAM-06" class="absolute inset-0 w-full h-full object-cover">
+                </div>
+                <div class="h-7 px-2 flex items-center text-[10px] text-[#e8f6ff]">CAM-06 · 码头前沿</div>
+              </div>
             </div>
-            <div class="rounded overflow-hidden" style="border:1px solid rgba(255,170,0,.45)">
-              <div class="relative h-[7.5vh] min-h-[72px] bg-[#0a1220]">
-                <img src="../assets/figma/cam02.png" alt="CAM-02" class="absolute inset-0 w-full h-full object-cover">
-                <span class="absolute left-1 top-1 text-[9px] font-bold text-[#fa0] bg-[rgba(16,34,55,.93)] border border-[#fa0] px-1 rounded">模拟</span>
-                <span class="absolute right-1 top-1 text-[9px] text-[#fa0] bg-[rgba(16,34,55,.93)] px-1 rounded">关联 A001</span>
-              </div>
-              <div class="h-7 px-2 flex items-center text-[10px] text-[#e8f6ff]">CAM-02 · T2转运</div>
-            </div>
-            <div class="rounded overflow-hidden" style="border:1px solid rgba(245,63,63,.45)">
-              <div class="relative h-[7.5vh] min-h-[72px] bg-[#071018] flex flex-col items-center justify-center text-center">
-                <i class="fa-solid fa-video-slash text-[#637f99] text-lg mb-1"></i>
-                <div class="text-[11px] text-[#b4c7e7]">设备离线</div>
-                <div class="text-[9px] text-[rgba(180,199,231,.55)]">信号中断 · 关联 A003</div>
-              </div>
-              <div class="h-7 px-2 flex items-center justify-between text-[10px] text-[#e8f6ff]">
-                <span>CAM-03 · 2#泊位</span>
-                <span class="text-[9px] text-[#ff9a9a] font-bold">OFFLINE</span>
-              </div>
-            </div>
-            <div class="rounded overflow-hidden" style="border:1px solid rgba(14,116,240,.28)">
-              <div class="relative h-[7.5vh] min-h-[72px] bg-[#0a1220]">
-                <img src="../assets/figma/cam04.png" alt="CAM-04" class="absolute inset-0 w-full h-full object-cover">
-                <span class="absolute left-1 top-1 text-[9px] font-bold text-[#fa0] bg-[rgba(16,34,55,.93)] border border-[#fa0] px-1 rounded">模拟</span>
-              </div>
-              <div class="h-7 px-2 flex items-center text-[10px] text-[#e8f6ff]">CAM-04 · 闸口入口</div>
-            </div>
-            <div class="rounded overflow-hidden" style="border:1px solid rgba(14,116,240,.28)">
-              <div class="relative h-[7.5vh] min-h-[72px] bg-[#0a1220]">
-                <img src="../assets/figma/cam05.png" alt="CAM-05" class="absolute inset-0 w-full h-full object-cover">
-                <span class="absolute left-1 top-1 text-[9px] font-bold text-[#fa0] bg-[rgba(16,34,55,.93)] border border-[#fa0] px-1 rounded">模拟</span>
-              </div>
-              <div class="h-7 px-2 flex items-center text-[10px] text-[#e8f6ff]">CAM-05 · 1#仓库</div>
-            </div>
-            <div class="rounded overflow-hidden" style="border:1px solid rgba(14,116,240,.28)">
-              <div class="relative h-[7.5vh] min-h-[72px] bg-[#0a1220]">
-                <img src="../assets/figma/cam06.png" alt="CAM-06" class="absolute inset-0 w-full h-full object-cover">
-                <span class="absolute left-1 top-1 text-[9px] font-bold text-[#fa0] bg-[rgba(16,34,55,.93)] border border-[#fa0] px-1 rounded">模拟</span>
-              </div>
-              <div class="h-7 px-2 flex items-center text-[10px] text-[#e8f6ff]">CAM-06 · 码头前沿</div>
-            </div>
+            <button type="button" class="vid-rail-btn" data-rail-next aria-label="下一组"><i class="fa-solid fa-chevron-right"></i></button>
           </div>
         </div>
       </div>
@@ -324,20 +350,24 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
           </div>
         </div>
 
-        <div class="card p-2">
-          <div class="flex items-center gap-1.5 mb-1">
+        <div class="card card-eq p-2">
+          <div class="flex items-center gap-1.5 mb-1 shrink-0">
             <span class="mark"></span>
             <span class="text-[12px] font-bold text-[#36bffa]">作业设备状态监测</span>
             <span class="chip ml-auto">读数与状态</span>
           </div>
           <div class="eq-compact">
             <div class="eq-row"><div><span class="nm">卸船机01</span><span class="sub">负载 72%</span></div><span class="text-[11px] text-[#00c48c] font-bold">运行</span></div>
+            <div class="eq-row"><div><span class="nm">卸船机02</span><span class="sub">负载 41%</span></div><span class="text-[11px] text-[#00c48c] font-bold">运行</span></div>
             <div class="eq-row"><div><span class="nm">主皮带输送</span><span class="sub">2.5 m/s</span></div><span class="text-[11px] text-[#00c48c] font-bold">运行</span></div>
             <div class="eq-row warn"><div><span class="nm">T2输送驱动</span><span class="sub">轴承 78℃</span></div><span class="text-[11px] text-[#fa0] font-bold">预警</span></div>
+            <div class="eq-row"><div><span class="nm">堆取料机</span><span class="sub">作业中</span></div><span class="text-[11px] text-[#00c48c] font-bold">运行</span></div>
+            <div class="eq-row"><div><span class="nm">岸电系统</span><span class="sub">就绪</span></div><span class="text-[11px] text-[#7eb6ff] font-bold">待机</span></div>
+            <div class="eq-row"><div><span class="nm">雾炮#1</span><span class="sub">联动粉尘</span></div><span class="text-[11px] text-[#fa0] font-bold">待机</span></div>
           </div>
         </div>
 
-        <div class="card p-2">
+        <div class="card card-env p-2">
           <div class="flex items-center gap-1.5 mb-1">
             <span class="mark"></span>
             <span class="text-[12px] font-bold text-[#36bffa]">作业环境监测</span>
@@ -415,7 +445,30 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
   </div>
 </div>
 
+<div class="ov-modal-mask" id="ov-modal" role="dialog" aria-modal="true">
+  <div class="ov-modal">
+    <div class="ovm-hd">
+      <div class="left">
+        <h4 id="ovm-title">对象详情</h4>
+        <span class="pill g" id="ovm-status">—</span>
+        <span class="pill b" id="ovm-type">—</span>
+      </div>
+      <div class="acts">
+        <button type="button" id="ovm-history" class="ovm-history" hidden><i class="fa-solid fa-clock-rotate-left"></i> 历史作业</button>
+        <button type="button" id="ovm-cam-live" class="ovm-cam-btn" hidden><i class="fa-solid fa-video"></i> 实时监控</button>
+        <button type="button" id="ovm-cam-hist" class="ovm-cam-btn" hidden><i class="fa-solid fa-film"></i> 历史视频</button>
+        <button type="button" id="ovm-cam-ai" class="ovm-cam-btn" hidden><i class="fa-solid fa-shield-halved"></i> AI报警</button>
+        <button type="button" id="ovm-cam-info" class="ovm-cam-btn" hidden><i class="fa-solid fa-circle-info"></i> 基础信息</button>
+        <button type="button" class="x" id="ovm-close" aria-label="关闭">×</button>
+      </div>
+    </div>
+    <div class="ovm-bd" id="ovm-body"></div>
+    <div class="ovm-ft">默认实时监控；右上角可切换历史视频 / AI报警 / 基础信息。Esc 关闭。</div>
+  </div>
+</div>
+
 <script src="wall_domain.js"></script>
+<script src="wall_ov_detail.js"></script>
 <script src="wall_theme_nav.js"></script>
 <script>
 const THEME_LABEL={'概览':'港区概览','生产':'生产运行','交通':'港区交通','设备':'设备设施','经营':'经营分析','调度':'智慧调度'};
@@ -432,9 +485,15 @@ function renderThemes(){
 }
 renderThemes();
 initWallTheme('生产');
+OvDetail.bind();
 
 document.getElementById('btnPresent').onclick=()=>{document.body.classList.add('present');toast('汇报全屏 · Esc 退出')};
-document.addEventListener('keydown',e=>{if(e.key==='Escape') document.body.classList.remove('present')});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    if(document.getElementById('ov-modal')?.classList.contains('show')) return;
+    document.body.classList.remove('present');
+  }
+});
 
 function pad(n){return String(n).padStart(2,'0')}
 function tickFooter(){

@@ -33,7 +33,12 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 .toast{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);background:rgba(8,28,62,.95);border:1px solid rgba(14,116,240,.28);padding:8px 14px;border-radius:8px;font-size:12px;opacity:0;transition:.2s;z-index:80}
 .toast.show{opacity:1}
 #themes{display:none}
-.gauge{width:100px;height:100px;border-radius:50%;border:1px solid rgba(0,228,255,.42);box-shadow:0 0 10px rgba(14,116,240,.18),inset 0 0 14px rgba(0,228,255,.12);display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 35% 30%,rgba(0,228,255,.28),rgba(8,25,50,.72) 70%)}
+.gauge{width:84px;height:84px;border-radius:50%;border:1px solid rgba(0,228,255,.42);box-shadow:0 0 10px rgba(14,116,240,.18),inset 0 0 14px rgba(0,228,255,.12);display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 35% 30%,rgba(0,228,255,.28),rgba(8,25,50,.72) 70%)}
+.left-col{min-height:0;display:flex;flex-direction:column;gap:8px;overflow:hidden}
+.left-col>.card{padding:10px 12px}
+.card-top5{flex:1 1 0;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.card-top5 #top5Chart{flex:1 1 0;min-height:0;width:100%;height:auto!important}
+.card-res .res-yard{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 10px;border-radius:4px;background:rgba(14,116,240,.06)}
 .poi{position:absolute;transform:translate(-50%,-50%);padding:2px 6px;border-radius:3px;font-size:10px;border:1px solid rgba(0,228,255,.45);color:#00e4ff;background:rgba(8,28,62,.9);cursor:pointer;z-index:3;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;max-width:140px}
 .poi i{font-size:9px;opacity:.9}
 .poi span{overflow:hidden;text-overflow:ellipsis}
@@ -67,12 +72,16 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 .pill.m{color:#b4c7e7;background:rgba(180,199,231,.1);border-color:rgba(180,199,231,.25)}
 .ov-modal-mask,.eq-modal-mask{display:none;position:fixed;inset:0;z-index:90;background:rgba(2,8,20,.62);align-items:center;justify-content:center;padding:1.5vmin}
 .ov-modal-mask.show,.eq-modal-mask.show{display:flex}
-.ov-modal,.eq-modal{width:min(94vw,1180px);height:min(82vh,760px);display:flex;flex-direction:column;overflow:hidden;border-radius:10px;background:linear-gradient(165deg,rgba(8,28,62,.98),rgba(6,18,42,.98));border:1px solid rgba(0,228,255,.35);box-shadow:0 0 40px rgba(0,0,0,.55)}
+.ov-modal,.eq-modal{position:relative;width:min(94vw,1180px);height:min(82vh,760px);display:flex;flex-direction:column;overflow:hidden;border-radius:10px;background:linear-gradient(165deg,rgba(8,28,62,.98),rgba(6,18,42,.98));border:1px solid rgba(0,228,255,.35);box-shadow:0 0 40px rgba(0,0,0,.55)}
 .ovm-hd,.eqm-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--line);flex-shrink:0;background:rgba(8,28,62,.96)}
 .ovm-hd .left,.eqm-hd .left{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
 .ovm-hd h4,.eqm-hd h4{margin:0;font-size:15px;color:var(--cyan);font-weight:800;letter-spacing:.04em}
 .ovm-hd .acts,.eqm-hd .acts{display:flex;align-items:center;gap:6px}
 .ovm-hd .acts button,.eqm-hd .acts button{font-size:12px;padding:5px 10px;border-radius:4px;cursor:pointer;font-weight:600;border:1px solid rgba(14,116,240,.4);background:rgba(14,116,240,.2);color:var(--blue-light)}
+.ovm-hd .acts #ovm-history{border-color:rgba(0,228,255,.4);background:rgba(0,228,255,.12);color:#9ec5ff}
+.ovm-hd .acts .ovm-cam-btn{border-color:rgba(0,228,255,.35);background:rgba(0,228,255,.08);color:#9ec5ff}
+.ovm-hd .acts .ovm-cam-btn.on{border-color:rgba(0,228,255,.55);background:rgba(0,228,255,.2);color:#e7f7ff;font-weight:700}
+.ovm-hd .acts .ovm-cam-btn[hidden],.ovm-hd .acts .ovm-history[hidden]{display:none!important}
 .ovm-hd .x,.eqm-hd .x{width:30px;padding:0;font-size:16px;line-height:28px;text-align:center;color:#e8f6ff}
 .ovm-bd,.eqm-bd{padding:12px 16px 14px;flex:1;min-height:0;overflow:auto}
 .ovm-ft,.eqm-ft{padding:0 16px 12px;font-size:11px;color:rgba(180,199,231,.55);flex-shrink:0}
@@ -80,9 +89,15 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 .eqm-tabs button{font-size:12px;padding:5px 12px;border-radius:4px;cursor:pointer;font-weight:700;border:1px solid transparent;background:transparent;color:var(--gray)}
 .eqm-tabs button.on{background:rgba(14,116,240,.45);border-color:rgba(0,228,255,.4);color:#fff}
 .eqm-grid{display:grid;grid-template-columns:.9fr 1.2fr;gap:10px}
+.eqm-base-grid{grid-template-columns:minmax(200px,.85fr) 1.15fr}
+.eqm-stack{display:flex;flex-direction:column;gap:10px;min-width:0}
+.eqm-scroll{overflow:auto;max-height:28vh}
 .eqm-col{display:flex;flex-direction:column;gap:10px;min-width:0}
 .eqm-card{border:1px solid rgba(14,116,240,.22);border-radius:6px;padding:10px 12px;background:rgba(14,116,240,.06)}
 .eqm-card h5{margin:0 0 8px;font-size:13px;color:var(--blue-light);font-weight:700;border-left:3px solid var(--blue);padding-left:7px}
+.eqm-photo{position:relative;aspect-ratio:4/3;border-radius:5px;overflow:hidden;border:1px solid rgba(14,116,240,.28);background:#0a1220}
+.eqm-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.eqm-photo .cap{position:absolute;left:0;right:0;bottom:0;padding:6px 8px;font-size:11px;font-weight:600;color:#e8f6ff;background:linear-gradient(transparent,rgba(2,8,20,.82))}
 .eqm-kv{display:flex;justify-content:space-between;gap:10px;padding:3px 0;border-bottom:1px solid rgba(14,116,240,.08);font-size:12px}
 .eqm-kv .k{color:var(--muted)}.eqm-kv .v{color:#e8f6ff;font-weight:600;text-align:right}
 .eqm-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
@@ -156,48 +171,48 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
     <!-- 主体 · 360 | 1108 | 408 -->
     <div class="flex-1 min-h-0 grid gap-2.5 px-3 py-2.5" style="grid-template-columns:19.2% minmax(0,1fr) 21.8%">
       <!-- 左 -->
-      <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
+      <div class="left-col">
         <div class="card shrink-0">
-          <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[13px] font-bold text-[#36bffa]">吞吐量</span><span class="chip ml-auto">年 / 季 / 月 万吨</span></div>
-          <div class="flex justify-between gap-2">
-            <div class="gauge"><div class="text-[18px] text-[#00e4ff]">186</div><div class="text-[9px] text-[#b4c7e7]">年</div><div class="text-[10px] font-bold text-[#7dffc8]">26.6%</div><div class="text-[8px] text-[rgba(180,199,231,.65)]">目标700</div></div>
-            <div class="gauge"><div class="text-[18px] text-[#00e4ff]">48.5</div><div class="text-[9px] text-[#b4c7e7]">季</div><div class="text-[10px] font-bold text-[#7dffc8]">27.7%</div><div class="text-[8px] text-[rgba(180,199,231,.65)]">目标175</div></div>
-            <div class="gauge"><div class="text-[18px] text-[#00e4ff]">15.2</div><div class="text-[9px] text-[#b4c7e7]">月</div><div class="text-[10px] font-bold text-[#7dffc8]">26.1%</div><div class="text-[8px] text-[rgba(180,199,231,.65)]">目标58.3</div></div>
+          <div class="flex items-center gap-1.5 mb-1.5"><span class="mark"></span><span class="text-[13px] font-bold text-[#36bffa]">吞吐量</span><span class="chip ml-auto">年 / 季 / 月 万吨</span></div>
+          <div class="flex justify-between gap-1.5">
+            <div class="gauge"><div class="text-[16px] text-[#00e4ff]">186</div><div class="text-[9px] text-[#b4c7e7]">年</div><div class="text-[10px] font-bold text-[#7dffc8]">26.6%</div><div class="text-[8px] text-[rgba(180,199,231,.65)]">目标700</div></div>
+            <div class="gauge"><div class="text-[16px] text-[#00e4ff]">48.5</div><div class="text-[9px] text-[#b4c7e7]">季</div><div class="text-[10px] font-bold text-[#7dffc8]">27.7%</div><div class="text-[8px] text-[rgba(180,199,231,.65)]">目标175</div></div>
+            <div class="gauge"><div class="text-[16px] text-[#00e4ff]">15.2</div><div class="text-[9px] text-[#b4c7e7]">月</div><div class="text-[10px] font-bold text-[#7dffc8]">26.1%</div><div class="text-[8px] text-[rgba(180,199,231,.65)]">目标58.3</div></div>
           </div>
         </div>
         <div class="card shrink-0">
-          <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[13px] font-bold text-[#36bffa]">当年货类分布</span><span class="chip ml-auto">标准货类</span></div>
-          <div class="flex gap-3">
-            <div id="cargoChart" class="w-[110px] h-[130px] shrink-0"></div>
-            <div class="flex-1 space-y-1.5 text-[10px]">
-              <div><div class="flex justify-between"><span class="font-bold text-[#e7eef8]"><i class="inline-block w-1.5 h-1.5 rounded-sm bg-[#0e74f0] mr-1"></i>水泥熟料</span><span><b class="text-[#00e4ff]">36%</b> <span class="text-[rgba(180,199,231,.75)]">67万</span></span></div><div class="bar mt-1"><i style="width:100%"></i></div></div>
-              <div><div class="flex justify-between"><span class="font-bold text-[#e7eef8]"><i class="inline-block w-1.5 h-1.5 rounded-sm bg-[#36bffa] mr-1"></i>河砂</span><span><b class="text-[#00e4ff]">28%</b> <span class="text-[rgba(180,199,231,.75)]">52.1万</span></span></div><div class="bar mt-1"><i style="width:78%;background:linear-gradient(90deg,#36bffa,#36bffa)"></i></div></div>
-              <div><div class="flex justify-between"><span class="font-bold text-[#e7eef8]"><i class="inline-block w-1.5 h-1.5 rounded-sm bg-[#7eb6ff] mr-1"></i>石英砂</span><span><b class="text-[#00e4ff]">18%</b> <span class="text-[rgba(180,199,231,.75)]">33.5万</span></span></div><div class="bar mt-1"><i style="width:50%;background:linear-gradient(90deg,#7eb6ff,#7eb6ff)"></i></div></div>
-              <div><div class="flex justify-between"><span class="font-bold text-[#e7eef8]"><i class="inline-block w-1.5 h-1.5 rounded-sm bg-[#b4c7e7] mr-1"></i>钢铁件杂</span><span><b class="text-[#00e4ff]">18%</b> <span class="text-[rgba(180,199,231,.75)]">33.4万</span></span></div><div class="bar mt-1"><i style="width:50%;background:linear-gradient(90deg,#b4c7e7,#b4c7e7)"></i></div></div>
-              <div class="text-[9px] text-[#637f99] pt-1">总计 186.0万吨 · 水泥熟料为主</div>
+          <div class="flex items-center gap-1.5 mb-1.5"><span class="mark"></span><span class="text-[13px] font-bold text-[#36bffa]">当年货类分布</span><span class="chip ml-auto">标准货类</span></div>
+          <div class="flex gap-2.5">
+            <div id="cargoChart" class="w-[96px] h-[112px] shrink-0"></div>
+            <div class="flex-1 space-y-1 text-[10px]">
+              <div><div class="flex justify-between"><span class="font-bold text-[#e7eef8]"><i class="inline-block w-1.5 h-1.5 rounded-sm bg-[#0e74f0] mr-1"></i>水泥熟料</span><span><b class="text-[#00e4ff]">36%</b> <span class="text-[rgba(180,199,231,.75)]">67万</span></span></div><div class="bar mt-0.5"><i style="width:100%"></i></div></div>
+              <div><div class="flex justify-between"><span class="font-bold text-[#e7eef8]"><i class="inline-block w-1.5 h-1.5 rounded-sm bg-[#36bffa] mr-1"></i>河砂</span><span><b class="text-[#00e4ff]">28%</b> <span class="text-[rgba(180,199,231,.75)]">52.1万</span></span></div><div class="bar mt-0.5"><i style="width:78%;background:linear-gradient(90deg,#36bffa,#36bffa)"></i></div></div>
+              <div><div class="flex justify-between"><span class="font-bold text-[#e7eef8]"><i class="inline-block w-1.5 h-1.5 rounded-sm bg-[#7eb6ff] mr-1"></i>石英砂</span><span><b class="text-[#00e4ff]">18%</b> <span class="text-[rgba(180,199,231,.75)]">33.5万</span></span></div><div class="bar mt-0.5"><i style="width:50%;background:linear-gradient(90deg,#7eb6ff,#7eb6ff)"></i></div></div>
+              <div><div class="flex justify-between"><span class="font-bold text-[#e7eef8]"><i class="inline-block w-1.5 h-1.5 rounded-sm bg-[#b4c7e7] mr-1"></i>钢铁件杂</span><span><b class="text-[#00e4ff]">18%</b> <span class="text-[rgba(180,199,231,.75)]">33.4万</span></span></div><div class="bar mt-0.5"><i style="width:50%;background:linear-gradient(90deg,#b4c7e7,#b4c7e7)"></i></div></div>
+              <div class="text-[9px] text-[#637f99] pt-0.5">总计 186.0万吨 · 水泥熟料为主</div>
             </div>
           </div>
         </div>
-        <div class="card shrink-0 flex-1 min-h-0 overflow-hidden">
-          <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[13px] font-bold text-[#36bffa]">当年客户排行</span><span class="chip ml-auto">Top5 · 万吨</span></div>
-          <div id="top5Chart" class="w-full h-[calc(100%-24px)] min-h-[160px]"></div>
+        <div class="card card-top5">
+          <div class="flex items-center gap-1.5 mb-1.5 shrink-0"><span class="mark"></span><span class="text-[13px] font-bold text-[#36bffa]">当年客户排行</span><span class="chip ml-auto">Top5 · 万吨</span></div>
+          <div id="top5Chart"></div>
         </div>
-        <div class="card shrink-0">
-          <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[13px] font-bold text-[#36bffa]">资源占用</span><span class="chip ml-auto">车辆 · 船舶 · 堆场</span></div>
-          <div class="grid grid-cols-2 gap-2 mb-2 text-[10px]">
-            <div class="hit rounded border border-[rgba(14,116,240,.2)] bg-[rgba(14,116,240,.06)] p-2" data-ov="卡口1">
-              <div class="text-[#b4c7e7] mb-1">车辆</div>
-              <div class="flex justify-between"><div class="text-center flex-1"><div class="text-[20px] text-[#00e4ff]">18</div><div class="text-[#637f99]">待进港</div></div><div class="text-center flex-1"><div class="text-[20px] text-[#00e4ff]">186</div><div class="text-[#637f99]">已进港</div></div></div>
+        <div class="card card-res shrink-0">
+          <div class="flex items-center gap-1.5 mb-1.5"><span class="mark"></span><span class="text-[13px] font-bold text-[#36bffa]">资源占用</span><span class="chip ml-auto">车辆 · 船舶 · 堆场</span></div>
+          <div class="grid grid-cols-2 gap-1.5 mb-1.5 text-[10px]">
+            <div class="hit rounded border border-[rgba(14,116,240,.2)] bg-[rgba(14,116,240,.06)] px-2 py-1.5" data-ov="卡口1">
+              <div class="text-[#b4c7e7] mb-0.5">车辆</div>
+              <div class="flex justify-between"><div class="text-center flex-1"><div class="text-[18px] leading-none text-[#00e4ff]">18</div><div class="text-[#637f99]">待进港</div></div><div class="text-center flex-1"><div class="text-[18px] leading-none text-[#00e4ff]">186</div><div class="text-[#637f99]">已进港</div></div></div>
             </div>
-            <div class="hit rounded border border-[rgba(14,116,240,.2)] bg-[rgba(14,116,240,.06)] p-2" data-ov="远航11">
-              <div class="text-[#b4c7e7] mb-1">船舶</div>
-              <div class="flex justify-between"><div class="text-center flex-1"><div class="text-[20px] text-[#00e4ff]">1</div><div class="text-[#637f99]">待泊</div></div><div class="text-center flex-1"><div class="text-[20px] text-[#00e4ff]">1</div><div class="text-[#637f99]">锚地</div></div></div>
+            <div class="hit rounded border border-[rgba(14,116,240,.2)] bg-[rgba(14,116,240,.06)] px-2 py-1.5" data-ov="远航11">
+              <div class="text-[#b4c7e7] mb-0.5">船舶</div>
+              <div class="flex justify-between"><div class="text-center flex-1"><div class="text-[18px] leading-none text-[#00e4ff]">1</div><div class="text-[#637f99]">待泊</div></div><div class="text-center flex-1"><div class="text-[18px] leading-none text-[#00e4ff]">1</div><div class="text-[#637f99]">锚地</div></div></div>
             </div>
           </div>
-          <div class="space-y-1.5 text-[12px]">
-            <div class="hit flex items-center justify-between rounded px-3 py-2 bg-[rgba(14,116,240,.06)]" data-ov="散货堆场A"><span class="text-[#e7eef8]">散货堆场</span><b class="text-[#00e4ff] text-[18px]">76%</b><span class="text-[10px] text-[#fa0]">关注·80万吨</span></div>
-            <div class="hit flex items-center justify-between rounded px-3 py-2 bg-[rgba(14,116,240,.06)]" data-ov="件杂堆场"><span class="text-[#e7eef8]">件杂堆场</span><b class="text-[#00e4ff] text-[18px]">54%</b><span class="text-[10px] text-[#00c48c]">正常·15万吨</span></div>
-            <div class="hit flex items-center justify-between rounded px-3 py-2 bg-[rgba(14,116,240,.06)]" data-ov="仓库"><span class="text-[#e7eef8]">仓库</span><b class="text-[#00e4ff] text-[18px]">38%</b><span class="text-[10px] text-[#00c48c]">正常·10万吨</span></div>
+          <div class="space-y-1 text-[11px]">
+            <div class="hit res-yard" data-ov="散货堆场A"><span class="text-[#e7eef8]">散货堆场</span><b class="text-[#00e4ff] text-[16px]">76%</b><span class="text-[10px] text-[#fa0]">关注·80万吨</span></div>
+            <div class="hit res-yard" data-ov="件杂堆场"><span class="text-[#e7eef8]">件杂堆场</span><b class="text-[#00e4ff] text-[16px]">54%</b><span class="text-[10px] text-[#00c48c]">正常·15万吨</span></div>
+            <div class="hit res-yard" data-ov="仓库"><span class="text-[#e7eef8]">仓库</span><b class="text-[#00e4ff] text-[16px]">38%</b><span class="text-[10px] text-[#00c48c]">正常·10万吨</span></div>
           </div>
         </div>
       </div>
@@ -307,10 +322,13 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
         <h4 id="ovm-title">对象详情</h4>
         <span class="pill g" id="ovm-status">—</span>
         <span class="pill b" id="ovm-type">—</span>
-        <span class="pill m">演示数据</span>
       </div>
       <div class="acts">
-        <button type="button" id="ovm-locate"><i class="fa-solid fa-location-crosshairs"></i> 定位</button>
+        <button type="button" id="ovm-history" class="ovm-history" hidden><i class="fa-solid fa-clock-rotate-left"></i> 历史作业</button>
+        <button type="button" id="ovm-cam-live" class="ovm-cam-btn" hidden><i class="fa-solid fa-video"></i> 实时监控</button>
+        <button type="button" id="ovm-cam-hist" class="ovm-cam-btn" hidden><i class="fa-solid fa-film"></i> 历史视频</button>
+        <button type="button" id="ovm-cam-ai" class="ovm-cam-btn" hidden><i class="fa-solid fa-shield-halved"></i> AI报警</button>
+        <button type="button" id="ovm-cam-info" class="ovm-cam-btn" hidden><i class="fa-solid fa-circle-info"></i> 基础信息</button>
         <button type="button" class="x" id="ovm-close" aria-label="关闭">×</button>
       </div>
     </div>
@@ -329,7 +347,6 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
         <span class="pill m">演示数据</span>
       </div>
       <div class="acts">
-        <button type="button" id="eqm-locate"><i class="fa-solid fa-location-crosshairs"></i> 定位设备</button>
         <button type="button" class="x" id="eqm-close" aria-label="关闭">×</button>
       </div>
     </div>
@@ -426,27 +443,37 @@ function matchLayer(poiLayer, filter){
   return allow.includes(poiLayer);
 }
 
-document.querySelectorAll('.flt').forEach(btn=>{
-  btn.onclick=()=>{
-    document.querySelectorAll('.flt').forEach(b=>{b.classList.remove('filter-on');b.classList.add('filter-off')});
-    btn.classList.add('filter-on');btn.classList.remove('filter-off');
-    const f=btn.dataset.f;
-    document.querySelectorAll('#mapBox .poi').forEach(p=>{
-      p.style.display=matchLayer(p.dataset.k,f)?'':'none';
-    });
-    toast('筛选：'+f);
-  };
-});
-document.getElementById('fltReset').onclick=()=>{
+function applyMapFilter(f, silent){
+  const target=f||'全部';
   document.querySelectorAll('.flt').forEach(b=>{
-    const on=b.dataset.f==='全部';
+    const on=b.dataset.f===target;
     b.classList.toggle('filter-on',on);
     b.classList.toggle('filter-off',!on);
   });
-  document.querySelectorAll('#mapBox .poi').forEach(p=>{p.style.display='';p.classList.remove('on')});
+  document.querySelectorAll('#mapBox .poi').forEach(p=>{
+    p.style.display=matchLayer(p.dataset.k,target)?'':'none';
+  });
+  const hint=document.getElementById('mapHint');
+  if(hint && target==='摄像头') hint.textContent='监控系统 · 摄像头图层';
+  if(!silent) toast('筛选：'+target);
+}
+document.querySelectorAll('.flt').forEach(btn=>{
+  btn.onclick=()=>applyMapFilter(btn.dataset.f);
+});
+document.getElementById('fltReset').onclick=()=>{
+  applyMapFilter('全部', true);
+  document.querySelectorAll('#mapBox .poi').forEach(p=>p.classList.remove('on'));
   document.getElementById('mapHint').textContent='港区态势 · 点选打开详情';
   toast('视角复位');
 };
+(()=>{
+  const q=new URLSearchParams(location.search);
+  const filter=q.get('filter');
+  if(filter && [...document.querySelectorAll('.flt')].some(b=>b.dataset.f===filter)){
+    applyMapFilter(filter, true);
+    toast(filter==='摄像头'?'已进入监控系统（摄像头）':'筛选：'+filter);
+  }
+})();
 
 document.querySelector('.wall').addEventListener('click',e=>{
   const poi=e.target.closest('#mapBox .poi');
@@ -455,18 +482,23 @@ document.querySelector('.wall').addEventListener('click',e=>{
   if(hit){ openOv(hit.getAttribute('data-ov')); }
 });
 
-echarts.init(document.getElementById('cargoChart'),null,{renderer:'canvas'}).setOption({
+const cargoChart=echarts.init(document.getElementById('cargoChart'),null,{renderer:'canvas'});
+cargoChart.setOption({
   backgroundColor:'transparent',
   series:[{type:'pie',radius:['48%','72%'],label:{show:false},
     data:[{value:67,name:'水泥熟料',itemStyle:{color:'#0e74f0'}},{value:52.1,name:'河砂',itemStyle:{color:'#36bffa'}},{value:33.5,name:'石英砂',itemStyle:{color:'#7eb6ff'}},{value:33.4,name:'钢铁件杂',itemStyle:{color:'#b4c7e7'}}]}]
 });
-echarts.init(document.getElementById('top5Chart'),null,{renderer:'canvas'}).setOption({
+const top5Chart=echarts.init(document.getElementById('top5Chart'),null,{renderer:'canvas'});
+top5Chart.setOption({
   backgroundColor:'transparent',
-  grid:{left:90,right:24,top:8,bottom:16,containLabel:false},
+  grid:{left:78,right:18,top:4,bottom:8,containLabel:false},
   xAxis:{type:'value',axisLabel:{color:'#637f99',fontSize:10},splitLine:{show:true,lineStyle:{color:'rgba(14,116,240,.1)',type:'dashed'}},axisLine:{show:false},axisTick:{show:false}},
   yAxis:{type:'category',data:['海建物流','金港贸易','远航砂石','琼海建材','湾区钢铁'].reverse(),axisLabel:{color:'#b4c7e7',fontSize:10},axisLine:{show:false},axisTick:{show:false},splitLine:{show:false}},
-  series:[{type:'bar',data:[42,35,28,21,18].reverse(),barWidth:12,itemStyle:{color:new echarts.graphic.LinearGradient(0,0,1,0,[{offset:0,color:'#0e74f0'},{offset:1,color:'#00e4ff'}]),borderRadius:[0,3,3,0]}}]
+  series:[{type:'bar',data:[42,35,28,21,18].reverse(),barWidth:10,itemStyle:{color:new echarts.graphic.LinearGradient(0,0,1,0,[{offset:0,color:'#0e74f0'},{offset:1,color:'#00e4ff'}]),borderRadius:[0,3,3,0]}}]
 });
+function resizeWallCharts(){ cargoChart.resize(); top5Chart.resize(); }
+requestAnimationFrame(()=>{ resizeWallCharts(); setTimeout(resizeWallCharts,80); });
+window.addEventListener('resize',resizeWallCharts);
 </script>
 </body>
 </html>
