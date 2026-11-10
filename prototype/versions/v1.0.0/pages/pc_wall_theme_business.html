@@ -75,8 +75,8 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
           <div class="text-[10px] text-[#8fa6b8]">数字孪生平台 / 经营管理 · <span id="hd-clock">--</span></div>
         </div>
         <div class="text-center flex-1">
-          <h1 class="m-0 text-[20px] font-extrabold tracking-[3px] text-[#4dd0e1]">经营分析一张图</h1>
-          <p class="m-0 mt-0.5 text-[11px] text-[#8fa6b8]">一期全港 · 月度经营复盘 · 客户地域主视觉</p>
+          <h1 class="m-0 text-[22px] font-bold tracking-[3px] text-[#00e4ff] leading-none">海南金牌港 · 经营分析一张图</h1>
+          <p class="m-0 mt-1 text-[11px] tracking-[1px] text-[#b4c7e7]">一期全港 · 月度经营复盘 · 客户地域主视觉</p>
         </div>
         <div class="w-[260px] flex justify-end" data-weather="today"></div>
       </div>
@@ -86,18 +86,42 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
       <!-- 左 -->
       <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
         <div class="card shrink-0 p-2.5">
-          <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[12px] font-bold text-[#4dd0e1]">吞吐汇总</span><span class="chip ml-auto">2026年10月</span></div>
-          <div class="flex items-end justify-between gap-2">
+          <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[12px] font-bold text-[#4dd0e1]">吞吐汇总</span><span class="chip ml-auto">万吨 · 演示</span></div>
+          <div class="space-y-2">
             <div>
-              <div class="kpi-big mono">53.8<span class="text-[14px] text-[#8fa6b8] font-600 ml-1">万吨</span></div>
-              <div class="kpi-sub">计划 58.0 万吨</div>
+              <div class="flex items-center justify-between gap-2 mb-1">
+                <span class="text-[11px] text-[#8fa6b8]">本月 · 10月</span>
+                <span class="text-[11px] font-bold text-[#7ee7f0] mono">92.8%</span>
+              </div>
+              <div class="flex items-end justify-between gap-2">
+                <div class="text-[18px] font-extrabold text-[#4dd0e1] mono leading-none">53.8<span class="text-[11px] text-[#8fa6b8] font-600 ml-1">/ 58.0</span></div>
+                <span class="text-[10px] text-[#8fa6b8]">实际 / 计划</span>
+              </div>
+              <div class="bar mt-1.5"><i style="width:92.8%"></i></div>
             </div>
-            <div class="text-right">
-              <div class="text-[22px] font-extrabold text-[#7ee7f0] mono">92.8%</div>
-              <div class="text-[10px] text-[#8fa6b8]">达成率</div>
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-1">
+                <span class="text-[11px] text-[#8fa6b8]">本季 · Q4</span>
+                <span class="text-[11px] font-bold text-[#7ee7f0] mono">94.1%</span>
+              </div>
+              <div class="flex items-end justify-between gap-2">
+                <div class="text-[18px] font-extrabold text-[#4dd0e1] mono leading-none">162.4<span class="text-[11px] text-[#8fa6b8] font-600 ml-1">/ 172.5</span></div>
+                <span class="text-[10px] text-[#8fa6b8]">实际 / 计划</span>
+              </div>
+              <div class="bar mt-1.5"><i style="width:94.1%"></i></div>
+            </div>
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-1">
+                <span class="text-[11px] text-[#8fa6b8]">本年 · 2026</span>
+                <span class="text-[11px] font-bold text-[#7ee7f0] mono">91.6%</span>
+              </div>
+              <div class="flex items-end justify-between gap-2">
+                <div class="text-[18px] font-extrabold text-[#4dd0e1] mono leading-none">538.2<span class="text-[11px] text-[#8fa6b8] font-600 ml-1">/ 587.0</span></div>
+                <span class="text-[10px] text-[#8fa6b8]">实际 / 计划</span>
+              </div>
+              <div class="bar mt-1.5"><i style="width:91.6%"></i></div>
             </div>
           </div>
-          <div class="bar mt-2"><i style="width:92.8%"></i></div>
         </div>
 
         <div class="card flex-[1.1] min-h-0 p-2 flex flex-col overflow-hidden">
@@ -108,39 +132,35 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
           <div id="chartTrend" class="flex-1 min-h-0"></div>
         </div>
 
-        <div class="card shrink-0 p-2">
-          <div class="flex items-center gap-1.5 mb-1.5"><span class="mark"></span><span class="text-[12px] font-bold text-[#4dd0e1]">货种结构</span><span class="chip ml-auto">实际 / 计划</span></div>
-          <div class="space-y-1.5 text-[12px]">
-            <div>
-              <div class="flex justify-between mb-0.5"><span class="text-[#e8f4fa]">粮食</span><span class="mono text-[#4dd0e1]">24.8 / 26.0</span></div>
-              <div class="bar"><i style="width:95.4%"></i></div>
+        <div class="card flex-1 min-h-0 p-2 flex flex-col overflow-hidden">
+          <div class="flex items-center gap-1.5 mb-1.5 shrink-0"><span class="mark"></span><span class="text-[12px] font-bold text-[#4dd0e1]">货种与流向</span><span class="chip ml-auto">本月 · 万吨</span></div>
+          <div class="grid grid-cols-2 gap-1.5 mb-2 shrink-0">
+            <div class="mini-card" style="padding:10px">
+              <div class="text-[10px] text-[#8fa6b8]">进港</div>
+              <div class="text-[20px] font-extrabold text-[#4dd0e1] mono mt-1 leading-none">35.5<span class="text-[11px] text-[#8fa6b8] font-600 ml-1">万吨</span></div>
             </div>
-            <div>
-              <div class="flex justify-between mb-0.5"><span class="text-[#e8f4fa]">矿建散货</span><span class="mono text-[#4dd0e1]">17.7 / 19.5</span></div>
-              <div class="bar"><i style="width:90.8%"></i></div>
-            </div>
-            <div>
-              <div class="flex justify-between mb-0.5"><span class="text-[#e8f4fa]">件杂货</span><span class="mono text-[#4dd0e1]">11.3 / 12.5</span></div>
-              <div class="bar"><i style="width:90.4%"></i></div>
+            <div class="mini-card" style="padding:10px">
+              <div class="text-[10px] text-[#8fa6b8]">出港</div>
+              <div class="text-[20px] font-extrabold text-[#4dd0e1] mono mt-1 leading-none">18.3<span class="text-[11px] text-[#8fa6b8] font-600 ml-1">万吨</span></div>
             </div>
           </div>
-          <div class="text-[10px] text-[#fa0] mt-1.5 leading-snug">矿建散货占计划缺口约 42.9%</div>
-        </div>
-
-        <div class="card shrink-0 p-2 overflow-hidden">
-          <div class="flex items-center gap-1.5 mb-1.5"><span class="mark"></span><span class="text-[12px] font-bold text-[#4dd0e1]">经营质量</span><span class="chip ml-auto">已结账 · 万元</span></div>
-          <div class="grid grid-cols-2 gap-1.5 mb-1.5">
-            <div class="mini-card text-center" style="padding:6px 8px">
-              <div class="text-[18px] font-extrabold text-[#7ee7f0] mono">17.2%</div>
-              <div class="text-[10px] text-[#8fa6b8] mt-0.5">毛利率</div>
+          <div class="flex-1 min-h-0 grid grid-rows-3 gap-1.5 text-[12px]">
+            <div class="flex items-center gap-2 min-h-0">
+              <span class="w-8 shrink-0 text-[#e8f4fa]">粮食</span>
+              <div class="bar flex-1"><i style="width:100%"></i></div>
+              <span class="w-9 text-right mono text-[#4dd0e1]">24.8</span>
             </div>
-            <div class="mini-card text-center" style="padding:6px 8px">
-              <div class="text-[18px] font-extrabold text-[#4dd0e1] mono">220</div>
-              <div class="text-[10px] text-[#8fa6b8] mt-0.5">营业毛利</div>
+            <div class="flex items-center gap-2 min-h-0">
+              <span class="w-8 shrink-0 text-[#e8f4fa]">矿建</span>
+              <div class="bar flex-1"><i style="width:71%"></i></div>
+              <span class="w-9 text-right mono text-[#4dd0e1]">17.7</span>
+            </div>
+            <div class="flex items-center gap-2 min-h-0">
+              <span class="w-8 shrink-0 text-[#e8f4fa]">件杂</span>
+              <div class="bar flex-1"><i style="width:46%"></i></div>
+              <span class="w-9 text-right mono text-[#4dd0e1]">11.3</span>
             </div>
           </div>
-          <div class="row"><span class="k">营业收入</span><span class="v mono">1,280</span></div>
-          <div class="row"><span class="k">营业成本</span><span class="v mono">1,060</span></div>
         </div>
       </div>
 
@@ -184,7 +204,38 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
           </div>
         </div>
 
-        <div class="grid gap-2 shrink-0" style="grid-template-columns:1.15fr .85fr;height:32%">
+        <div class="grid gap-2 shrink-0" style="grid-template-columns:1fr 1fr;height:32%">
+          <div class="card p-2 min-h-0 overflow-hidden flex flex-col">
+            <div class="flex items-center gap-1.5 mb-1.5 shrink-0"><span class="mark"></span><span class="text-[12px] font-bold text-[#4dd0e1]">客户规模与结构</span></div>
+            <div class="flex-1 min-h-0 flex flex-col justify-between gap-1.5">
+              <div class="grid grid-cols-3 gap-1.5">
+                <div class="mini-card text-center" style="padding:8px 6px">
+                  <div class="text-[18px] font-extrabold text-[#4dd0e1] mono leading-none">24</div>
+                  <div class="text-[10px] text-[#8fa6b8] mt-1">活跃客户</div>
+                </div>
+                <div class="mini-card text-center" style="padding:8px 6px">
+                  <div class="text-[18px] font-extrabold text-[#7ee7f0] mono leading-none">20</div>
+                  <div class="text-[10px] text-[#8fa6b8] mt-1">存量</div>
+                </div>
+                <div class="mini-card text-center" style="padding:8px 6px">
+                  <div class="text-[18px] font-extrabold text-[#ffb74d] mono leading-none">4</div>
+                  <div class="text-[10px] text-[#8fa6b8] mt-1">新增</div>
+                </div>
+              </div>
+              <div class="mini-card" style="padding:8px 10px">
+                <div class="flex items-center justify-between text-[10px] text-[#8fa6b8] mb-1">
+                  <span>目标 25 家</span>
+                  <span class="text-[#7ee7f0] font-bold mono">达成 96.0%</span>
+                </div>
+                <div class="bar"><i style="width:96%"></i></div>
+              </div>
+              <div class="mini-card flex-1 min-h-0 flex flex-col justify-center" style="padding:8px 10px">
+                <div class="text-[10px] text-[#8fa6b8] mb-1.5">合作类型货量占比区间</div>
+                <div class="seg mb-1.5" style="height:10px"><i style="width:55%;background:#2b8cff"></i><i style="width:30%;background:#4dd0e1"></i><i style="width:15%;background:#ffb74d"></i></div>
+                <div class="flex justify-between text-[10px] text-[#8fa6b8]"><span>长期 50–60%</span><span>常规 25–35%</span><span>临时 10–20%</span></div>
+              </div>
+            </div>
+          </div>
           <div class="card p-2 min-h-0 flex flex-col overflow-hidden">
             <div class="flex items-center gap-1.5 mb-1 shrink-0">
               <span class="mark"></span><span class="text-[12px] font-bold text-[#4dd0e1]">国家区域占比</span>
@@ -192,24 +243,27 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
             </div>
             <div id="chartRegion" class="flex-1 min-h-0"></div>
           </div>
-          <div class="card p-2 min-h-0 overflow-hidden">
-            <div class="flex items-center gap-1.5 mb-1.5"><span class="mark"></span><span class="text-[12px] font-bold text-[#4dd0e1]">客户规模与结构</span></div>
-            <div class="flex items-end justify-between mb-2">
-              <div>
-                <div class="text-[22px] font-extrabold text-[#4dd0e1] mono">24<span class="text-[12px] text-[#8fa6b8] ml-1">家</span></div>
-                <div class="text-[10px] text-[#8fa6b8]">活跃客户 · 目标 25 · 达成 96.0%</div>
-              </div>
-              <div class="text-right text-[11px] text-[#b4c7e7]"><div>存量 <b class="text-[#7ee7f0]">20</b></div><div>新增 <b class="text-[#ffb74d]">4</b></div></div>
-            </div>
-            <div class="text-[10px] text-[#8fa6b8] mb-1">合作类型货量占比区间</div>
-            <div class="seg mb-1"><i style="width:55%;background:#2b8cff"></i><i style="width:30%;background:#4dd0e1"></i><i style="width:15%;background:#ffb74d"></i></div>
-            <div class="flex justify-between text-[10px] text-[#8fa6b8]"><span>长期 50–60%</span><span>常规 25–35%</span><span>临时 10–20%</span></div>
-          </div>
         </div>
       </div>
 
       <!-- 右 -->
       <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
+        <div class="card shrink-0 p-2 overflow-hidden">
+          <div class="flex items-center gap-1.5 mb-1.5"><span class="mark"></span><span class="text-[12px] font-bold text-[#4dd0e1]">效率与泊位</span></div>
+          <div class="grid grid-cols-2 gap-1.5">
+            <div class="mini-card text-center" style="padding:10px 8px">
+              <div class="text-[10px] text-[#8fa6b8]">泊位综合利用率</div>
+              <div class="text-[20px] font-extrabold text-white mono mt-1.5 leading-none">78%—85%</div>
+              <div class="text-[10px] text-[#8fa6b8] mt-1.5">对外展示为区间值</div>
+            </div>
+            <div class="mini-card text-center" style="padding:10px 8px">
+              <div class="text-[10px] text-[#8fa6b8]">散杂堆场占用</div>
+              <div class="text-[20px] font-extrabold text-white mono mt-1.5 leading-none">68%—75%</div>
+              <div class="text-[10px] text-[#8fa6b8] mt-1.5">仓区加权口径</div>
+            </div>
+          </div>
+        </div>
+
         <div class="card shrink-0 p-2.5">
           <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[12px] font-bold text-[#4dd0e1]">合同额</span><span class="chip ml-auto">新增生效 · 万元</span></div>
           <div class="flex items-end justify-between">
@@ -222,27 +276,58 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
           <div class="row"><span class="k">港务服务</span><span class="v mono">210</span></div>
         </div>
 
-        <div class="card shrink-0 p-2.5">
-          <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[12px] font-bold text-[#4dd0e1]">回款</span><span class="chip ml-auto">本月确认 · 万元</span></div>
-          <div class="flex items-end justify-between">
-            <div class="kpi-big mono" style="font-size:24px">980</div>
-            <div class="text-right"><div class="text-[18px] font-extrabold text-[#7ee7f0] mono">93.3%</div><div class="text-[10px] text-[#8fa6b8]">达成率</div></div>
-          </div>
-          <div class="bar mt-2 mb-2"><i style="width:93.3%"></i></div>
-          <div class="row"><span class="k">当期应收回款</span><span class="v mono">360</span></div>
-          <div class="row"><span class="k">往期应收回款</span><span class="v mono">620</span></div>
-        </div>
+        <div class="card flex-1 min-h-0 p-2.5 overflow-hidden flex flex-col">
+          <div class="flex items-center gap-1.5 mb-2 shrink-0"><span class="mark"></span><span class="text-[12px] font-bold text-[#4dd0e1]">资金回收</span></div>
 
-        <div class="card flex-1 min-h-0 p-2.5 overflow-hidden">
-          <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[12px] font-bold text-[#4dd0e1]">账期与应收</span><span class="chip ml-auto">截点 10/31</span></div>
-          <div class="text-[10px] text-[#8fa6b8] mb-1">合同约定账期结构（月末应收为分母）</div>
-          <div class="seg mb-1"><i style="width:50%;background:#2b8cff"></i><i style="width:30%;background:#4dd0e1"></i><i style="width:20%;background:#ffb74d"></i></div>
-          <div class="flex justify-between text-[10px] text-[#8fa6b8] mb-2"><span>≤30天 50%</span><span>31–60天 30%</span><span>>60天 20%</span></div>
-          <div class="row"><span class="k">月末应收</span><span class="v mono text-[#4dd0e1]">860</span></div>
-          <div class="row"><span class="k">已逾期</span><span class="v mono text-[#ff9a9a]">230</span></div>
-          <div class="row"><span class="k">未来30天到期</span><span class="v mono">320</span></div>
-          <div class="row"><span class="k">其他未到期</span><span class="v mono">310</span></div>
-          <div class="text-[10px] text-[#637f99] mt-2">三类到期余额合计 860 · 与月末应收一致</div>
+          <div class="shrink-0">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-[12px] font-bold text-[#e8f4fa]">本月到账</span>
+              <span class="chip">10月 · 期间发生额</span>
+            </div>
+            <div class="flex items-end justify-between gap-2">
+              <div>
+                <div class="text-[24px] font-extrabold text-[#4dd0e1] mono leading-none">980<span class="text-[12px] text-[#8fa6b8] font-600 ml-1">万元</span></div>
+                <div class="text-[10px] text-[#8fa6b8] mt-1">计划 1,050 万元</div>
+              </div>
+              <div class="text-right">
+                <div class="text-[16px] font-extrabold text-[#7ee7f0] mono">93.3%</div>
+                <div class="text-[10px] text-[#8fa6b8]">达成</div>
+              </div>
+            </div>
+            <div class="bar mt-1.5 mb-2"><i style="width:93.3%"></i></div>
+            <div class="text-[10px] text-[#8fa6b8] mb-1">到账构成 · 按应收形成期</div>
+            <div class="seg mb-1.5" style="height:8px"><i style="width:36.7%;background:#4dd0e1"></i><i style="width:63.3%;background:#2b8cff"></i></div>
+            <div class="flex justify-between text-[11px]">
+              <span class="text-[#8fa6b8]"><i class="inline-block w-1.5 h-1.5 rounded-full bg-[#4dd0e1] mr-1 align-middle"></i>本期应收 <b class="text-[#e8f4fa] mono">360</b></span>
+              <span class="text-[#8fa6b8]"><i class="inline-block w-1.5 h-1.5 rounded-full bg-[#2b8cff] mr-1 align-middle"></i>往期应收 <b class="text-[#e8f4fa] mono">620</b></span>
+            </div>
+          </div>
+
+          <div class="my-2.5 border-t border-[rgba(77,210,225,.16)] shrink-0"></div>
+
+          <div class="flex-1 min-h-0 flex flex-col">
+            <div class="flex items-center justify-between mb-1 shrink-0">
+              <span class="text-[12px] font-bold text-[#e8f4fa]">月末应收余额</span>
+              <span class="chip">截至 10/31 · 期末余额</span>
+            </div>
+            <div class="text-[24px] font-extrabold text-white mono leading-none mb-2 shrink-0">860<span class="text-[12px] text-[#8fa6b8] font-600 ml-1">万元</span></div>
+            <div class="text-[10px] text-[#8fa6b8] mb-1 shrink-0">到期结构 · 万元</div>
+            <div class="seg mb-2 shrink-0" style="height:10px"><i style="width:26.7%;background:#ffb74d"></i><i style="width:37.2%;background:#4dd0e1"></i><i style="width:36.1%;background:#2b8cff"></i></div>
+            <div class="grid grid-cols-3 gap-1.5 flex-1 min-h-0">
+              <div class="mini-card flex flex-col justify-center text-center h-full" style="padding:10px 4px">
+                <div class="text-[10px] text-[#8fa6b8]">已逾期</div>
+                <div class="text-[18px] font-extrabold text-[#ffb74d] mono mt-1.5">230</div>
+              </div>
+              <div class="mini-card flex flex-col justify-center text-center h-full" style="padding:10px 4px">
+                <div class="text-[10px] text-[#8fa6b8]">30天内到期</div>
+                <div class="text-[18px] font-extrabold text-[#4dd0e1] mono mt-1.5">320</div>
+              </div>
+              <div class="mini-card flex flex-col justify-center text-center h-full" style="padding:10px 4px">
+                <div class="text-[10px] text-[#8fa6b8]">其他未到期</div>
+                <div class="text-[18px] font-extrabold text-[#90caf9] mono mt-1.5">310</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -299,8 +384,8 @@ tick(); setInterval(tick,1000);
     xAxis:{type:'category',data:['5月','6月','7月','8月','9月','10月'],axisLine:{lineStyle:{color:'rgba(77,210,225,.25)'}},axisLabel:{color:'#8fa6b8',fontSize:9},axisTick:{show:false}},
     yAxis:{type:'value',splitLine:{lineStyle:{color:'rgba(77,210,225,.08)'}},axisLabel:{color:'#8fa6b8',fontSize:9},axisLine:{show:false}},
     series:[
-      {name:'实际',type:'line',smooth:true,data:[48.2,51.6,55.1,54.0,55.1,53.8],symbol:'circle',symbolSize:5,lineStyle:{width:2,color:'#4dd0e1'},itemStyle:{color:'#4dd0e1'},areaStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'rgba(77,210,225,.28)'},{offset:1,color:'rgba(77,210,225,0)'}])}},
-      {name:'计划',type:'line',smooth:true,data:[50,52,54,56,57,58],symbol:'circle',symbolSize:4,lineStyle:{width:2,type:'dashed',color:'#ffb74d'},itemStyle:{color:'#ffb74d'}}
+      {name:'实际',type:'bar',data:[48.2,51.6,55.1,54.0,55.1,53.8],barWidth:'38%',itemStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'#7ee7f0'},{offset:1,color:'#2b8cff'}]),borderRadius:[3,3,0,0]}},
+      {name:'计划',type:'line',smooth:true,data:[50,52,54,56,57,58],symbol:'circle',symbolSize:5,lineStyle:{width:2,type:'dashed',color:'#ffb74d'},itemStyle:{color:'#ffb74d'},z:3}
     ]
   });
   const ro=typeof ResizeObserver!=='undefined'?new ResizeObserver(()=>chart.resize()):null;
@@ -322,20 +407,60 @@ tick(); setInterval(tick,1000);
     {name:'南美',value:3.1},
     {name:'境外东亚',value:2.3}
   ];
+  const total=data.reduce((s,d)=>s+d.value,0).toFixed(1);
   const colors=['#2b8cff','#4dd0e1','#7ee7f0','#5b8def','#ffb74d','#90caf9','#81d4fa','#64b5f6'];
   chart.setOption({
     backgroundColor:'transparent',
     color:colors,
-    tooltip:{trigger:'item',backgroundColor:'rgba(8,28,62,.95)',borderColor:'rgba(77,210,225,.28)',textStyle:{color:'#e8f4fa',fontSize:11},formatter:p=>`${p.name}<br/>货量 ${p.value} 万吨 · ${p.percent}%`},
-    legend:{type:'scroll',orient:'vertical',right:4,top:'middle',itemWidth:8,itemHeight:8,itemGap:6,textStyle:{color:'#8fa6b8',fontSize:10},pageIconColor:'#4dd0e1',pageTextStyle:{color:'#8fa6b8'}},
+    tooltip:{
+      trigger:'item',
+      backgroundColor:'rgba(8,28,62,.96)',
+      borderColor:'rgba(77,210,225,.35)',
+      textStyle:{color:'#e8f4fa',fontSize:11},
+      formatter:p=>`${p.marker}${p.name}<br/>货量 <b>${p.value}</b> 万吨<br/>占比 <b>${p.percent}%</b>`
+    },
+    legend:{show:false},
+    title:{
+      text:`${total}`,
+      subtext:'万吨合计',
+      left:'center',
+      top:'40%',
+      textStyle:{color:'#7ee7f0',fontSize:16,fontWeight:800,fontFamily:'Roboto Mono,monospace'},
+      subtextStyle:{color:'#8fa6b8',fontSize:10,fontWeight:500}
+    },
     series:[{
       type:'pie',
-      radius:['42%','68%'],
-      center:['34%','50%'],
+      radius:['36%','62%'],
+      center:['50%','50%'],
+      padAngle:2,
       avoidLabelOverlap:true,
-      itemStyle:{borderColor:'#07111d',borderWidth:2},
-      label:{show:false},
-      labelLine:{show:false},
+      minShowLabelAngle:8,
+      itemStyle:{
+        borderColor:'#07111d',
+        borderWidth:2,
+        shadowBlur:8,
+        shadowColor:'rgba(77,210,225,.18)'
+      },
+      label:{
+        show:true,
+        formatter:p=>`{n|${p.name}}\n{v|${p.value}万吨 · ${p.percent}%}`,
+        rich:{
+          n:{color:'#e8f4fa',fontSize:10,fontWeight:700,lineHeight:14},
+          v:{color:'#8fa6b8',fontSize:9,lineHeight:13}
+        }
+      },
+      labelLine:{
+        show:true,
+        length:10,
+        length2:12,
+        lineStyle:{color:'rgba(77,210,225,.35)'}
+      },
+      emphasis:{
+        scale:true,
+        scaleSize:6,
+        itemStyle:{shadowBlur:14,shadowColor:'rgba(126,231,240,.35)'},
+        label:{show:true}
+      },
       data:data
     }]
   });
