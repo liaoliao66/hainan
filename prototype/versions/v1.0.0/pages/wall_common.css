@@ -565,6 +565,14 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .wall.mode-bim-full .bim-slot .center-video,
 .wall.mode-bim-full .bim-slot .map-chrome{pointer-events:auto}
 .wall.mode-bim-full .center-map.card{background:transparent!important;border-color:rgba(14,116,240,.22)!important;box-shadow:none!important;backdrop-filter:none!important}
+/* 铺满态收起两侧 + 中栏视频，BIM 拉满；筛选/标注工具条保留 */
+.wall.mode-bim-full.sides-collapsed .float-panels{grid-template-columns:minmax(0,1fr);padding:8px 10px}
+.wall.mode-bim-full.sides-collapsed .float-panels .side-col{display:none!important}
+.wall.mode-bim-full.sides-collapsed .center-video{display:none!important}
+.wall.mode-bim-full.sides-collapsed .bim-slot{min-height:100%}
+.wall.mode-bim-full.sides-collapsed .center-map.card{border-color:transparent!important}
+.tool-btn.is-disabled,.tool-btn:disabled{opacity:.42;cursor:not-allowed;pointer-events:none}
+.tool-btn.on-sides{border-color:#00e4ff;color:#00e4ff;background:rgba(0,228,255,.1)}
 .wall.mode-bim-classic .card{background:rgba(8,28,62,.9)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;box-shadow:inset 0 0 12px rgba(14,116,240,.04)}
 .wall.mode-bim-classic .main-stage{flex:1;min-height:0;overflow:hidden;display:grid;grid-template-columns:var(--bim-cols,19.2% minmax(0,1fr) 21.8%);gap:10px;padding:10px 12px}
 .wall.mode-bim-classic .float-panels{position:static;display:contents;pointer-events:auto;padding:0;gap:0}

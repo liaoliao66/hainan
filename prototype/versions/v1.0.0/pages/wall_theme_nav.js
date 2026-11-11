@@ -535,7 +535,7 @@ function initWallTheme(active, opts) {
   if (opts.flipId && opts.flipBase != null) setFlip(document.getElementById(opts.flipId), opts.flipBase, opts.flipLen || 5);
 }
 
-/** BIM 铺满/分栏 + 隐藏模型标注（主题页共用） */
+/** BIM 铺满/分栏 + 收起两侧 + 隐藏模型标注（主题页共用） */
 const WALL_BIM_URL = 'https://jgyw.crfsdi.com.cn:51111/hnlg-large-screen/';
 function initWallBimLayout(opts) {
   opts = opts || {};
@@ -544,6 +544,7 @@ function initWallBimLayout(opts) {
   const slot = document.querySelector(opts.slot || '#bimSlot');
   let frame = document.querySelector(opts.frame || '#bimFrame');
   const btn = document.querySelector(opts.btn || '#btnBimLayout');
+  const sidesBtn = document.querySelector(opts.sidesBtn || '#btnSidesCollapse');
   const hint = document.querySelector(opts.hint || '#layoutHint');
   const poiBtn = document.querySelector(opts.poiBtn || '#btnTogglePoi');
   const poiBox = document.querySelector(opts.poiBox || '#mapBox');
@@ -561,6 +562,34 @@ function initWallBimLayout(opts) {
   if (!wall.id) wall.id = 'wallRoot';
   wall.classList.add('mode-bim-full');
   let full = true;
+  let sidesCollapsed = false;
+  function syncSidesBtn() {
+    if (!sidesBtn) return;
+    if (!full) {
+      sidesBtn.disabled = true;
+      sidesBtn.classList.add('is-disabled');
+      sidesBtn.classList.remove('on-sides');
+      sidesBtn.textContent = '收起两侧';
+      sidesBtn.setAttribute('aria-pressed', 'false');
+      return;
+    }
+    sidesBtn.disabled = false;
+    sidesBtn.classList.remove('is-disabled');
+    sidesBtn.textContent = sidesCollapsed ? '展开两侧' : '收起两侧';
+    sidesBtn.classList.toggle('on-sides', sidesCollapsed);
+    sidesBtn.setAttribute('aria-pressed', sidesCollapsed ? 'true' : 'false');
+  }
+  function applySides(collapsed) {
+    sidesCollapsed = !!collapsed && full;
+    wall.classList.toggle('sides-collapsed', sidesCollapsed);
+    syncSidesBtn();
+    if (hint) {
+      if (!full) hint.textContent = opts.hintClassic || '演示态 · 分栏布局';
+      else if (sidesCollapsed) hint.textContent = opts.hintSides || '演示态 · BIM 沉浸';
+      else hint.textContent = opts.hintFull || '演示态 · BIM 铺满';
+    }
+    window.dispatchEvent(new Event('resize'));
+  }
   function apply(nextFull) {
     full = nextFull;
     wall.classList.toggle('mode-bim-full', full);
@@ -569,19 +598,27 @@ function initWallBimLayout(opts) {
       stage.insertBefore(frame, stage.firstChild);
       btn.textContent = '分栏布局';
       btn.classList.add('on-bim');
-      if (hint) hint.textContent = opts.hintFull || '演示态 · BIM 铺满';
     } else {
       slot.insertBefore(frame, slot.firstChild);
       btn.textContent = 'BIM铺满';
       btn.classList.remove('on-bim');
-      if (hint) hint.textContent = opts.hintClassic || '演示态 · 分栏布局';
+      sidesCollapsed = false;
     }
-    window.dispatchEvent(new Event('resize'));
+    applySides(sidesCollapsed);
   }
   btn.addEventListener('click', () => {
     apply(!full);
     if (typeof toast === 'function') toast(full ? '已切换：BIM 铺满' : '已切换：分栏布局');
   });
+  if (sidesBtn) {
+    sidesBtn.addEventListener('click', () => {
+      if (!full) return;
+      applySides(!sidesCollapsed);
+      if (typeof toast === 'function') {
+        toast(sidesCollapsed ? '已收起两侧与视频' : '已展开两侧与视频');
+      }
+    });
+  }
   apply(true);
   if (poiBtn && poiBox) {
     let hidden = false;
@@ -595,5 +632,5 @@ function initWallBimLayout(opts) {
       if (typeof toast === 'function') toast(hidden ? '已隐藏 BIM 模型标注' : '已显示 BIM 模型标注');
     });
   }
-  return { apply, isFull: () => full };
+  return { apply, applySides, isFull: () => full, isSidesCollapsed: () => sidesCollapsed };
 }
