@@ -100,7 +100,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 </head>
 <body>
 <div class="stage">
-  <div class="wall">
+  <div class="wall mode-bim-full" id="wallRoot">
 
     <header class="shrink-0 flex flex-col" style="height:9.26%">
       <div class="flex items-center justify-between px-4 border-b border-[#1e293b] bg-[#0a1220]" style="height:36%">
@@ -109,10 +109,12 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
           <button type="button" class="tool-btn" onclick="toast('操控席 · 领导席切换（演示）')">操控席  领导⌄</button>
           <a class="tool-btn" href="../index.html">入口</a>
           <a class="tool-btn" href="pc_wall_command_screen.html?from=%E4%BA%A4%E9%80%9A">概览总览</a>
+          <button type="button" class="tool-btn on-bim" id="btnBimLayout" title="切换 BIM 铺满 / 分栏布局">分栏布局</button>
           <button type="button" class="tool-btn" id="btnPresent">汇报全屏</button>
           <span class="text-[11px] text-[#94a3b8] px-1">时效 <b class="text-[#e2e8f0]" id="hd-lag">27s</b></span>
           <button type="button" class="tool-btn" onclick="toast('已刷新演示数据')">刷新数据</button>
           <button type="button" class="tool-btn" onclick="toast('模拟降级：关键链路演示')">模拟降级</button>
+          <span class="text-[10px] text-[#475569]" id="layoutHint">演示态 · BIM 铺满</span>
         </div>
       </div>
       <div class="flex-1 min-h-0 flex items-center justify-between px-6 border-b" style="border-color:rgba(14,116,240,.28);background:linear-gradient(90deg,#080c20,#0d1a3a,#080c20)">
@@ -128,10 +130,12 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
       </div>
     </header>
 
-    <div class="flex-1 min-h-0 grid gap-2.5 px-3 pt-2.5 pb-2" style="grid-template-columns:19.8% minmax(0,1fr) 20.6%">
+    <div class="main-stage" style="--bim-cols:19.8% minmax(0,1fr) 20.6%">
+      <iframe class="bim-frame" id="bimFrame" title="海南金牌港数字孪生 BIM" src="https://jgyw.crfsdi.com.cn:51111/hnlg-large-screen/" allow="fullscreen; autoplay; clipboard-read; clipboard-write" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <div class="float-panels">
 
       <!-- 左列 -->
-      <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
+      <div class="side-col">
         <div class="card flex-[1.35] min-h-0 overflow-hidden p-3 flex flex-col">
           <div class="flex items-center gap-1.5 mb-2 shrink-0">
             <span class="mark"></span>
@@ -236,18 +240,17 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
       </div>
 
       <!-- 中列 -->
-      <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
-        <div class="card flex-[1.4] min-h-0 flex flex-col p-0" style="background:#071427;border-color:rgba(14,116,240,.3)">
+      <div class="bim-slot" id="bimSlot">
+        <div class="card center-map flex-[1.4] min-h-0 flex flex-col p-0">
           <div class="relative flex-1 min-h-0 overflow-hidden" id="mapBox">
-            <img src="../assets/figma/traf-map.png" alt="港区交通态势" class="absolute inset-0 w-full h-full object-cover opacity-85">
-            <div class="absolute inset-0" style="background:linear-gradient(180deg,rgba(4,10,22,.35) 0%,rgba(4,10,22,0) 12%,rgba(4,10,22,0) 82%,rgba(4,10,22,.35) 100%)"></div>
             <div class="absolute left-0 right-0 top-0 z-10 px-2.5 py-1 flex items-center justify-between" style="background:linear-gradient(180deg,rgba(4,12,28,.82),rgba(4,12,28,0))">
               <span class="px-2 py-1 rounded text-[9px] font-bold tracking-wide text-[#00e4ff]" style="background:rgba(8,28,62,.82);border:1px solid rgba(0,228,255,.35)">港区车辆与路况</span>
-              <div class="flex gap-1.5">
+              <div class="flex gap-1.5 items-center">
                 <button type="button" class="map-chip warn" onclick="toast('进港通道 · 缓行')">进港通道 缓行</button>
                 <button type="button" class="map-chip ok" onclick="toast('引桥通道 · 正常')">引桥通道 正常</button>
                 <button type="button" class="map-chip err" onclick="toast('仓库通道 · 受限')">仓库通道 受限</button>
                 <button type="button" class="map-chip" id="btnTrafFilter" onclick="toast('交通筛选（演示）')">交通筛选</button>
+                <button type="button" class="map-chip filter-off" id="btnTogglePoi" title="隐藏或显示 BIM 上的点位标注">隐藏标注</button>
               </div>
             </div>
 
@@ -271,11 +274,11 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
               <span class="inline-flex items-center gap-1"><i class="dot bg-[#00e4ff]"></i>车载定位</span>
               <span class="inline-flex items-center gap-1"><i class="dot bg-[#7eb6ff]"></i>最近识别</span>
             </div>
-            <span class="absolute right-3 bottom-2.5 z-10 text-[9px] text-[#637f99]">原港区三维底图 · 分类POI定位</span>
+            <span class="absolute right-3 bottom-2.5 z-10 text-[9px] text-[#637f99]">BIM 底图 · 分类POI定位</span>
           </div>
         </div>
 
-        <div class="card shrink-0 p-2.5">
+        <div class="card center-video shrink-0 p-2.5">
           <div class="flex items-center gap-1.5 mb-2">
             <span class="mark"></span>
             <span class="text-[12px] font-bold text-[#36bffa]">重点交通节点视频</span>
@@ -328,7 +331,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
       </div>
 
       <!-- 右列 -->
-      <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
+      <div class="side-col">
         <div class="card shrink-0 p-3">
           <div class="flex items-center gap-1.5 mb-2">
             <span class="mark"></span>
@@ -402,6 +405,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
           </div>
         </div>
       </div>
+      </div>
     </div>
 
     <footer class="shrink-0 border-t flex items-center justify-center relative bg-[#0a1220]" style="height:5.56%;border-color:rgba(14,116,240,.28)">
@@ -456,6 +460,7 @@ function renderThemes(){
 }
 renderThemes();
 initWallTheme('交通');
+initWallBimLayout({hintFull:'演示态 · BIM 铺满',hintClassic:'演示态 · 分栏布局'});
 OvDetail.bind();
 
 document.getElementById('btnPresent').onclick=()=>{document.body.classList.add('present');toast('汇报全屏 · Esc 退出')};

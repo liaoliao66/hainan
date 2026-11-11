@@ -552,3 +552,33 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .al-row .al-tm{flex-shrink:0;color:rgba(180,199,231,.45);font-size:.75vmin;font-variant-numeric:tabular-nums}
 .al-empty{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;border:1px dashed rgba(0,196,140,.35);border-radius:4px;color:var(--green);font-size:.9vmin;background:rgba(0,196,140,.06)}
 .alarm-ticker.ok{color:var(--green);background:rgba(0,196,140,.18);border-color:rgba(0,196,140,.4)}
+
+/* ===== BIM 铺满 / 分栏布局（主题页共用） ===== */
+.tool-btn.on-bim{border-color:#00e4ff;color:#00e4ff;background:rgba(0,228,255,.1)}
+.wall.mode-bim-full .card{background:rgba(8,28,62,.58)!important;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 8px 24px rgba(0,0,0,.28),inset 0 0 12px rgba(14,116,240,.04)}
+.wall.mode-bim-full .main-stage{position:relative;flex:1;min-height:0;overflow:hidden;display:block}
+.wall.mode-bim-full .bim-frame{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:0;background:#030712}
+.wall.mode-bim-full .float-panels{position:absolute;inset:0;z-index:2;display:grid;grid-template-columns:var(--bim-cols,19.2% minmax(0,1fr) 21.8%);gap:10px;padding:10px 12px;pointer-events:none}
+.wall.mode-bim-full .float-panels .side-col{min-height:0;display:flex;flex-direction:column;gap:8px;overflow:hidden;pointer-events:auto}
+.wall.mode-bim-full .bim-slot{position:relative;min-height:0;display:flex;flex-direction:column;gap:8px;pointer-events:none;overflow:hidden}
+.wall.mode-bim-full .bim-slot .center-map,
+.wall.mode-bim-full .bim-slot .center-video,
+.wall.mode-bim-full .bim-slot .map-chrome{pointer-events:auto}
+.wall.mode-bim-full .center-map.card{background:transparent!important;border-color:rgba(14,116,240,.22)!important;box-shadow:none!important;backdrop-filter:none!important}
+.wall.mode-bim-classic .card{background:rgba(8,28,62,.9)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;box-shadow:inset 0 0 12px rgba(14,116,240,.04)}
+.wall.mode-bim-classic .main-stage{flex:1;min-height:0;overflow:hidden;display:grid;grid-template-columns:var(--bim-cols,19.2% minmax(0,1fr) 21.8%);gap:10px;padding:10px 12px}
+.wall.mode-bim-classic .float-panels{position:static;display:contents;pointer-events:auto;padding:0;gap:0}
+.wall.mode-bim-classic .float-panels .side-col{min-height:0;display:flex;flex-direction:column;gap:8px;overflow:hidden;pointer-events:auto}
+.wall.mode-bim-classic .bim-slot{position:relative;min-height:0;overflow:hidden;display:flex;flex-direction:column;gap:8px;pointer-events:auto}
+.wall.mode-bim-classic .bim-frame{position:absolute;inset:0;width:100%;height:100%;border:0;background:#030712;z-index:0;border-radius:6px}
+.wall.mode-bim-classic .bim-slot > .center-map,
+.wall.mode-bim-classic .bim-slot > .center-video{position:relative;z-index:2}
+.wall.mode-bim-classic .center-map.card{background:transparent!important;border:1px solid rgba(14,116,240,.28)!important}
+#mapBox.poi-hidden .tag,
+#mapBox.poi-hidden .poi,
+#mapBox.poi-hidden .veh-pin,
+#mapBox.poi-hidden .map-mark,
+#mapBox.poi-hidden .wh,
+#ovMap.poi-hidden .poi,
+#ovMap.poi-hidden .tag,
+#ovMap.poi-hidden .wh{display:none!important}

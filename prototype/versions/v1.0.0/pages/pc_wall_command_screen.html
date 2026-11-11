@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>海南金牌港数字孪生指挥中心 · v1.0.0</title>
+<title>海南金牌港数字孪生平台 · v1.0.0</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="../vendor/font-awesome/css/all.min.css">
 <link rel="stylesheet" href="wall_common.css">
@@ -18,7 +18,29 @@ body{display:flex;flex-direction:column}
 .stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
 .wall{position:relative;aspect-ratio:16/9;width:min(98vw,calc(98vh*16/9));height:min(98vh,calc(98vw*9/16));display:flex;flex-direction:column;overflow:hidden;border:1px solid rgba(14,116,240,.35);box-shadow:0 0 40px rgba(0,0,0,.55);background:#030712}
 body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
-.card{position:relative;border:1px solid rgba(14,116,240,.28);border-radius:6px;padding:12px 14px;background:rgba(8,28,62,.9);box-shadow:inset 0 0 12px rgba(14,116,240,.04);overflow:hidden}
+.card{position:relative;border:1px solid rgba(14,116,240,.32);border-radius:6px;padding:12px 14px;overflow:hidden}
+/* 默认：BIM 铺满 + 左右半透明浮层 */
+.wall.mode-bim-full .card{background:rgba(8,28,62,.58);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 8px 24px rgba(0,0,0,.28),inset 0 0 12px rgba(14,116,240,.04)}
+.wall.mode-bim-full .main-stage{position:relative;flex:1;min-height:0;overflow:hidden;display:block}
+.wall.mode-bim-full .bim-frame{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:0;background:#030712}
+.wall.mode-bim-full .float-panels{position:absolute;inset:0;z-index:2;display:grid;grid-template-columns:19.2% minmax(0,1fr) 21.8%;gap:10px;padding:10px 12px;pointer-events:none}
+.wall.mode-bim-full .float-panels .side-col{min-height:0;display:flex;flex-direction:column;gap:8px;overflow:hidden;pointer-events:auto}
+.wall.mode-bim-full .bim-slot{position:relative;min-height:0;pointer-events:none}
+/* 分栏：恢复三列，BIM 仅在中间 */
+.wall.mode-bim-classic .card{background:rgba(8,28,62,.9);backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:inset 0 0 12px rgba(14,116,240,.04)}
+.wall.mode-bim-classic .main-stage{flex:1;min-height:0;overflow:hidden;display:grid;grid-template-columns:19.2% minmax(0,1fr) 21.8%;gap:10px;padding:10px 12px}
+.wall.mode-bim-classic .float-panels{position:static;display:contents;pointer-events:auto;padding:0;gap:0}
+.wall.mode-bim-classic .float-panels .side-col{min-height:0;display:flex;flex-direction:column;gap:8px;overflow:hidden;pointer-events:auto}
+.wall.mode-bim-classic .bim-slot{position:relative;min-height:0;overflow:hidden;border-radius:6px;border:1px solid rgba(14,116,240,.28);background:#030712;pointer-events:auto}
+.wall.mode-bim-classic .bim-frame{position:absolute;inset:0;width:100%;height:100%;border:0;background:#030712;z-index:0}
+.tool-btn.on-bim{border-color:#00e4ff;color:#00e4ff;background:rgba(0,228,255,.1)}
+/* 中间筛选 / POI / 图例浮层 */
+.map-chrome{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;pointer-events:none;min-height:0}
+.map-toolbar{flex-shrink:0;height:34px;padding:0 10px;display:flex;align-items:center;gap:4px;background:rgba(8,28,62,.82);border-bottom:1px solid rgba(14,116,240,.28);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);pointer-events:auto}
+#mapBox{position:relative;flex:1;min-height:0;pointer-events:none}
+#mapBox .poi{pointer-events:auto}
+.wall.mode-bim-full .map-toolbar{border-radius:6px 6px 0 0}
+.wall.mode-bim-classic .map-chrome{border-radius:6px;overflow:hidden}
 #top5Chart,#cargoChart{background:transparent!important}
 #top5Chart>div,#cargoChart>div,#top5Chart canvas,#cargoChart canvas{background:transparent!important}
 .mark{width:2px;height:14px;background:#0e74f0;flex-shrink:0}
@@ -34,8 +56,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 .toast.show{opacity:1}
 #themes{display:none}
 .gauge{width:84px;height:84px;border-radius:50%;border:1px solid rgba(0,228,255,.42);box-shadow:0 0 10px rgba(14,116,240,.18),inset 0 0 14px rgba(0,228,255,.12);display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 35% 30%,rgba(0,228,255,.28),rgba(8,25,50,.72) 70%)}
-.left-col{min-height:0;display:flex;flex-direction:column;gap:8px;overflow:hidden}
-.left-col>.card{padding:10px 12px}
+.side-col>.card{padding:10px 12px}
 .card-top5{flex:1 1 0;min-height:0;display:flex;flex-direction:column;overflow:hidden}
 .card-top5 #top5Chart{flex:1 1 0;min-height:0;width:100%;height:auto!important}
 .card-res .res-yard{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 10px;border-radius:4px;background:rgba(14,116,240,.06)}
@@ -50,6 +71,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 .poi.customs{border-color:rgba(126,182,255,.55);color:#7eb6ff}
 .poi.muted{opacity:.55}
 .map-legend{position:absolute;left:10px;right:10px;bottom:10px;z-index:6;display:flex;align-items:center;justify-content:flex-end;gap:14px;padding:5px 10px;border:1px solid rgba(14,116,240,.28);border-radius:4px;background:rgba(6,16,34,.72);pointer-events:none}
+#mapBox.poi-hidden .poi{display:none!important}
 .map-legend b{font-size:11px;color:#00e4ff;font-weight:700;margin-right:auto}
 .map-legend-item{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#b4c7e7;white-space:nowrap}
 .map-legend-item .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;border:1px solid rgba(255,255,255,.18)}
@@ -131,7 +153,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 </head>
 <body>
 <div class="stage">
-  <div class="wall">
+  <div class="wall mode-bim-full" id="wallRoot">
     <!-- 操控工具栏 · Figma 8:56 -->
     <div class="shrink-0 h-9 px-4 flex items-center justify-between border-b border-[#1e293b] bg-[#0a1220]">
       <div class="flex items-center gap-2 text-[11px]">
@@ -147,9 +169,10 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
         <button type="button" class="tool-btn" onclick="toast('已恢复预设布局')">恢复预设</button>
         <button type="button" class="tool-btn" onclick="toast('已刷新演示数据')">刷新数据</button>
         <button type="button" class="tool-btn" onclick="toast('模拟降级：关键链路演示')">模拟降级</button>
+        <button type="button" class="tool-btn on-bim" id="btnBimLayout" title="切换 BIM 铺满 / 分栏布局">分栏布局</button>
         <button type="button" class="tool-btn" id="btnPresent">汇报全屏</button>
         <span class="text-[11px] text-[#94a3b8] ml-1">时效 <b class="text-[#e2e8f0]">28s</b></span>
-        <span class="text-[10px] text-[#475569]">演示态：概览一张图 · 点选POI</span>
+        <span class="text-[10px] text-[#475569]" id="layoutHint">演示态 · BIM 铺满</span>
       </div>
     </div>
 
@@ -163,15 +186,24 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
         </div>
       </div>
       <div class="text-center flex-1 flex items-center justify-center">
-        <h1 class="m-0 text-[20px] font-extrabold tracking-[2px] text-[#00e4ff]" style="text-shadow:0 0 16px rgba(0,228,255,.35)">海南金牌港数字孪生指挥中心</h1>
+        <h1 class="m-0 text-[20px] font-extrabold tracking-[2px] text-[#00e4ff]" style="text-shadow:0 0 16px rgba(0,228,255,.35)">海南金牌港数字孪生平台</h1>
       </div>
       <div class="w-[280px] flex items-center justify-end" data-weather="today"></div>
     </header>
 
-    <!-- 主体 · 360 | 1108 | 408 -->
-    <div class="flex-1 min-h-0 grid gap-2.5 px-3 py-2.5" style="grid-template-columns:19.2% minmax(0,1fr) 21.8%">
+    <!-- 主体 · BIM 全屏铺满，左右浮层 -->
+    <div class="main-stage">
+      <iframe
+        class="bim-frame"
+        id="bimFrame"
+        title="海南金牌港数字孪生 BIM"
+        src="https://jgyw.crfsdi.com.cn:51111/hnlg-large-screen/"
+        allow="fullscreen; autoplay; clipboard-read; clipboard-write"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+      <div class="float-panels">
       <!-- 左 -->
-      <div class="left-col">
+      <div class="side-col">
         <div class="card shrink-0">
           <div class="flex items-center gap-1.5 mb-1.5"><span class="mark"></span><span class="text-[13px] font-bold text-[#36bffa]">吞吐量</span><span class="chip ml-auto">年 / 季 / 月 万吨</span></div>
           <div class="flex justify-between gap-1.5">
@@ -217,21 +249,20 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
         </div>
       </div>
 
-      <!-- 中 -->
-      <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
-        <div class="card flex-1 min-h-0 relative p-0 overflow-hidden">
-          <div class="absolute left-0 right-0 top-0 z-10 h-[34px] px-2.5 flex items-center gap-1 bg-[rgba(8,28,62,.92)] border-b border-[rgba(14,116,240,.28)]">
+      <!-- 中：BIM + 可点击 POI / 筛选 / 图例 -->
+      <div class="bim-slot" id="bimSlot">
+        <div class="map-chrome">
+          <div class="map-toolbar">
             <button type="button" class="tab filter-off" id="fltReset">复位</button>
             <button type="button" class="tab filter-on flt" data-f="全部">全部</button>
             <button type="button" class="tab filter-off flt" data-f="人员">人员</button>
             <button type="button" class="tab filter-off flt" data-f="车辆">车辆</button>
             <button type="button" class="tab filter-off flt" data-f="摄像头">摄像头</button>
             <button type="button" class="tab filter-off flt" data-f="环境监测">环境监测</button>
-            <span class="ml-auto text-[10px] text-[#637f99]" id="mapHint">人员/车辆/摄像/环境 · 其余见 BIM</span>
+            <button type="button" class="tab filter-off ml-1" id="btnTogglePoi" title="隐藏或显示 BIM 上的点位标注，界面更清爽" aria-pressed="false">隐藏标注</button>
+            <span class="ml-auto text-[10px] text-[#637f99]" id="mapHint">人员/车辆/摄像/环境 · 点选打开详情</span>
           </div>
-          <div class="absolute inset-0 top-[34px]" id="mapBox">
-            <img src="../assets/figma/eq-map.png" alt="港区底图" class="absolute inset-0 w-full h-full object-cover opacity-75">
-            <div class="absolute inset-0" style="background:linear-gradient(180deg,rgba(3,7,18,.15),rgba(3,7,18,.4))"></div>
+          <div id="mapBox">
             <aside class="map-legend" id="mapLegend" aria-label="状态色图例">
               <b>图例</b>
               <span class="map-legend-item"><i class="dot g"></i>正常</span>
@@ -244,7 +275,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
       </div>
 
       <!-- 右 -->
-      <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
+      <div class="side-col">
         <div class="card shrink-0">
           <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[13px] font-bold text-[#36bffa]">正在作业</span><span class="chip ml-auto">卸船 · 待泊/锚地</span></div>
           <div class="grid grid-cols-2 gap-2 mb-2 text-[11px]">
@@ -304,10 +335,11 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
           </div>
         </div>
       </div>
+      </div>
     </div>
 
-    <footer class="shrink-0 h-[5.5%] border-t border-[rgba(14,116,240,.28)] flex items-center justify-center relative bg-[#0a1220]">
-      <div class="absolute left-5 text-[12px] text-[#91abc4]"><i class="fa-solid fa-anchor text-[#00e4ff] mr-1"></i>金牌港智慧运营指挥中心</div>
+    <footer class="shrink-0 h-[5.5%] border-t border-[rgba(14,116,240,.28)] flex items-center justify-center relative" style="background:rgba(10,18,32,.78);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)">
+      <div class="absolute left-5 text-[12px] text-[#91abc4]"><i class="fa-solid fa-anchor text-[#00e4ff] mr-1"></i>海南金牌港数字孪生平台</div>
       <div id="theme-foot" class="flex gap-2"></div>
       <div class="absolute right-5 text-[11px] text-[#637f99]">当前视图：港区概览 · <span id="hd-asof2">--</span></div>
     </footer>
@@ -362,14 +394,6 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 <script src="wall_ov_detail.js"></script>
 <script>
 const THEME_LABEL={概览:'港区概览',生产:'生产运行',交通:'港区交通',设备:'设备设施',经营:'经营分析',调度:'智慧调度'};
-const LAYER_MAP={
-  全部:null,
-  人员:['人员'],
-  车辆:['车辆'],
-  摄像头:['摄像头'],
-  环境监测:['环境']
-};
-const OV_MAP_TYPES=['人员','车辆','摄像头','环境'];
 function renderFoot(){
   const el=document.getElementById('theme-foot');
   el.innerHTML=Object.keys(THEME_PAGES).map(k=>{
@@ -402,6 +426,14 @@ document.addEventListener('keydown',e=>{
   document.body.classList.remove('present');
 });
 
+const LAYER_MAP={
+  全部:null,
+  人员:['人员'],
+  车辆:['车辆'],
+  摄像头:['摄像头'],
+  环境监测:['环境']
+};
+const OV_MAP_TYPES=['人员','车辆','摄像头','环境'];
 const mapBox=document.getElementById('mapBox');
 OvDetail.mountPois(mapBox,{types:OV_MAP_TYPES});
 OvDetail.bind();
@@ -432,7 +464,7 @@ function openOv(raw){
   const opened=OvDetail.open(raw);
   if(opened){
     const name=OvDetail.resolveName(raw)||raw;
-    if(findMapFeature(name)||findMapFeature(OvDetail.resolveName(raw))) focusOnMap(name);
+    if(typeof findMapFeature==='function' && (findMapFeature(name)||findMapFeature(OvDetail.resolveName(raw)))) focusOnMap(name);
   }
   return opened;
 }
@@ -455,6 +487,8 @@ function applyMapFilter(f, silent){
   });
   const hint=document.getElementById('mapHint');
   if(hint && target==='摄像头') hint.textContent='监控系统 · 摄像头图层';
+  else if(hint && target==='全部') hint.textContent='人员/车辆/摄像/环境 · 点选打开详情';
+  else if(hint) hint.textContent='筛选：'+target+' · 点选打开详情';
   if(!silent) toast('筛选：'+target);
 }
 document.querySelectorAll('.flt').forEach(btn=>{
@@ -466,6 +500,24 @@ document.getElementById('fltReset').onclick=()=>{
   document.getElementById('mapHint').textContent='港区态势 · 点选打开详情';
   toast('视角复位');
 };
+
+(function bindPoiOverlayToggle(){
+  const btn=document.getElementById('btnTogglePoi');
+  const box=document.getElementById('mapBox');
+  if(!btn||!box) return;
+  let hidden=false;
+  btn.addEventListener('click',()=>{
+    hidden=!hidden;
+    box.classList.toggle('poi-hidden', hidden);
+    btn.textContent=hidden?'显示标注':'隐藏标注';
+    btn.classList.toggle('filter-on', hidden);
+    btn.classList.toggle('filter-off', !hidden);
+    btn.setAttribute('aria-pressed', hidden?'true':'false');
+    const hint=document.getElementById('mapHint');
+    if(hint) hint.textContent=hidden?'已隐藏 BIM 标注 · 界面清爽模式':'人员/车辆/摄像/环境 · 点选打开详情';
+    toast(hidden?'已隐藏 BIM 模型标注':'已显示 BIM 模型标注');
+  });
+})();
 (()=>{
   const q=new URLSearchParams(location.search);
   const filter=q.get('filter');
@@ -479,8 +531,45 @@ document.querySelector('.wall').addEventListener('click',e=>{
   const poi=e.target.closest('#mapBox .poi');
   if(poi){ openOv(poi.dataset.n); return; }
   const hit=e.target.closest('[data-ov]');
-  if(hit){ openOv(hit.getAttribute('data-ov')); }
+  if(hit) openOv(hit.getAttribute('data-ov'));
 });
+
+/* BIM 布局切换：默认铺满；可切回分栏 */
+(function bindBimLayoutToggle(){
+  const wall=document.getElementById('wallRoot');
+  const stage=document.querySelector('.main-stage');
+  const slot=document.getElementById('bimSlot');
+  const frame=document.getElementById('bimFrame');
+  const btn=document.getElementById('btnBimLayout');
+  const hint=document.getElementById('layoutHint');
+  if(!wall||!stage||!slot||!frame||!btn) return;
+  let full=true;
+  function apply(nextFull){
+    full=nextFull;
+    wall.classList.toggle('mode-bim-full', full);
+    wall.classList.toggle('mode-bim-classic', !full);
+    if(full){
+      stage.insertBefore(frame, stage.firstChild);
+      btn.textContent='分栏布局';
+      btn.classList.add('on-bim');
+      if(hint) hint.textContent='演示态 · BIM 铺满';
+    }else{
+      slot.insertBefore(frame, slot.firstChild);
+      btn.textContent='BIM铺满';
+      btn.classList.remove('on-bim');
+      if(hint) hint.textContent='演示态 · 分栏布局';
+    }
+    requestAnimationFrame(()=>{
+      if(typeof resizeWallCharts==='function') resizeWallCharts();
+      setTimeout(()=>{ if(typeof resizeWallCharts==='function') resizeWallCharts(); },80);
+    });
+  }
+  btn.addEventListener('click',()=>{
+    apply(!full);
+    toast(full?'已切换：BIM 铺满':'已切换：分栏布局');
+  });
+  apply(true);
+})();
 
 const cargoChart=echarts.init(document.getElementById('cargoChart'),null,{renderer:'canvas'});
 cargoChart.setOption({

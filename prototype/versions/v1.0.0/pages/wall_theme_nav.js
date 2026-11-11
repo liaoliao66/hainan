@@ -534,3 +534,66 @@ function initWallTheme(active, opts) {
   if (typeof mountAlertBoards === 'function') mountAlertBoards();
   if (opts.flipId && opts.flipBase != null) setFlip(document.getElementById(opts.flipId), opts.flipBase, opts.flipLen || 5);
 }
+
+/** BIM 铺满/分栏 + 隐藏模型标注（主题页共用） */
+const WALL_BIM_URL = 'https://jgyw.crfsdi.com.cn:51111/hnlg-large-screen/';
+function initWallBimLayout(opts) {
+  opts = opts || {};
+  const wall = document.querySelector(opts.wall || '#wallRoot') || document.querySelector('.wall');
+  const stage = document.querySelector(opts.stage || '.main-stage');
+  const slot = document.querySelector(opts.slot || '#bimSlot');
+  let frame = document.querySelector(opts.frame || '#bimFrame');
+  const btn = document.querySelector(opts.btn || '#btnBimLayout');
+  const hint = document.querySelector(opts.hint || '#layoutHint');
+  const poiBtn = document.querySelector(opts.poiBtn || '#btnTogglePoi');
+  const poiBox = document.querySelector(opts.poiBox || '#mapBox');
+  if (!wall || !stage || !slot || !btn) return null;
+  if (!frame) {
+    frame = document.createElement('iframe');
+    frame.className = 'bim-frame';
+    frame.id = 'bimFrame';
+    frame.title = '海南金牌港数字孪生 BIM';
+    frame.src = opts.src || WALL_BIM_URL;
+    frame.setAttribute('allow', 'fullscreen; autoplay; clipboard-read; clipboard-write');
+    frame.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
+    stage.insertBefore(frame, stage.firstChild);
+  }
+  if (!wall.id) wall.id = 'wallRoot';
+  wall.classList.add('mode-bim-full');
+  let full = true;
+  function apply(nextFull) {
+    full = nextFull;
+    wall.classList.toggle('mode-bim-full', full);
+    wall.classList.toggle('mode-bim-classic', !full);
+    if (full) {
+      stage.insertBefore(frame, stage.firstChild);
+      btn.textContent = '分栏布局';
+      btn.classList.add('on-bim');
+      if (hint) hint.textContent = opts.hintFull || '演示态 · BIM 铺满';
+    } else {
+      slot.insertBefore(frame, slot.firstChild);
+      btn.textContent = 'BIM铺满';
+      btn.classList.remove('on-bim');
+      if (hint) hint.textContent = opts.hintClassic || '演示态 · 分栏布局';
+    }
+    window.dispatchEvent(new Event('resize'));
+  }
+  btn.addEventListener('click', () => {
+    apply(!full);
+    if (typeof toast === 'function') toast(full ? '已切换：BIM 铺满' : '已切换：分栏布局');
+  });
+  apply(true);
+  if (poiBtn && poiBox) {
+    let hidden = false;
+    poiBtn.addEventListener('click', () => {
+      hidden = !hidden;
+      poiBox.classList.toggle('poi-hidden', hidden);
+      poiBtn.textContent = hidden ? '显示标注' : '隐藏标注';
+      poiBtn.classList.toggle('filter-on', hidden);
+      poiBtn.classList.toggle('filter-off', !hidden);
+      poiBtn.setAttribute('aria-pressed', hidden ? 'true' : 'false');
+      if (typeof toast === 'function') toast(hidden ? '已隐藏 BIM 模型标注' : '已显示 BIM 模型标注');
+    });
+  }
+  return { apply, isFull: () => full };
+}

@@ -132,7 +132,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 </head>
 <body>
 <div class="stage">
-  <div class="wall">
+  <div class="wall mode-bim-full" id="wallRoot">
     <header class="shrink-0 flex flex-col" style="height:9.2%">
       <div class="flex items-center justify-between px-4 border-b border-[#1e293b] bg-[#0a1220]" style="height:38%">
         <div class="text-[11px] text-[#94a3b8]">智慧调度一张图 · 演练只读 · 演示数据不可作正式调度依据</div>
@@ -140,8 +140,10 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
           <button type="button" class="tool-btn" onclick="toast('操控席 · 领导席（演示）')">操控席 领导⌄</button>
           <a class="tool-btn" href="../index.html">入口</a>
           <a class="tool-btn" href="pc_wall_command_screen.html?from=%E8%B0%83%E5%BA%A6">概览总览</a>
+          <button type="button" class="tool-btn on-bim" id="btnBimLayout" title="切换 BIM 铺满 / 分栏布局">分栏布局</button>
           <button type="button" class="tool-btn" id="btnPresent">汇报全屏</button>
           <button type="button" class="tool-btn" onclick="toast('已刷新演练数据')">刷新</button>
+          <span class="text-[10px] text-[#475569]" id="layoutHint">演示态 · BIM 铺满</span>
         </div>
       </div>
       <div class="flex-1 min-h-0 flex items-center justify-between px-5 border-b" style="border-color:rgba(14,116,240,.28);background:linear-gradient(90deg,#080c20,#0d1a3a,#080c20)">
@@ -162,10 +164,12 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
     </header>
 
     <!-- ===== 01 常态总览 ===== -->
-    <div class="view on px-3 pt-2 pb-2 gap-2" id="view-overview">
-      <div class="flex-1 min-h-0 grid gap-2.5" style="grid-template-columns:22% minmax(0,1fr) 22.5%">
+    <div class="view on" id="view-overview">
+      <div class="main-stage" style="--bim-cols:22% minmax(0,1fr) 22.5%">
+        <iframe class="bim-frame" id="bimFrame" title="海南金牌港数字孪生 BIM" src="https://jgyw.crfsdi.com.cn:51111/hnlg-large-screen/" allow="fullscreen; autoplay; clipboard-read; clipboard-write" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <div class="float-panels">
         <!-- 左 -->
-        <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
+        <div class="side-col">
           <div class="card shrink-0 p-2.5">
             <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[12px] font-bold text-[#36bffa]">调度业务</span><span class="chip ml-auto">11月截至演练时点</span></div>
             <div class="grid grid-cols-3 gap-1.5 text-center mb-2">
@@ -211,18 +215,17 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
         </div>
 
         <!-- 中 -->
-        <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
-          <div class="card flex-1 min-h-0 p-0 overflow-hidden flex flex-col">
+        <div class="bim-slot" id="bimSlot">
+          <div class="card center-map flex-1 min-h-0 p-0 overflow-hidden flex flex-col">
             <div class="shrink-0 h-8 px-2.5 flex items-center gap-2 border-b border-[rgba(14,116,240,.22)] bg-[rgba(8,28,62,.92)]">
               <span class="text-[12px] font-bold text-[#36bffa]">危险区域与资源分布</span>
               <div class="dim-seg" id="dimSeg" role="group" aria-label="视图维度">
                 <button type="button" class="on" data-dim="3d">三维</button>
                 <button type="button" data-dim="2d">二维</button>
               </div>
+              <button type="button" class="tool-btn filter-off ml-auto" id="btnTogglePoi" title="隐藏或显示 BIM 上的点位标注">隐藏标注</button>
             </div>
-            <div class="map-box flex-1" id="ovMap">
-              <img class="bg" id="ovMapBg" src="../assets/figma/prod-map.png" alt="港区态势">
-              <div class="map-mask"></div>
+            <div class="map-box flex-1" id="ovMap" style="border:0;border-radius:0;background:transparent">
               <button type="button" class="poi z" style="left:22%;top:58%" onclick="toast('Z01 临水作业')">Z01 临水</button>
               <button type="button" class="poi z" style="left:38%;top:48%" onclick="toast('Z02 输送设备')">Z02 输送</button>
               <button type="button" class="poi z" style="left:58%;top:42%" onclick="toast('Z03 堆场限制')">Z03 堆场</button>
@@ -241,7 +244,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
               </div>
             </div>
           </div>
-          <div class="card shrink-0 p-2.5">
+          <div class="card center-video shrink-0 p-2.5">
             <div class="flex items-center gap-1.5 mb-2">
               <span class="mark"></span>
               <span class="text-[12px] font-bold text-[#36bffa]">安全监控</span>
@@ -299,7 +302,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
         </div>
 
         <!-- 右 -->
-        <div class="min-h-0 flex flex-col gap-2 overflow-hidden">
+        <div class="side-col">
           <div class="card shrink-0 p-2.5">
             <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[12px] font-bold text-[#36bffa]">应急资源台账</span><span class="chip ml-auto">八类 · 按单位汇总</span></div>
             <div class="res-grid">
@@ -345,6 +348,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
               </div>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </div>
@@ -548,6 +552,7 @@ function renderThemes(){
 renderThemes();
 mountWeather();
 bindVidRails();
+initWallBimLayout({poiBox:'#ovMap',hintFull:'演示态 · BIM 铺满',hintClassic:'演示态 · 分栏布局'});
 OvDetail.bind();
 
 function pad(n){return String(n).padStart(2,'0')}
@@ -597,25 +602,16 @@ document.querySelectorAll('[data-view]').forEach(btn=>{
   });
 })();
 
-/* 中央大屏维度切换：仅页头一套控件，底图自带按钮已裁切隐藏 */
+/* 中央大屏维度切换：BIM 铺满后以提示为主 */
 (function bindDimSeg(){
   const seg=document.getElementById('dimSeg');
-  const bg=document.getElementById('ovMapBg');
-  if(!seg||!bg) return;
+  if(!seg) return;
   seg.addEventListener('click',e=>{
     const btn=e.target.closest('[data-dim]');
     if(!btn) return;
     seg.querySelectorAll('[data-dim]').forEach(b=>b.classList.toggle('on',b===btn));
     const dim=btn.getAttribute('data-dim');
-    if(dim==='2d'){
-      bg.src='../assets/port-aerial.jpg';
-      bg.style.objectPosition='center 40%';
-      toast('已切换二维示意');
-    }else{
-      bg.src='../assets/figma/prod-map.png';
-      bg.style.objectPosition='center 52%';
-      toast('已切换三维示意');
-    }
+    toast(dim==='2d' ? '二维示意 · 演示（当前以 BIM 三维为主）' : '三维 BIM 示意');
   });
 })();
 document.querySelectorAll('[data-cmd]').forEach(el=>{
