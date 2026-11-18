@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生产运行一张图 · 管理后台 · v1.0.0</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex">
+<aside class="w-64 shrink-0 bg-slate-800 text-slate-100 min-h-screen p-4 flex flex-col sticky top-0 h-screen">
+  <div class="mb-5">
+    <div class="text-[11px] text-slate-400">海南金牌港 · 管理后台</div>
+    <div class="text-lg font-semibold mt-1">生产运行配置</div>
+    <div class="text-[11px] text-slate-400 mt-1">对齐大屏模块 · 增删改查</div>
+  </div>
+  <nav id="sideNav" class="space-y-1 text-sm flex-1 overflow-auto">
+<a href="#home" data-nav="home" class="nav flex items-center gap-2 rounded-xl px-3 py-2 bg-slate-700 text-white"><i class="fa-solid fa-gauge w-4 text-center"></i><span>总控</span></a>
+<div class="text-[11px] text-slate-500 px-3 pt-3 pb-1">大屏对应模块</div>
+<a href="#summary" data-nav="summary" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-chart-simple w-4 text-center"></i><span>作业汇总</span></a>
+<a href="#berth" data-nav="berth" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-anchor w-4 text-center"></i><span>泊位作业与任务</span></a>
+<a href="#plan" data-nav="plan" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-ship w-4 text-center"></i><span>待泊船舶计划</span></a>
+<a href="#vehicle" data-nav="vehicle" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-truck w-4 text-center"></i><span>待进港预约车辆</span></a>
+<a href="#alarm" data-nav="alarm" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-bell w-4 text-center"></i><span>报警中心</span></a>
+<a href="#device" data-nav="device" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-gears w-4 text-center"></i><span>作业设备监测</span></a>
+<a href="#env" data-nav="env" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-wind w-4 text-center"></i><span>作业环境监测</span></a>
+<a href="#storage" data-nav="storage" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-warehouse w-4 text-center"></i><span>仓储接收能力</span></a>
+  </nav>
+  <div class="space-y-2 text-xs text-slate-400 mt-3">
+    <a class="hover:text-white block" href="pc_wall_theme_production.html" target="_blank">打开对应大屏</a>
+    <a class="hover:text-white block" href="admin_overview.html">港区概览后台</a>
+    <a class="hover:text-white block" href="../index.html">返回版本首页</a>
+  </div>
+</aside>
+<main class="flex-1 min-w-0 p-5 md:p-6 overflow-auto">
+  <div class="max-w-[1180px] mx-auto">
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+      <div>
+        <div class="text-xs text-slate-400">管理后台 / 生产运行配置</div>
+        <h1 id="pageTitle" class="text-2xl font-semibold mt-1">总控</h1>
+        <p id="pageDesc" class="text-sm text-slate-500 mt-1">维护大屏展示数据：新增、查看、编辑、删除；本地演示存储。</p>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <span id="modeBadge" class="text-xs px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200">演示数据</span>
+        <button type="button" class="rounded-xl bg-slate-800 text-white px-3 py-2 text-sm" onclick="doSave()">保存全部</button>
+        <button type="button" class="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" onclick="doReset()">恢复初值</button>
+      </div>
+    </div>
+
+    <section data-panel="home" class="space-y-4">
+      <div class="grid md:grid-cols-3 gap-3">
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200"><div class="text-xs text-slate-500">可维护模块</div><div class="text-2xl font-semibold mt-1" id="kpiMods">—</div></div>
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200"><div class="text-xs text-slate-500">上墙启用</div><div class="text-2xl font-semibold text-emerald-600 mt-1" id="kpiOn">—</div></div>
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200"><div class="text-xs text-slate-500">数据截至</div><div class="text-lg font-semibold mt-2" id="kpiAsof">—</div></div>
+      </div>
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <h2 class="font-semibold mb-3">全局</h2>
+        <div class="grid md:grid-cols-2 gap-3 text-sm">
+          <label class="flex items-center justify-between gap-3 rounded-xl border border-slate-200 px-3 py-3">
+            <span><b>演示数据总开关</b><div class="text-xs text-slate-500">关闭后列表仍可维护，大屏按正式源策略展示</div></span>
+            <input id="gDemo" type="checkbox" class="w-4 h-4" onchange="syncGlobal()">
+          </label>
+          <div class="rounded-xl border border-slate-200 px-3 py-3">
+            <div class="text-xs text-slate-500 mb-1">数据截至</div>
+            <input id="gAsof" type="datetime-local" class="w-full rounded-lg border border-slate-300 px-2 py-1.5" onchange="syncGlobal()">
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="px-4 py-3 border-b font-semibold text-sm">模块清单</div>
+        <table class="w-full text-sm"><thead class="bg-slate-50 text-xs text-slate-600"><tr>
+          <th class="text-left px-3 py-2">模块</th><th class="text-left px-3 py-2">记录数</th><th class="text-left px-3 py-2">上墙</th><th class="text-left px-3 py-2">操作</th>
+        </tr></thead><tbody id="homeBody"></tbody></table>
+      </div>
+    </section>
+
+
+    <section data-panel="summary" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div>
+            <h2 class="font-semibold">作业汇总</h2>
+            <p class="text-xs text-slate-500 mt-1">对应大屏左侧当日主指标</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <label class="text-xs flex items-center gap-2"><input id="summaryOnWall" type="checkbox" onchange="toggleWall('summary')"> 上墙启用</label>
+            <button type="button" class="rounded-xl bg-sky-700 text-white px-3 py-1.5 text-sm" onclick="addRow('summary')">新增</button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-xs text-slate-600" id="summaryHead"></thead>
+            <tbody id="summaryBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+
+    <section data-panel="berth" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div>
+            <h2 class="font-semibold">泊位作业与当前任务</h2>
+            <p class="text-xs text-slate-500 mt-1">对应大屏左侧泊位任务卡</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <label class="text-xs flex items-center gap-2"><input id="berthOnWall" type="checkbox" onchange="toggleWall('berth')"> 上墙启用</label>
+            <button type="button" class="rounded-xl bg-sky-700 text-white px-3 py-1.5 text-sm" onclick="addRow('berth')">新增</button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-xs text-slate-600" id="berthHead"></thead>
+            <tbody id="berthBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+
+    <section data-panel="plan" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div>
+            <h2 class="font-semibold">待泊船舶计划</h2>
+            <p class="text-xs text-slate-500 mt-1">对应大屏待泊计划表</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <label class="text-xs flex items-center gap-2"><input id="planOnWall" type="checkbox" onchange="toggleWall('plan')"> 上墙启用</label>
+            <button type="button" class="rounded-xl bg-sky-700 text-white px-3 py-1.5 text-sm" onclick="addRow('plan')">新增</button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-xs text-slate-600" id="planHead"></thead>
+            <tbody id="planBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+
+    <section data-panel="vehicle" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div>
+            <h2 class="font-semibold">待进港预约车辆</h2>
+            <p class="text-xs text-slate-500 mt-1">对应大屏预约车辆表</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <label class="text-xs flex items-center gap-2"><input id="vehicleOnWall" type="checkbox" onchange="toggleWall('vehicle')"> 上墙启用</label>
+            <button type="button" class="rounded-xl bg-sky-700 text-white px-3 py-1.5 text-sm" onclick="addRow('vehicle')">新增</button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-xs text-slate-600" id="vehicleHead"></thead>
+            <tbody id="vehicleBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+
+    <section data-panel="alarm" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div>
+            <h2 class="font-semibold">报警中心</h2>
+            <p class="text-xs text-slate-500 mt-1">对应大屏右侧报警</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <label class="text-xs flex items-center gap-2"><input id="alarmOnWall" type="checkbox" onchange="toggleWall('alarm')"> 上墙启用</label>
+            <button type="button" class="rounded-xl bg-sky-700 text-white px-3 py-1.5 text-sm" onclick="addRow('alarm')">新增</button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-xs text-slate-600" id="alarmHead"></thead>
+            <tbody id="alarmBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+
+    <section data-panel="device" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div>
+            <h2 class="font-semibold">作业设备监测</h2>
+            <p class="text-xs text-slate-500 mt-1">对应大屏作业设备状态</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <label class="text-xs flex items-center gap-2"><input id="deviceOnWall" type="checkbox" onchange="toggleWall('device')"> 上墙启用</label>
+            <button type="button" class="rounded-xl bg-sky-700 text-white px-3 py-1.5 text-sm" onclick="addRow('device')">新增</button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-xs text-slate-600" id="deviceHead"></thead>
+            <tbody id="deviceBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+
+    <section data-panel="env" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div>
+            <h2 class="font-semibold">作业环境监测</h2>
+            <p class="text-xs text-slate-500 mt-1">对应大屏环境点位</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <label class="text-xs flex items-center gap-2"><input id="envOnWall" type="checkbox" onchange="toggleWall('env')"> 上墙启用</label>
+            <button type="button" class="rounded-xl bg-sky-700 text-white px-3 py-1.5 text-sm" onclick="addRow('env')">新增</button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-xs text-slate-600" id="envHead"></thead>
+            <tbody id="envBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+
+    <section data-panel="storage" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div>
+            <h2 class="font-semibold">仓储接收能力</h2>
+            <p class="text-xs text-slate-500 mt-1">对应大屏仓储能力</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <label class="text-xs flex items-center gap-2"><input id="storageOnWall" type="checkbox" onchange="toggleWall('storage')"> 上墙启用</label>
+            <button type="button" class="rounded-xl bg-sky-700 text-white px-3 py-1.5 text-sm" onclick="addRow('storage')">新增</button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-xs text-slate-600" id="storageHead"></thead>
+            <tbody id="storageBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+<script src="admin_common.js"></script>
+<script>
+
+const STORE = 'hn_admin_production_v1';
+const META = {"home": {"title": "总控", "desc": "本专题大屏数据维护入口；支持新增/查看/编辑/删除。"}, "summary": {"title": "作业汇总", "desc": "对应大屏左侧当日主指标"}, "berth": {"title": "泊位作业与当前任务", "desc": "对应大屏左侧泊位任务卡"}, "plan": {"title": "待泊船舶计划", "desc": "对应大屏待泊计划表"}, "vehicle": {"title": "待进港预约车辆", "desc": "对应大屏预约车辆表"}, "alarm": {"title": "报警中心", "desc": "对应大屏右侧报警"}, "device": {"title": "作业设备监测", "desc": "对应大屏作业设备状态"}, "env": {"title": "作业环境监测", "desc": "对应大屏环境点位"}, "storage": {"title": "仓储接收能力", "desc": "对应大屏仓储能力"}};
+const SCHEMAS = {"summary": {"cols": [["name", "指标"], ["value", "数值"], ["unit", "单位"], ["note", "说明"], ["on", "上墙"]], "fields": [["name", "指标名称", "text"], ["value", "数值", "text"], ["unit", "单位", "text"], ["note", "说明", "text"], ["on", "上墙", "checkbox"]], "derived_rate": false}, "berth": {"cols": [["berth", "泊位"], ["status", "状态"], ["task", "任务"], ["progress", "进度%"], ["note", "说明"], ["on", "上墙"]], "fields": [["berth", "泊位", "text"], ["status", "状态", "select", ["作业中", "待装", "空闲", "待离泊"]], ["task", "任务描述", "text"], ["progress", "进度%", "number"], ["note", "说明", "text"], ["on", "上墙", "checkbox"]], "derived_rate": false}, "plan": {"cols": [["ship", "船舶"], ["pos", "当前位置"], ["berth", "计划泊位"], ["eta", "计划靠泊"], ["on", "上墙"]], "fields": [["ship", "船舶", "text"], ["pos", "当前位置", "text"], ["berth", "计划泊位", "select", ["1#泊位", "2#泊位"]], ["eta", "计划靠泊", "text"], ["on", "上墙", "checkbox"]], "derived_rate": false}, "vehicle": {"cols": [["plate", "车辆"], ["slot", "预约时段"], ["dest", "作业去向"], ["status", "状态"], ["on", "上墙"]], "fields": [["plate", "车辆", "text"], ["slot", "预约时段", "text"], ["dest", "作业去向", "text"], ["status", "状态", "select", ["待叫号", "核验超时", "未到场"]], ["on", "上墙", "checkbox"]], "derived_rate": false}, "alarm": {"cols": [["code", "编号"], ["title", "标题"], ["level", "等级"], ["status", "状态"], ["on", "上墙"]], "fields": [["code", "编号", "text"], ["title", "标题", "text"], ["level", "等级", "select", ["一级", "二级", "三级"]], ["status", "状态", "select", ["待响应", "处理中", "已闭环"]], ["note", "说明", "text"], ["on", "上墙", "checkbox"]], "derived_rate": false}, "device": {"cols": [["name", "设备"], ["status", "状态"], ["metric", "关键读数"], ["on", "上墙"]], "fields": [["name", "设备", "text"], ["status", "状态", "select", ["运行", "待机", "预警", "故障", "检修"]], ["metric", "关键读数", "text"], ["on", "上墙", "checkbox"]], "derived_rate": false}, "env": {"cols": [["name", "点位"], ["value", "读数"], ["status", "状态"], ["on", "上墙"]], "fields": [["name", "点位", "text"], ["value", "读数", "text"], ["status", "状态", "select", ["正常", "关注", "超标"]], ["on", "上墙", "checkbox"]], "derived_rate": false}, "storage": {"cols": [["name", "仓区"], ["cap", "能力"], ["used", "占用"], ["status", "状态"], ["on", "上墙"]], "fields": [["name", "仓区", "text"], ["cap", "能力", "text"], ["used", "占用", "text"], ["status", "状态", "select", ["可接收", "关注", "受限"]], ["on", "上墙", "checkbox"]], "derived_rate": false}};
+const DEFAULTS = {"global": {"demo": true, "asof": ""}, "walls": {"summary": true, "berth": true, "plan": true, "vehicle": true, "alarm": true, "device": true, "env": true, "storage": true}, "rows": {"summary": [{"id": "s1", "name": "今日吞吐量", "value": "1.86", "unit": "万吨", "note": "计划2.40 · 完成77.5%", "on": true}, {"id": "s2", "name": "装卸船舶", "value": "1", "unit": "艘在泊", "note": "今日靠离2艘", "on": true}, {"id": "s3", "name": "集疏车辆", "value": "46", "unit": "辆港内", "note": "待进预约36辆", "on": true}], "berth": [{"id": "b1", "berth": "1#泊位", "status": "作业中", "task": "RW-001 · 1#泊位→1#散货仓库", "progress": 68, "note": "关联报警 A001", "on": true}, {"id": "b2", "berth": "2#泊位", "status": "待装", "task": "当前无在执行航次", "progress": 0, "note": "等待计划靠泊", "on": true}], "plan": [{"id": "p1", "ship": "示例船01", "pos": "A锚地", "berth": "2#泊位", "eta": "当日 14:30", "on": true}, {"id": "p2", "ship": "示例船02", "pos": "A锚地", "berth": "1#泊位", "eta": "次日 01:30", "on": true}, {"id": "p3", "ship": "示例船03", "pos": "进港途中", "berth": "2#泊位", "eta": "次日 08:00", "on": true}], "vehicle": [{"id": "v1", "plate": "示例车01", "slot": "14:00—14:30", "dest": "1#散货仓库", "status": "待叫号", "on": true}, {"id": "v2", "plate": "示例车02", "slot": "14:00—14:30", "dest": "3#杂货仓库", "status": "核验超时", "on": true}, {"id": "v3", "plate": "示例车03", "slot": "14:30—15:00", "dest": "1#散货仓库", "status": "未到场", "on": true}], "alarm": [{"id": "a1", "code": "A001", "title": "T2输送驱动轴承温升", "level": "二级", "status": "处理中", "note": "作业影响待评估", "on": true}, {"id": "a2", "code": "A002", "title": "卸船机振动偏高", "level": "二级", "status": "待响应", "note": "1#泊位", "on": true}], "device": [{"id": "d1", "name": "卸船机01", "status": "运行", "metric": "负载71%", "on": true}, {"id": "d2", "name": "T2驱动", "status": "预警", "metric": "轴承78℃", "on": true}], "env": [{"id": "e1", "name": "门机风速#1", "value": "12.4 m/s", "status": "关注", "on": true}, {"id": "e2", "name": "前沿水位", "value": "2.1 m", "status": "正常", "on": true}], "storage": [{"id": "st1", "name": "1#散货仓库", "cap": "可接收", "used": "68%", "status": "可接收", "on": true}, {"id": "st2", "name": "3#杂货仓库", "cap": "可接收", "used": "54%", "status": "可接收", "on": true}]}};
+let state = null;
+let dirty = false;
+
+function markDirty(){ dirty = true; }
+
+function doSave(){
+  AdminKit.save(STORE, state);
+  dirty = false;
+  refreshHome();
+}
+function doReset(){
+  if(!confirm('恢复演示初值？')) return;
+  state = AdminKit.clone(DEFAULTS);
+  if(!state.global.asof) state.global.asof = AdminKit.nowAsof();
+  AdminKit.save(STORE, state);
+  bindAll();
+  dirty = false;
+}
+function syncGlobal(){
+  state.global.demo = document.getElementById('gDemo').checked;
+  state.global.asof = document.getElementById('gAsof').value;
+  document.getElementById('modeBadge').textContent = state.global.demo ? '演示数据 · 开' : '演示数据 · 关';
+  markDirty(); refreshHome();
+}
+function toggleWall(key){
+  state.walls[key] = document.getElementById(key+'OnWall').checked;
+  markDirty(); refreshHome();
+}
+
+function refreshHome(){
+  const keys = Object.keys(SCHEMAS);
+  document.getElementById('kpiMods').textContent = keys.length;
+  document.getElementById('kpiOn').textContent = keys.filter(k=>state.walls[k]).length;
+  document.getElementById('kpiAsof').textContent = (state.global.asof||'—').replace('T',' ');
+  document.getElementById('homeBody').innerHTML = keys.map(k=>{
+    const n = (state.rows[k]||[]).length;
+    const on = state.walls[k];
+    return `<tr class="border-t border-slate-100"><td class="px-3 py-2 font-medium">${META[k].title}</td>
+      <td class="px-3 py-2">${n}</td>
+      <td class="px-3 py-2 ${on?'text-emerald-600':'text-slate-400'}">${on?'启用':'停用'}</td>
+      <td class="px-3 py-2"><button class="text-sky-700" onclick="AdminKit.showPanel('${k}', META)">维护</button></td></tr>`;
+  }).join('');
+}
+
+function renderModule(key){
+  const sch = SCHEMAS[key];
+  const cols = sch.cols;
+  document.getElementById(key+'OnWall').checked = !!state.walls[key];
+  document.getElementById(key+'Head').innerHTML = `<tr>${cols.map(c=>`<th class="text-left px-3 py-2">${c[1]}</th>`).join('')}<th class="text-left px-3 py-2">操作</th></tr>`;
+  const rows = state.rows[key] || [];
+  document.getElementById(key+'Body').innerHTML = rows.map(r=>{
+    const tds = cols.map(([k])=>{
+      let v = r[k];
+      if(k==='on') v = r.on ? '是' : '否';
+      if(sch.derived_rate && k==='rate'){
+        v = r.plan ? ((r.actual/r.plan*100).toFixed(1)+'%') : '—';
+      }
+      return `<td class="px-3 py-2">${v==null?'—':v}</td>`;
+    }).join('');
+    return `<tr class="border-t">${tds}<td class="px-3 py-2 space-x-2 whitespace-nowrap">
+      <button class="text-slate-600" onclick="viewRow('${key}','${r.id}')">查看</button>
+      <button class="text-sky-700" onclick="editRow('${key}','${r.id}')">编辑</button>
+      <button class="text-rose-600" onclick="delRow('${key}','${r.id}')">删除</button>
+    </td></tr>`;
+  }).join('') || `<tr><td class="px-3 py-6 text-slate-400" colspan="${cols.length+1}">暂无数据，请点击新增</td></tr>`;
+}
+
+function renderAll(){
+  Object.keys(SCHEMAS).forEach(renderModule);
+  refreshHome();
+}
+
+function buildForm(key, row, viewOnly){
+  const fields = SCHEMAS[key].fields;
+  return fields.map(f=>{
+    const [id,label,type,opts] = f;
+    const raw = row ? row[id] : (type==='checkbox'?true:'');
+    if(type==='select'){
+      return AdminKit.field(label, 'f_'+id, {value: raw||opts[0], options: opts, disabled: viewOnly}, 'select');
+    }
+    if(type==='checkbox'){
+      return `<label class="text-xs text-slate-500 flex items-center gap-2"><input id="f_${id}" type="checkbox" ${raw?'checked':''} ${viewOnly?'disabled':''}> ${label}</label>`;
+    }
+    return AdminKit.field(label, 'f_'+id, {value: raw, disabled: viewOnly}, type==='number'?'number':'text');
+  }).join('');
+}
+
+function readForm(key){
+  const obj = {};
+  SCHEMAS[key].fields.forEach(f=>{
+    const [id,,type] = f;
+    obj[id] = AdminKit.val('f_'+id);
+  });
+  return obj;
+}
+
+function addRow(key){
+  AdminKit.openModal('新增 · '+META[key].title, buildForm(key, null, false), ()=>{
+    const obj = readForm(key);
+    if(SCHEMAS[key].fields[0] && !String(obj[SCHEMAS[key].fields[0][0]]||'').trim() && SCHEMAS[key].fields[0][2]!=='checkbox'){
+      AdminKit.toast('请填写必填项'); return false;
+    }
+    obj.id = AdminKit.uid(key[0]);
+    if(obj.on === '') obj.on = true;
+    state.rows[key].unshift(obj);
+    markDirty(); renderModule(key); refreshHome(); return true;
+  });
+}
+function editRow(key, id){
+  const row = state.rows[key].find(x=>x.id===id);
+  if(!row) return;
+  AdminKit.openModal('编辑 · '+META[key].title, buildForm(key, row, false), ()=>{
+    const obj = readForm(key);
+    Object.assign(row, obj);
+    markDirty(); renderModule(key); refreshHome(); return true;
+  });
+}
+function viewRow(key, id){
+  const row = state.rows[key].find(x=>x.id===id);
+  if(!row) return;
+  AdminKit.openModal('查看 · '+META[key].title, buildForm(key, row, true), null, {viewOnly:true});
+}
+function delRow(key, id){
+  if(!confirm('确认删除该条数据？')) return;
+  state.rows[key] = state.rows[key].filter(x=>x.id!==id);
+  markDirty(); renderModule(key); refreshHome();
+}
+
+function bindAll(){
+  document.getElementById('gDemo').checked = !!state.global.demo;
+  document.getElementById('gAsof').value = state.global.asof || '';
+  document.getElementById('modeBadge').textContent = state.global.demo ? '演示数据 · 开' : '演示数据 · 关';
+  renderAll();
+}
+
+state = AdminKit.load(STORE, DEFAULTS);
+if(!state.global.asof) state.global.asof = AdminKit.nowAsof();
+AdminKit.ensureModal();
+AdminKit.bindNav(META);
+bindAll();
+const init = (location.hash||'#home').replace('#','');
+AdminKit.showPanel(META[init]?init:'home', META);
+window.addEventListener('beforeunload', e=>{ if(dirty){ e.preventDefault(); e.returnValue=''; } });
+
+</script>
+</body>
+</html>

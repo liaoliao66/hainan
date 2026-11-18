@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>智慧调度一张图 · 管理后台 · v1.0.0</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex">
+<aside class="w-64 shrink-0 bg-slate-800 text-slate-100 min-h-screen p-4 flex flex-col sticky top-0 h-screen">
+  <div class="mb-5">
+    <div class="text-[11px] text-slate-400">海南金牌港 · 管理后台</div>
+    <div class="text-lg font-semibold mt-1">智慧调度配置</div>
+    <div class="text-[11px] text-slate-400 mt-1">对齐大屏模块 · 增删改查</div>
+  </div>
+  <nav id="sideNav" class="space-y-1 text-sm flex-1 overflow-auto">
+<a href="#home" data-nav="home" class="nav flex items-center gap-2 rounded-xl px-3 py-2 bg-slate-700 text-white"><i class="fa-solid fa-gauge w-4 text-center"></i><span>总控</span></a>
+<div class="text-[11px] text-slate-500 px-3 pt-3 pb-1">大屏对应模块</div>
+<a href="#biz" data-nav="biz" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-briefcase w-4 text-center"></i><span>调度业务</span></a>
+<a href="#duty" data-nav="duty" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-user-shield w-4 text-center"></i><span>值守与响应</span></a>
+<a href="#event" data-nav="event" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-bell w-4 text-center"></i><span>重点事件监控</span></a>
+<a href="#review" data-nav="review" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-clock-rotate-left w-4 text-center"></i><span>事件回顾</span></a>
+<a href="#res" data-nav="res" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-boxes-stacked w-4 text-center"></i><span>应急资源台账</span></a>
+<a href="#point" data-nav="point" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-location-dot w-4 text-center"></i><span>应急物资点</span></a>
+<a href="#video" data-nav="video" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-video w-4 text-center"></i><span>安全监控</span></a>
+  </nav>
+  <div class="space-y-2 text-xs text-slate-400 mt-3">
+    <a class="hover:text-white block" href="pc_wall_theme_dispatch.html" target="_blank">打开对应大屏</a>
+    <a class="hover:text-white block" href="admin_overview.html">港区概览后台</a>
+    <a class="hover:text-white block" href="../index.html">返回版本首页</a>
+  </div>
+</aside>
+<main class="flex-1 min-w-0 p-5 md:p-6 overflow-auto">
+  <div class="max-w-[1180px] mx-auto">
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+      <div>
+        <div class="text-xs text-slate-400">管理后台 / 智慧调度配置</div>
+        <h1 id="pageTitle" class="text-2xl font-semibold mt-1">总控</h1>
+        <p id="pageDesc" class="text-sm text-slate-500 mt-1">维护大屏展示数据：新增、查看、编辑、删除；本地演示存储。</p>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <span id="modeBadge" class="text-xs px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200">演示数据</span>
+        <button type="button" class="rounded-xl bg-slate-800 text-white px-3 py-2 text-sm" onclick="doSave()">保存全部</button>
+        <button type="button" class="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" onclick="doReset()">恢复初值</button>
+      </div>
+    </div>
+
+    <section data-panel="home" class="space-y-4">
+      <div class="grid md:grid-cols-3 gap-3">
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200"><div class="text-xs text-slate-500">可维护模块</div><div class="text-2xl font-semibold mt-1" id="kpiMods">—</div></div>
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200"><div class="text-xs text-slate-500">上墙启用</div><div class="text-2xl font-semibold text-emerald-600 mt-1" id="kpiOn">—</div></div>
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200"><div class="text-xs text-slate-500">数据截至</div><div class="text-lg font-semibold mt-2" id="kpiAsof">—</div></div>
+      </div>
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <h2 class="font-semibold mb-3">全局</h2>
+        <div class="grid md:grid-cols-2 gap-3 text-sm">
+          <label class="flex items-center justify-between gap-3 rounded-xl border border-slate-200 px-3 py-3">
+            <span><b>演示数据总开关</b><div class="text-xs text-slate-500">关闭后列表仍可维护，大屏按正式源策略展示</div></span>
+            <input id="gDemo" type="checkbox" class="w-4 h-4" onchange="syncGlobal()">
+          </label>
+          <div class="rounded-xl border border-slate-200 px-3 py-3">
+            <div class="text-xs text-slate-500 mb-1">数据截至</div>
+            <input id="gAsof" type="datetime-local" class="w-full rounded-lg border border-slate-300 px-2 py-1.5" onchange="syncGlobal()">
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="px-4 py-3 border-b font-semibold text-sm">模块清单</div>
+        <table class="w-full text-sm"><thead class="bg-slate-50 text-xs text-slate-600"><tr>
+          <th class="text-left px-3 py-2">模块</th><th class="text-left px-3 py-2">记录数</th><th class="text-left px-3 py-2">上墙</th><th class="text-left px-3 py-2">操作</th>
+        </tr></thead><tbody id="homeBody"></tbody></table>
+      </div>
+    </section>
+
+
+    <section data-panel="biz" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div>
+            <h2 class="font-semibold">调度业务</h2>
+            <p class="text-xs text-slate-500 mt-1">业务汇总指标</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <label class="text-xs flex items-center gap-2"><input id="bizOnWall" type="checkbox" onchange="toggleWall('biz')"> 上墙启用</label>
+            <button type="button" class="rounded-xl bg-sky-700 text-white px-3 py-1.5 text-sm" onclick="addRow('biz')">新增</button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-xs text-slate-600" id="bizHead"></thead>
+            <tbody id="bizBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+
+    <section data-panel="duty" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div>
+            <h2 class="font-semibold">值守与响应</h2>
+            <p class="text-xs text-slate-500 mt-1">当班岗位</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <label class="text-xs flex items-center gap-2"><input id="dutyOnWall" type="checkbox" onchange="toggleWall('duty')"> 上墙启用</label>
+            <button type="button" class="rounded-xl bg-sky-700 text-white px-3 py-1.5 text-sm" onclick="addRow('duty')">新增</button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-xs text-slate-600" id="dutyHead"></thead>
+            <tbody id="dutyBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+
+    <section data-panel="event" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div>
+            <h2 class="font-semibold">重点事件监控</h2>
+            <p class="text-xs text-slate-500 mt-1">在办事件</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <label class="text-xs flex items-center gap-2"><input id="eventOnWall" type="checkbox" onchange="toggleWall('event')"> 上墙启用</label>
+            <button type="button" class="rounded-xl bg-sky-700 text-white px-3 py-1.5 text-sm" onclick="addRow('event')">新增</button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-xs text-slate-600" id="eventHead"></thead>
+            <tbody id="eventBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+
+    <section data-panel="review" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div>
+            <h2 class="font-semibold">事件回顾</h2>
+            <p class="text-xs text-slate-500 mt-1">已闭环事件</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <label class="text-xs flex items-center gap-2"><input id="reviewOnWall" type="checkbox" onchange="toggleWall('review')"> 上墙启用</label>
+            <button type="button" class="rounded-xl bg-sky-700 text-white px-3 py-1.5 text-sm" onclick="addRow('review')">新增</button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-xs text-slate-600" id="reviewHead"></thead>
+            <tbody id="reviewBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+
+    <section data-panel="res" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div>
+            <h2 class="font-semibold">应急资源台账</h2>
+            <p class="text-xs text-slate-500 mt-1">资源分类汇总</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <label class="text-xs flex items-center gap-2"><input id="resOnWall" type="checkbox" onchange="toggleWall('res')"> 上墙启用</label>
+            <button type="button" class="rounded-xl bg-sky-700 text-white px-3 py-1.5 text-sm" onclick="addRow('res')">新增</button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-xs text-slate-600" id="resHead"></thead>
+            <tbody id="resBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+
+    <section data-panel="point" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div>
+            <h2 class="font-semibold">应急物资点</h2>
+            <p class="text-xs text-slate-500 mt-1">地图点位 R01–R03</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <label class="text-xs flex items-center gap-2"><input id="pointOnWall" type="checkbox" onchange="toggleWall('point')"> 上墙启用</label>
+            <button type="button" class="rounded-xl bg-sky-700 text-white px-3 py-1.5 text-sm" onclick="addRow('point')">新增</button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-xs text-slate-600" id="pointHead"></thead>
+            <tbody id="pointBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+
+    <section data-panel="video" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div>
+            <h2 class="font-semibold">安全监控</h2>
+            <p class="text-xs text-slate-500 mt-1">视频通道</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <label class="text-xs flex items-center gap-2"><input id="videoOnWall" type="checkbox" onchange="toggleWall('video')"> 上墙启用</label>
+            <button type="button" class="rounded-xl bg-sky-700 text-white px-3 py-1.5 text-sm" onclick="addRow('video')">新增</button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-xs text-slate-600" id="videoHead"></thead>
+            <tbody id="videoBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+<script src="admin_common.js"></script>
+<script>
+
+const STORE = 'hn_admin_dispatch_v1';
+const META = {"home": {"title": "总控", "desc": "本专题大屏数据维护入口；支持新增/查看/编辑/删除。"}, "biz": {"title": "调度业务", "desc": "业务汇总指标"}, "duty": {"title": "值守与响应", "desc": "当班岗位"}, "event": {"title": "重点事件监控", "desc": "在办事件"}, "review": {"title": "事件回顾", "desc": "已闭环事件"}, "res": {"title": "应急资源台账", "desc": "资源分类汇总"}, "point": {"title": "应急物资点", "desc": "地图点位 R01–R03"}, "video": {"title": "安全监控", "desc": "视频通道"}};
+const SCHEMAS = {"biz": {"cols": [["name", "指标"], ["value", "数值"], ["on", "上墙"]], "fields": [["name", "指标", "text"], ["value", "数值", "text"], ["on", "上墙", "checkbox"]], "derived_rate": false}, "duty": {"cols": [["name", "岗位"], ["status", "状态"], ["note", "说明"], ["on", "上墙"]], "fields": [["name", "岗位", "text"], ["status", "状态", "select", ["在岗", "离岗", "交接中"]], ["note", "说明", "text"], ["on", "上墙", "checkbox"]], "derived_rate": false}, "event": {"cols": [["code", "编号"], ["title", "标题"], ["level", "级别"], ["status", "状态"], ["on", "上墙"]], "fields": [["code", "编号", "text"], ["title", "标题", "text"], ["level", "级别", "select", ["一级", "二级", "三级"]], ["status", "状态", "select", ["待响应", "处置中", "已闭环"]], ["pos", "位置", "text"], ["on", "上墙", "checkbox"]], "derived_rate": false}, "review": {"cols": [["code", "编号"], ["title", "标题"], ["closed", "闭环时间"], ["on", "上墙"]], "fields": [["code", "编号", "text"], ["title", "标题", "text"], ["closed", "闭环时间", "text"], ["on", "上墙", "checkbox"]], "derived_rate": false}, "res": {"cols": [["name", "类别"], ["qty", "数量"], ["unit", "单位"], ["status", "状态"], ["on", "上墙"]], "fields": [["name", "类别", "text"], ["qty", "数量", "number"], ["unit", "单位", "text"], ["status", "状态", "select", ["可用", "占用", "维护中"]], ["on", "上墙", "checkbox"]], "derived_rate": false}, "point": {"cols": [["code", "编码"], ["name", "名称"], ["cap", "能力"], ["on", "上墙"]], "fields": [["code", "编码", "text"], ["name", "名称", "text"], ["cap", "能力", "text"], ["on", "上墙", "checkbox"]], "derived_rate": false}, "video": {"cols": [["code", "机位"], ["name", "名称"], ["status", "状态"], ["on", "上墙"]], "fields": [["code", "机位", "text"], ["name", "名称", "text"], ["status", "状态", "select", ["在线", "离线", "故障"]], ["on", "上墙", "checkbox"]], "derived_rate": false}};
+const DEFAULTS = {"global": {"demo": true, "asof": ""}, "walls": {"biz": true, "duty": true, "event": true, "review": true, "res": true, "point": true, "video": true}, "rows": {"biz": [{"id": "b1", "name": "在办事件", "value": "2", "on": true}, {"id": "b2", "name": "本月已闭环", "value": "11", "on": true}], "duty": [{"id": "d1", "name": "调度值班", "status": "在岗", "note": "当班", "on": true}, {"id": "d2", "name": "应急值班", "status": "在岗", "note": "当班", "on": true}], "event": [{"id": "e1", "code": "S004", "title": "2#泊位前沿疑似油污", "level": "一级", "status": "处置中", "pos": "2#泊位", "on": true}, {"id": "e2", "code": "S001", "title": "1#仓库烟感告警", "level": "二级", "status": "待响应", "pos": "1#仓库", "on": true}], "review": [{"id": "r1", "code": "H021", "title": "联络道车辆剐蹭", "closed": "11-16 18:20", "on": true}, {"id": "r2", "code": "H020", "title": "输送设备临时停机", "closed": "11-15 21:05", "on": true}], "res": [{"id": "rs1", "name": "救援车辆", "qty": 4, "unit": "辆", "status": "可用", "on": true}, {"id": "rs2", "name": "防汛物资", "qty": 12, "unit": "套", "status": "可用", "on": true}], "point": [{"id": "p1", "code": "R01", "name": "综合保障区", "cap": "人员/医疗/通信", "on": true}, {"id": "p2", "code": "R02", "name": "物资库", "cap": "防汛/抢修", "on": true}, {"id": "p3", "code": "R03", "name": "岸侧保障点", "cap": "救援车/水侧物资", "on": true}], "video": [{"id": "v1", "code": "CAM-01", "name": "1#泊位前沿", "status": "在线", "on": true}, {"id": "v2", "code": "CAM-03", "name": "2#泊位", "status": "离线", "on": true}]}};
+let state = null;
+let dirty = false;
+
+function markDirty(){ dirty = true; }
+
+function doSave(){
+  AdminKit.save(STORE, state);
+  dirty = false;
+  refreshHome();
+}
+function doReset(){
+  if(!confirm('恢复演示初值？')) return;
+  state = AdminKit.clone(DEFAULTS);
+  if(!state.global.asof) state.global.asof = AdminKit.nowAsof();
+  AdminKit.save(STORE, state);
+  bindAll();
+  dirty = false;
+}
+function syncGlobal(){
+  state.global.demo = document.getElementById('gDemo').checked;
+  state.global.asof = document.getElementById('gAsof').value;
+  document.getElementById('modeBadge').textContent = state.global.demo ? '演示数据 · 开' : '演示数据 · 关';
+  markDirty(); refreshHome();
+}
+function toggleWall(key){
+  state.walls[key] = document.getElementById(key+'OnWall').checked;
+  markDirty(); refreshHome();
+}
+
+function refreshHome(){
+  const keys = Object.keys(SCHEMAS);
+  document.getElementById('kpiMods').textContent = keys.length;
+  document.getElementById('kpiOn').textContent = keys.filter(k=>state.walls[k]).length;
+  document.getElementById('kpiAsof').textContent = (state.global.asof||'—').replace('T',' ');
+  document.getElementById('homeBody').innerHTML = keys.map(k=>{
+    const n = (state.rows[k]||[]).length;
+    const on = state.walls[k];
+    return `<tr class="border-t border-slate-100"><td class="px-3 py-2 font-medium">${META[k].title}</td>
+      <td class="px-3 py-2">${n}</td>
+      <td class="px-3 py-2 ${on?'text-emerald-600':'text-slate-400'}">${on?'启用':'停用'}</td>
+      <td class="px-3 py-2"><button class="text-sky-700" onclick="AdminKit.showPanel('${k}', META)">维护</button></td></tr>`;
+  }).join('');
+}
+
+function renderModule(key){
+  const sch = SCHEMAS[key];
+  const cols = sch.cols;
+  document.getElementById(key+'OnWall').checked = !!state.walls[key];
+  document.getElementById(key+'Head').innerHTML = `<tr>${cols.map(c=>`<th class="text-left px-3 py-2">${c[1]}</th>`).join('')}<th class="text-left px-3 py-2">操作</th></tr>`;
+  const rows = state.rows[key] || [];
+  document.getElementById(key+'Body').innerHTML = rows.map(r=>{
+    const tds = cols.map(([k])=>{
+      let v = r[k];
+      if(k==='on') v = r.on ? '是' : '否';
+      if(sch.derived_rate && k==='rate'){
+        v = r.plan ? ((r.actual/r.plan*100).toFixed(1)+'%') : '—';
+      }
+      return `<td class="px-3 py-2">${v==null?'—':v}</td>`;
+    }).join('');
+    return `<tr class="border-t">${tds}<td class="px-3 py-2 space-x-2 whitespace-nowrap">
+      <button class="text-slate-600" onclick="viewRow('${key}','${r.id}')">查看</button>
+      <button class="text-sky-700" onclick="editRow('${key}','${r.id}')">编辑</button>
+      <button class="text-rose-600" onclick="delRow('${key}','${r.id}')">删除</button>
+    </td></tr>`;
+  }).join('') || `<tr><td class="px-3 py-6 text-slate-400" colspan="${cols.length+1}">暂无数据，请点击新增</td></tr>`;
+}
+
+function renderAll(){
+  Object.keys(SCHEMAS).forEach(renderModule);
+  refreshHome();
+}
+
+function buildForm(key, row, viewOnly){
+  const fields = SCHEMAS[key].fields;
+  return fields.map(f=>{
+    const [id,label,type,opts] = f;
+    const raw = row ? row[id] : (type==='checkbox'?true:'');
+    if(type==='select'){
+      return AdminKit.field(label, 'f_'+id, {value: raw||opts[0], options: opts, disabled: viewOnly}, 'select');
+    }
+    if(type==='checkbox'){
+      return `<label class="text-xs text-slate-500 flex items-center gap-2"><input id="f_${id}" type="checkbox" ${raw?'checked':''} ${viewOnly?'disabled':''}> ${label}</label>`;
+    }
+    return AdminKit.field(label, 'f_'+id, {value: raw, disabled: viewOnly}, type==='number'?'number':'text');
+  }).join('');
+}
+
+function readForm(key){
+  const obj = {};
+  SCHEMAS[key].fields.forEach(f=>{
+    const [id,,type] = f;
+    obj[id] = AdminKit.val('f_'+id);
+  });
+  return obj;
+}
+
+function addRow(key){
+  AdminKit.openModal('新增 · '+META[key].title, buildForm(key, null, false), ()=>{
+    const obj = readForm(key);
+    if(SCHEMAS[key].fields[0] && !String(obj[SCHEMAS[key].fields[0][0]]||'').trim() && SCHEMAS[key].fields[0][2]!=='checkbox'){
+      AdminKit.toast('请填写必填项'); return false;
+    }
+    obj.id = AdminKit.uid(key[0]);
+    if(obj.on === '') obj.on = true;
+    state.rows[key].unshift(obj);
+    markDirty(); renderModule(key); refreshHome(); return true;
+  });
+}
+function editRow(key, id){
+  const row = state.rows[key].find(x=>x.id===id);
+  if(!row) return;
+  AdminKit.openModal('编辑 · '+META[key].title, buildForm(key, row, false), ()=>{
+    const obj = readForm(key);
+    Object.assign(row, obj);
+    markDirty(); renderModule(key); refreshHome(); return true;
+  });
+}
+function viewRow(key, id){
+  const row = state.rows[key].find(x=>x.id===id);
+  if(!row) return;
+  AdminKit.openModal('查看 · '+META[key].title, buildForm(key, row, true), null, {viewOnly:true});
+}
+function delRow(key, id){
+  if(!confirm('确认删除该条数据？')) return;
+  state.rows[key] = state.rows[key].filter(x=>x.id!==id);
+  markDirty(); renderModule(key); refreshHome();
+}
+
+function bindAll(){
+  document.getElementById('gDemo').checked = !!state.global.demo;
+  document.getElementById('gAsof').value = state.global.asof || '';
+  document.getElementById('modeBadge').textContent = state.global.demo ? '演示数据 · 开' : '演示数据 · 关';
+  renderAll();
+}
+
+state = AdminKit.load(STORE, DEFAULTS);
+if(!state.global.asof) state.global.asof = AdminKit.nowAsof();
+AdminKit.ensureModal();
+AdminKit.bindNav(META);
+bindAll();
+const init = (location.hash||'#home').replace('#','');
+AdminKit.showPanel(META[init]?init:'home', META);
+window.addEventListener('beforeunload', e=>{ if(dirty){ e.preventDefault(); e.returnValue=''; } });
+
+</script>
+</body>
+</html>

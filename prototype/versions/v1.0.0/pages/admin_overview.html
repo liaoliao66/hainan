@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>港区概览 · 管理后台 · v1.0.0</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  [data-panel].hidden{display:none!important}
+  .toast{position:fixed;right:20px;bottom:20px;z-index:80;background:#0f172a;color:#fff;padding:10px 14px;border-radius:10px;font-size:13px;opacity:0;transform:translateY(8px);transition:.2s}
+  .toast.show{opacity:1;transform:none}
+  .modal-mask{position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:60;display:none;align-items:center;justify-content:center;padding:16px}
+  .modal-mask.show{display:flex}
+  input:disabled,select:disabled,textarea:disabled{background:#f8fafc;color:#64748b}
+</style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex">
+<aside class="w-64 shrink-0 bg-slate-800 text-slate-100 min-h-screen p-4 flex flex-col sticky top-0 h-screen">
+  <div class="mb-5">
+    <div class="text-[11px] text-slate-400">海南金牌港 · 管理后台</div>
+    <div class="text-lg font-semibold mt-1">港区概览配置</div>
+    <div class="text-[11px] text-slate-400 mt-1">对齐大屏模块 · 无权限矩阵</div>
+  </div>
+  <nav id="sideNav" class="space-y-1 text-sm flex-1 overflow-auto">
+    <a href="#home" data-nav="home" class="nav flex items-center gap-2 rounded-xl px-3 py-2 bg-slate-700 text-white"><i class="fa-solid fa-gauge w-4 text-center"></i><span>概览总控</span></a>
+    <div class="text-[11px] text-slate-500 px-3 pt-3 pb-1">大屏对应模块</div>
+    <a href="#throughput" data-nav="throughput" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-chart-simple w-4 text-center"></i><span>吞吐量</span></a>
+    <a href="#cargo" data-nav="cargo" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-pie-chart w-4 text-center"></i><span>当年货类分布</span></a>
+    <a href="#customer" data-nav="customer" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-ranking-star w-4 text-center"></i><span>当年客户排行</span></a>
+    <a href="#resource" data-nav="resource" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-boxes-stacked w-4 text-center"></i><span>资源占用</span></a>
+    <a href="#berth" data-nav="berth" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-ship w-4 text-center"></i><span>正在作业</span></a>
+    <a href="#equipment" data-nav="equipment" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-gears w-4 text-center"></i><span>设备信息</span></a>
+    <a href="#alert" data-nav="alert" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-bell w-4 text-center"></i><span>未闭环告警</span></a>
+    <a href="#weather" data-nav="weather" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-cloud-sun w-4 text-center"></i><span>今日气象</span></a>
+  </nav>
+  <div class="space-y-2 text-xs text-slate-400 mt-3">
+    <a class="hover:text-white block" href="pc_wall_command_screen.html" target="_blank">打开港区概览大屏</a>
+    <a class="hover:text-white block" href="../index.html">返回版本首页</a>
+  </div>
+</aside>
+
+<main class="flex-1 min-w-0 p-5 md:p-6 overflow-auto">
+  <div class="max-w-[1180px] mx-auto">
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+      <div>
+        <div class="text-xs text-slate-400">管理后台 / 港区概览</div>
+        <h1 id="pageTitle" class="text-2xl font-semibold mt-1">概览总控</h1>
+        <p id="pageDesc" class="text-sm text-slate-500 mt-1">演示数据维护 + 正式目标/容量/上墙开关。大屏只读取数。</p>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <span id="modeBadge" class="text-xs px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200">演示数据 · 开</span>
+        <button type="button" class="rounded-xl bg-slate-800 text-white px-3 py-2 text-sm" onclick="saveAll()">保存全部</button>
+        <button type="button" class="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" onclick="resetDemo()">恢复演示初值</button>
+      </div>
+    </div>
+
+    <!-- 总控 -->
+    <section data-panel="home" class="space-y-4">
+      <div class="grid md:grid-cols-4 gap-3">
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200"><div class="text-xs text-slate-500">对应大屏模块</div><div class="text-2xl font-semibold mt-1">8</div></div>
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200"><div class="text-xs text-slate-500">上墙启用</div><div class="text-2xl font-semibold text-emerald-600 mt-1" id="kpiOnWall">8</div></div>
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200"><div class="text-xs text-slate-500">未闭环告警</div><div class="text-2xl font-semibold text-rose-600 mt-1" id="kpiAlert">3</div></div>
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200"><div class="text-xs text-slate-500">数据截至</div><div class="text-lg font-semibold mt-2" id="kpiAsof">—</div></div>
+      </div>
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <h2 class="font-semibold mb-3">全局开关（演示 + 正式配置）</h2>
+        <div class="grid md:grid-cols-2 gap-4 text-sm">
+          <label class="flex items-center justify-between gap-3 rounded-xl border border-slate-200 px-3 py-3">
+            <span><b>演示数据总开关</b><br><span class="text-slate-500 text-xs">关闭后，大屏缺接口模块显示「—」，不再用演示数</span></span>
+            <input id="gDemo" type="checkbox" class="w-4 h-4" onchange="onGlobalChange()">
+          </label>
+          <label class="flex items-center justify-between gap-3 rounded-xl border border-slate-200 px-3 py-3">
+            <span><b>大屏显示「演示数据」角标</b><br><span class="text-slate-500 text-xs">参观讲解时建议开启</span></span>
+            <input id="gBadge" type="checkbox" class="w-4 h-4" onchange="onGlobalChange()">
+          </label>
+          <div class="rounded-xl border border-slate-200 px-3 py-3">
+            <div class="text-xs text-slate-500 mb-1">数据截至（展示用）</div>
+            <input id="gAsof" type="datetime-local" class="w-full rounded-lg border border-slate-300 px-2 py-1.5" onchange="onGlobalChange()">
+          </div>
+          <div class="rounded-xl border border-slate-200 px-3 py-3">
+            <div class="text-xs text-slate-500 mb-1">正式源说明（只读备忘）</div>
+            <input id="gFormalNote" type="text" class="w-full rounded-lg border border-slate-300 px-2 py-1.5" placeholder="如：吞吐实际接码头生产，目标后台配置" onchange="onGlobalChange()">
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="px-4 py-3 border-b border-slate-100 font-semibold text-sm">模块与大屏对应（点击进入维护）</div>
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 text-xs text-slate-600"><tr>
+            <th class="text-left px-3 py-2">后台模块</th><th class="text-left px-3 py-2">大屏位置</th><th class="text-left px-3 py-2">上墙</th><th class="text-left px-3 py-2">数据模式</th><th class="text-left px-3 py-2">操作</th>
+          </tr></thead>
+          <tbody id="moduleMapBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 吞吐量 -->
+    <section data-panel="throughput" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="font-semibold">吞吐量 · 年/季/月</h2>
+          <label class="text-xs flex items-center gap-2"><input id="thOnWall" type="checkbox" onchange="markDirty()"> 上墙启用</label>
+        </div>
+        <p class="text-xs text-slate-500 mb-3">正式：实际可接码头生产；目标为后台正式配置。演示：实际/目标均可改。</p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-xs text-slate-600"><tr>
+              <th class="text-left px-3 py-2">周期</th><th class="text-left px-3 py-2">实际（万吨）</th><th class="text-left px-3 py-2">目标（万吨）</th><th class="text-left px-3 py-2">完成率</th><th class="text-left px-3 py-2">实际来源</th>
+            </tr></thead>
+            <tbody>
+              <tr class="border-t"><td class="px-3 py-2">年</td><td class="px-3 py-2"><input id="thYAct" type="number" step="0.1" class="w-28 rounded border px-2 py-1" oninput="recalcTh()"></td><td class="px-3 py-2"><input id="thYTgt" type="number" step="0.1" class="w-28 rounded border px-2 py-1" oninput="recalcTh()"></td><td class="px-3 py-2" id="thYRate">—</td><td class="px-3 py-2"><select id="thYSrc" class="rounded border px-2 py-1" onchange="markDirty()"><option value="demo">演示</option><option value="formal">正式接口</option></select></td></tr>
+              <tr class="border-t"><td class="px-3 py-2">季</td><td class="px-3 py-2"><input id="thQAct" type="number" step="0.1" class="w-28 rounded border px-2 py-1" oninput="recalcTh()"></td><td class="px-3 py-2"><input id="thQTgt" type="number" step="0.1" class="w-28 rounded border px-2 py-1" oninput="recalcTh()"></td><td class="px-3 py-2" id="thQRate">—</td><td class="px-3 py-2"><select id="thQSrc" class="rounded border px-2 py-1" onchange="markDirty()"><option value="demo">演示</option><option value="formal">正式接口</option></select></td></tr>
+              <tr class="border-t"><td class="px-3 py-2">月</td><td class="px-3 py-2"><input id="thMAct" type="number" step="0.1" class="w-28 rounded border px-2 py-1" oninput="recalcTh()"></td><td class="px-3 py-2"><input id="thMTgt" type="number" step="0.1" class="w-28 rounded border px-2 py-1" oninput="recalcTh()"></td><td class="px-3 py-2" id="thMRate">—</td><td class="px-3 py-2"><select id="thMSrc" class="rounded border px-2 py-1" onchange="markDirty()"><option value="demo">演示</option><option value="formal">正式接口</option></select></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 货类 -->
+    <section data-panel="cargo" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <h2 class="font-semibold">当年货类分布</h2>
+          <div class="flex items-center gap-3">
+            <label class="text-xs flex items-center gap-2"><input id="cgOnWall" type="checkbox" onchange="markDirty()"> 上墙启用</label>
+            <button type="button" class="rounded-xl bg-sky-700 text-white px-3 py-1.5 text-sm" onclick="openCargoModal()">新增货类</button>
+          </div>
+        </div>
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 text-xs text-slate-600"><tr>
+            <th class="text-left px-3 py-2">货类</th><th class="text-left px-3 py-2">万吨</th><th class="text-left px-3 py-2">占比</th><th class="text-left px-3 py-2">排序</th><th class="text-left px-3 py-2">上墙</th><th class="text-left px-3 py-2">操作</th>
+          </tr></thead>
+          <tbody id="cargoBody"></tbody>
+        </table>
+        <div class="text-xs text-slate-500 mt-2">合计 <span id="cargoSum">0</span> 万吨；占比按合计自动重算。</div>
+      </div>
+    </section>
+
+    <!-- 客户 -->
+    <section data-panel="customer" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <h2 class="font-semibold">当年客户排行 Top5</h2>
+          <div class="flex items-center gap-3">
+            <label class="text-xs flex items-center gap-2"><input id="cuOnWall" type="checkbox" onchange="markDirty()"> 上墙启用</label>
+            <button type="button" class="rounded-xl bg-sky-700 text-white px-3 py-1.5 text-sm" onclick="openCustomerModal()">新增客户</button>
+          </div>
+        </div>
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 text-xs text-slate-600"><tr>
+            <th class="text-left px-3 py-2">排名</th><th class="text-left px-3 py-2">客户</th><th class="text-left px-3 py-2">万吨</th><th class="text-left px-3 py-2">上墙</th><th class="text-left px-3 py-2">操作</th>
+          </tr></thead>
+          <tbody id="customerBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 资源占用 -->
+    <section data-panel="resource" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="font-semibold">资源占用</h2>
+          <label class="text-xs flex items-center gap-2"><input id="rsOnWall" type="checkbox" onchange="markDirty()"> 上墙启用</label>
+        </div>
+        <div class="grid md:grid-cols-2 gap-4 text-sm mb-4">
+          <div class="rounded-xl border border-slate-200 p-3">
+            <div class="font-medium mb-2">车辆</div>
+            <div class="grid grid-cols-2 gap-2">
+              <label class="text-xs text-slate-500">待进港<input id="rsWaitIn" type="number" class="mt-1 w-full rounded border px-2 py-1.5 text-sm" onchange="markDirty()"></label>
+              <label class="text-xs text-slate-500">已进港<input id="rsInPort" type="number" class="mt-1 w-full rounded border px-2 py-1.5 text-sm" onchange="markDirty()"></label>
+            </div>
+          </div>
+          <div class="rounded-xl border border-slate-200 p-3">
+            <div class="font-medium mb-2">船舶</div>
+            <div class="grid grid-cols-2 gap-2">
+              <label class="text-xs text-slate-500">待泊<input id="rsWaitBerth" type="number" class="mt-1 w-full rounded border px-2 py-1.5 text-sm" onchange="markDirty()"></label>
+              <label class="text-xs text-slate-500">锚地<input id="rsAnchor" type="number" class="mt-1 w-full rounded border px-2 py-1.5 text-sm" onchange="markDirty()"></label>
+            </div>
+          </div>
+        </div>
+        <div class="grid md:grid-cols-3 gap-3 text-sm mb-3">
+          <label class="text-xs text-slate-500">关注线 %<input id="rsWarn" type="number" class="mt-1 w-full rounded border px-2 py-1.5 text-sm" oninput="renderYards()"></label>
+          <label class="text-xs text-slate-500">预警线 %<input id="rsAlarm" type="number" class="mt-1 w-full rounded border px-2 py-1.5 text-sm" oninput="renderYards()"></label>
+          <div class="text-xs text-slate-500 flex items-end">正式配置：容量与色阶；库存可演示维护</div>
+        </div>
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 text-xs text-slate-600"><tr>
+            <th class="text-left px-3 py-2">堆场</th><th class="text-left px-3 py-2">库存（万吨）</th><th class="text-left px-3 py-2">容量（万吨）</th><th class="text-left px-3 py-2">利用率</th><th class="text-left px-3 py-2">色阶</th>
+          </tr></thead>
+          <tbody id="yardBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 正在作业 -->
+    <section data-panel="berth" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <h2 class="font-semibold">正在作业 · 泊位卡</h2>
+          <label class="text-xs flex items-center gap-2"><input id="bhOnWall" type="checkbox" onchange="markDirty()"> 上墙启用</label>
+        </div>
+        <div class="grid md:grid-cols-2 gap-4" id="berthCards"></div>
+      </div>
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="font-semibold">待泊 / 锚地列表</h2>
+          <button type="button" class="rounded-xl bg-sky-700 text-white px-3 py-1.5 text-sm" onclick="openWaitModal()">新增船舶</button>
+        </div>
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 text-xs text-slate-600"><tr>
+            <th class="text-left px-3 py-2">船名</th><th class="text-left px-3 py-2">状态</th><th class="text-left px-3 py-2">货种</th><th class="text-left px-3 py-2">疏运</th><th class="text-left px-3 py-2">操作</th>
+          </tr></thead>
+          <tbody id="waitBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 设备信息 -->
+    <section data-panel="equipment" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="font-semibold">设备信息摘要</h2>
+          <label class="text-xs flex items-center gap-2"><input id="eqOnWall" type="checkbox" onchange="markDirty()"> 上墙启用</label>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm mb-4">
+          <label class="text-xs text-slate-500">设备总数<input id="eqTotal" type="number" class="mt-1 w-full rounded border px-2 py-1.5 text-sm" oninput="syncEqSum()"></label>
+          <label class="text-xs text-slate-500">运行<input id="eqRun" type="number" class="mt-1 w-full rounded border px-2 py-1.5 text-sm" oninput="syncEqSum()"></label>
+          <label class="text-xs text-slate-500">关注<input id="eqWatch" type="number" class="mt-1 w-full rounded border px-2 py-1.5 text-sm" oninput="syncEqSum()"></label>
+          <label class="text-xs text-slate-500">停机<input id="eqStop" type="number" class="mt-1 w-full rounded border px-2 py-1.5 text-sm" oninput="syncEqSum()"></label>
+        </div>
+        <div class="text-xs text-slate-500 mb-3">运行+关注+停机 = <span id="eqSumCheck">0</span>（应等于总数）</div>
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 text-xs text-slate-600"><tr>
+            <th class="text-left px-3 py-2">分组</th><th class="text-left px-3 py-2">共</th><th class="text-left px-3 py-2">运行</th><th class="text-left px-3 py-2">关注</th><th class="text-left px-3 py-2">停机</th>
+          </tr></thead>
+          <tbody id="eqGroupBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 告警 -->
+    <section data-panel="alert" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <h2 class="font-semibold">未闭环告警</h2>
+          <div class="flex items-center gap-3">
+            <label class="text-xs flex items-center gap-2"><input id="alOnWall" type="checkbox" onchange="markDirty()"> 上墙启用</label>
+            <button type="button" class="rounded-xl bg-sky-700 text-white px-3 py-1.5 text-sm" onclick="openAlertModal()">新增告警</button>
+          </div>
+        </div>
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 text-xs text-slate-600"><tr>
+            <th class="text-left px-3 py-2">编号</th><th class="text-left px-3 py-2">标题</th><th class="text-left px-3 py-2">等级</th><th class="text-left px-3 py-2">状态</th><th class="text-left px-3 py-2">上墙</th><th class="text-left px-3 py-2">操作</th>
+          </tr></thead>
+          <tbody id="alertBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 气象 -->
+    <section data-panel="weather" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="font-semibold">今日通航气象</h2>
+          <label class="text-xs flex items-center gap-2"><input id="wxOnWall" type="checkbox" onchange="markDirty()"> 上墙启用</label>
+        </div>
+        <div class="grid md:grid-cols-2 gap-3 text-sm">
+          <label class="text-xs text-slate-500">天气描述<input id="wxDesc" type="text" class="mt-1 w-full rounded border px-2 py-1.5 text-sm" onchange="markDirty()"></label>
+          <label class="text-xs text-slate-500">风力风向<input id="wxWind" type="text" class="mt-1 w-full rounded border px-2 py-1.5 text-sm" onchange="markDirty()"></label>
+          <label class="text-xs text-slate-500">最高温 ℃<input id="wxHigh" type="number" class="mt-1 w-full rounded border px-2 py-1.5 text-sm" onchange="markDirty()"></label>
+          <label class="text-xs text-slate-500">最低温 ℃<input id="wxLow" type="number" class="mt-1 w-full rounded border px-2 py-1.5 text-sm" onchange="markDirty()"></label>
+          <label class="text-xs text-slate-500 md:col-span-2">作业宜航提示
+            <select id="wxWork" class="mt-1 w-full rounded border px-2 py-1.5 text-sm" onchange="markDirty()">
+              <option>适宜作业</option><option>关注风力</option><option>限制作业</option><option>禁止作业</option>
+            </select>
+          </label>
+          <label class="text-xs text-slate-500 md:col-span-2">数据来源
+            <select id="wxSrc" class="mt-1 w-full rounded border px-2 py-1.5 text-sm" onchange="markDirty()">
+              <option value="demo">演示</option><option value="formal">正式气象源（待接入）</option>
+            </select>
+          </label>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- 通用弹窗 -->
+<div class="modal-mask" id="modal">
+  <div class="bg-white rounded-2xl w-full max-w-lg shadow-xl border border-slate-200">
+    <div class="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
+      <h3 class="font-semibold" id="modalTitle">编辑</h3>
+      <button type="button" class="text-slate-400 hover:text-slate-700" onclick="closeModal()">×</button>
+    </div>
+    <div class="p-4 space-y-3 text-sm" id="modalBody"></div>
+    <div class="px-4 py-3 border-t border-slate-100 flex justify-end gap-2">
+      <button type="button" class="rounded-xl border px-3 py-1.5" onclick="closeModal()">取消</button>
+      <button type="button" class="rounded-xl bg-sky-700 text-white px-3 py-1.5" id="modalOk">确定</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const STORE_KEY = 'hn_admin_overview_v1';
+const CUSTOMS = ['未申报','已申报','查验','放行','异常'];
+const WAIT_STATUS = ['预报','锚地','待靠','已排泊'];
+const HAUL = ['皮带直送','汽车','—'];
+
+const DEFAULTS = {
+  global: { demo: true, badge: true, asof: '', formalNote: '吞吐实际接码头生产；目标/容量/上墙为本后台正式配置；通关与气象可演示' },
+  throughput: { onWall: true, year:{act:186,tgt:700,src:'demo'}, quarter:{act:48.5,tgt:175,src:'demo'}, month:{act:15.2,tgt:58.3,src:'demo'} },
+  cargo: { onWall: true, rows: [
+    { id:'c1', name:'水泥熟料', ton:67, on:true, sort:1 },
+    { id:'c2', name:'河砂', ton:52.1, on:true, sort:2 },
+    { id:'c3', name:'石英砂', ton:33.5, on:true, sort:3 },
+    { id:'c4', name:'钢铁件杂', ton:33.4, on:true, sort:4 }
+  ]},
+  customer: { onWall: true, rows: [
+    { id:'u1', name:'海控物流', ton:42.6, on:true },
+    { id:'u2', name:'临高建材', ton:31.2, on:true },
+    { id:'u3', name:'琼北砂石', ton:28.4, on:true },
+    { id:'u4', name:'西部水泥', ton:22.1, on:true },
+    { id:'u5', name:'海湾贸易', ton:18.7, on:true }
+  ]},
+  resource: {
+    onWall: true, waitIn:18, inPort:186, waitBerth:1, anchor:1, warn:70, alarm:90,
+    yards: [
+      { id:'y1', name:'散货堆场', stock:60.8, cap:80 },
+      { id:'y2', name:'件杂堆场', stock:8.1, cap:15 },
+      { id:'y3', name:'仓库', stock:3.8, cap:10 }
+    ]
+  },
+  berth: {
+    onWall: true,
+    cards: [
+      { id:'b1', berth:'1# 泊位', status:'作业中', ship:'海建68', cargo:'水泥熟料', progress:82, haul:'皮带直送', customs:'放行' },
+      { id:'b2', berth:'2# 泊位', status:'作业中', ship:'金港5', cargo:'河砂', progress:46, haul:'皮带直送', customs:'查验' }
+    ],
+    waits: [
+      { id:'w1', ship:'远航11', status:'待靠', cargo:'石英砂', haul:'汽车' },
+      { id:'w2', ship:'琼海9', status:'锚地', cargo:'钢铁件杂', haul:'汽车' }
+    ]
+  },
+  equipment: {
+    onWall: true, total:15, run:10, watch:3, stop:2,
+    groups: [
+      { id:'g1', name:'卸船机', total:2, run:1, watch:1, stop:0 },
+      { id:'g2', name:'输送系统', total:6, run:4, watch:1, stop:1 },
+      { id:'g3', name:'岸电与闸口', total:7, run:5, watch:1, stop:1 }
+    ]
+  },
+  alert: { onWall: true, rows: [
+    { id:'A001', title:'T2输送驱动轴承温升', level:'二级', status:'处理中', note:'关联设备主题 · 风险核查', on:true, time:'13:42' },
+    { id:'A002', title:'SC-02驱动故障', level:'一级', status:'待响应', note:'卸船环节受限', on:true, time:'12:18' },
+    { id:'A003', title:'CAM-03离线', level:'二级', status:'待响应', note:'2#泊位视频点失效', on:true, time:'11:05' }
+  ]},
+  weather: { onWall: true, desc:'多云', wind:'东北风 3级', high:28, low:22, work:'适宜作业', src:'demo' }
+};
+
+let state = null;
+let dirty = false;
+let modalCtx = null;
+
+function toast(m){
+  const t=document.getElementById('toast');
+  t.textContent=m; t.classList.add('show');
+  clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('show'),1800);
+}
+function uid(p){ return p + Math.random().toString(36).slice(2,8); }
+function pct(a,b){ if(!b) return '—'; return (a/b*100).toFixed(1)+'%'; }
+function markDirty(){ dirty=true; }
+function clone(o){ return JSON.parse(JSON.stringify(o)); }
+
+function loadState(){
+  try{
+    const raw=localStorage.getItem(STORE_KEY);
+    state = raw ? JSON.parse(raw) : clone(DEFAULTS);
+  }catch(e){ state=clone(DEFAULTS); }
+  if(!state.global.asof){
+    const n=new Date(); const p=x=>String(x).padStart(2,'0');
+    state.global.asof=`${n.getFullYear()}-${p(n.getMonth()+1)}-${p(n.getDate())}T${p(n.getHours())}:${p(n.getMinutes())}`;
+  }
+}
+
+function saveAll(){
+  collectFromDom();
+  localStorage.setItem(STORE_KEY, JSON.stringify(state));
+  dirty=false;
+  refreshHome();
+  toast('已保存到本地演示存储');
+}
+function resetDemo(){
+  if(!confirm('恢复演示初值？当前本地修改将清除。')) return;
+  state=clone(DEFAULTS);
+  localStorage.setItem(STORE_KEY, JSON.stringify(state));
+  bindAll();
+  dirty=false;
+  toast('已恢复演示初值');
+}
+
+function onGlobalChange(){
+  state.global.demo=document.getElementById('gDemo').checked;
+  state.global.badge=document.getElementById('gBadge').checked;
+  state.global.asof=document.getElementById('gAsof').value;
+  state.global.formalNote=document.getElementById('gFormalNote').value;
+  markDirty(); refreshHome();
+}
+
+const META={
+  home:{title:'概览总控',desc:'演示数据维护 + 正式目标/容量/上墙开关。大屏只读取数。'},
+  throughput:{title:'吞吐量',desc:'对应大屏左侧「吞吐量」年/季/月实际、目标与完成率。'},
+  cargo:{title:'当年货类分布',desc:'对应大屏左侧货类环图与清单。'},
+  customer:{title:'当年客户排行',desc:'对应大屏左侧客户 Top5。'},
+  resource:{title:'资源占用',desc:'对应大屏左侧车辆/船舶/堆场利用率。'},
+  berth:{title:'正在作业',desc:'对应大屏右侧泊位作业卡与待泊列表。'},
+  equipment:{title:'设备信息',desc:'对应大屏右侧设备摘要与分组。'},
+  alert:{title:'未闭环告警',desc:'对应大屏右侧未闭环告警列表。'},
+  weather:{title:'今日气象',desc:'对应大屏顶栏今日通航气象。'}
+};
+
+function showPanel(name){
+  document.querySelectorAll('[data-panel]').forEach(el=>el.classList.toggle('hidden', el.getAttribute('data-panel')!==name));
+  document.querySelectorAll('#sideNav .nav').forEach(a=>{
+    const on=a.getAttribute('data-nav')===name;
+    a.classList.toggle('bg-slate-700', on);
+    a.classList.toggle('text-white', on);
+    a.classList.toggle('text-slate-200', !on);
+  });
+  const m=META[name]||META.home;
+  document.getElementById('pageTitle').textContent=m.title;
+  document.getElementById('pageDesc').textContent=m.desc;
+  location.hash=name;
+}
+
+function refreshHome(){
+  const on=[state.throughput,state.cargo,state.customer,state.resource,state.berth,state.equipment,state.alert,state.weather].filter(x=>x.onWall).length;
+  document.getElementById('kpiOnWall').textContent=on;
+  document.getElementById('kpiAlert').textContent=state.alert.rows.filter(r=>r.on && r.status!=='已闭环').length;
+  document.getElementById('kpiAsof').textContent=(state.global.asof||'—').replace('T',' ');
+  const badge=document.getElementById('modeBadge');
+  if(state.global.demo){
+    badge.textContent='演示数据 · 开';
+    badge.className='text-xs px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200';
+  }else{
+    badge.textContent='演示数据 · 关';
+    badge.className='text-xs px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200';
+  }
+  const rows=[
+    ['吞吐量','左侧 KPI',state.throughput.onWall, state.throughput.year.src,'throughput'],
+    ['当年货类分布','左侧',state.cargo.onWall,'演示/维护','cargo'],
+    ['当年客户排行','左侧',state.customer.onWall,'演示/维护','customer'],
+    ['资源占用','左侧',state.resource.onWall,'演示+正式容量','resource'],
+    ['正在作业','右侧',state.berth.onWall,'演示/通关模拟','berth'],
+    ['设备信息','右侧',state.equipment.onWall,'演示摘要','equipment'],
+    ['未闭环告警','右侧',state.alert.onWall,'演示/可上墙','alert'],
+    ['今日气象','顶栏右侧',state.weather.onWall,state.weather.src==='demo'?'演示':'正式待接','weather']
+  ];
+  document.getElementById('moduleMapBody').innerHTML=rows.map(r=>`<tr class="border-t border-slate-100">
+    <td class="px-3 py-2 font-medium">${r[0]}</td><td class="px-3 py-2">${r[1]}</td>
+    <td class="px-3 py-2 ${r[2]?'text-emerald-600':'text-slate-400'}">${r[2]?'启用':'停用'}</td>
+    <td class="px-3 py-2">${r[3]}</td>
+    <td class="px-3 py-2"><button class="text-sky-700" onclick="showPanel('${r[4]}')">维护</button></td>
+  </tr>`).join('');
+}
+
+function recalcTh(){
+  const pairs=[['thYAct','thYTgt','thYRate'],['thQAct','thQTgt','thQRate'],['thMAct','thMTgt','thMRate']];
+  pairs.forEach(([a,b,r])=>{
+    const act=+document.getElementById(a).value, tgt=+document.getElementById(b).value;
+    document.getElementById(r).textContent=pct(act,tgt);
+  });
+  markDirty();
+}
+
+function renderCargo(){
+  const sum=state.cargo.rows.reduce((s,r)=>s+(+r.ton||0),0);
+  document.getElementById('cargoSum').textContent=sum.toFixed(1);
+  document.getElementById('cargoBody').innerHTML=state.cargo.rows.sort((a,b)=>a.sort-b.sort).map(r=>`<tr class="border-t">
+    <td class="px-3 py-2">${r.name}</td>
+    <td class="px-3 py-2"><input type="number" step="0.1" class="w-24 rounded border px-2 py-1" value="${r.ton}" onchange="updateCargo('${r.id}','ton',this.value)"></td>
+    <td class="px-3 py-2">${sum?((r.ton/sum*100).toFixed(0)+'%'):'—'}</td>
+    <td class="px-3 py-2"><input type="number" class="w-16 rounded border px-2 py-1" value="${r.sort}" onchange="updateCargo('${r.id}','sort',this.value)"></td>
+    <td class="px-3 py-2"><input type="checkbox" ${r.on?'checked':''} onchange="updateCargo('${r.id}','on',this.checked)"></td>
+    <td class="px-3 py-2"><button class="text-rose-600" onclick="delCargo('${r.id}')">删除</button></td>
+  </tr>`).join('');
+}
+function updateCargo(id,k,v){
+  const row=state.cargo.rows.find(x=>x.id===id); if(!row) return;
+  row[k]= k==='on'?v: (k==='name'?v: +v);
+  markDirty(); renderCargo();
+}
+function delCargo(id){ state.cargo.rows=state.cargo.rows.filter(x=>x.id!==id); markDirty(); renderCargo(); }
+function openCargoModal(){
+  openModal('新增货类', `
+    <label class="text-xs text-slate-500 block">货类名称<input id="mName" class="mt-1 w-full rounded border px-2 py-1.5"></label>
+    <label class="text-xs text-slate-500 block">万吨<input id="mTon" type="number" step="0.1" class="mt-1 w-full rounded border px-2 py-1.5"></label>
+  `, ()=>{
+    const name=document.getElementById('mName').value.trim();
+    const ton=+document.getElementById('mTon').value;
+    if(!name){ toast('请填写货类'); return false; }
+    state.cargo.rows.push({id:uid('c'), name, ton:ton||0, on:true, sort:state.cargo.rows.length+1});
+    renderCargo(); markDirty(); return true;
+  });
+}
+
+function renderCustomer(){
+  const rows=[...state.customer.rows].sort((a,b)=>b.ton-a.ton);
+  document.getElementById('customerBody').innerHTML=rows.map((r,i)=>`<tr class="border-t">
+    <td class="px-3 py-2">${i+1}</td>
+    <td class="px-3 py-2"><input class="w-40 rounded border px-2 py-1" value="${r.name}" onchange="updateCustomer('${r.id}','name',this.value)"></td>
+    <td class="px-3 py-2"><input type="number" step="0.1" class="w-24 rounded border px-2 py-1" value="${r.ton}" onchange="updateCustomer('${r.id}','ton',this.value)"></td>
+    <td class="px-3 py-2"><input type="checkbox" ${r.on?'checked':''} onchange="updateCustomer('${r.id}','on',this.checked)"></td>
+    <td class="px-3 py-2"><button class="text-rose-600" onclick="delCustomer('${r.id}')">删除</button></td>
+  </tr>`).join('');
+}
+function updateCustomer(id,k,v){
+  const row=state.customer.rows.find(x=>x.id===id); if(!row) return;
+  row[k]=k==='on'?v:(k==='name'?v:+v); markDirty(); renderCustomer();
+}
+function delCustomer(id){ state.customer.rows=state.customer.rows.filter(x=>x.id!==id); markDirty(); renderCustomer(); }
+function openCustomerModal(){
+  openModal('新增客户', `
+    <label class="text-xs text-slate-500 block">客户名称<input id="mName" class="mt-1 w-full rounded border px-2 py-1.5"></label>
+    <label class="text-xs text-slate-500 block">万吨<input id="mTon" type="number" step="0.1" class="mt-1 w-full rounded border px-2 py-1.5"></label>
+  `, ()=>{
+    const name=document.getElementById('mName').value.trim();
+    const ton=+document.getElementById('mTon').value;
+    if(!name){ toast('请填写客户'); return false; }
+    state.customer.rows.push({id:uid('u'), name, ton:ton||0, on:true});
+    renderCustomer(); markDirty(); return true;
+  });
+}
+
+function yardLevel(u, warn, alarm){
+  if(u>=alarm) return ['预警','text-rose-600'];
+  if(u>=warn) return ['关注','text-amber-600'];
+  return ['正常','text-emerald-600'];
+}
+function renderYards(){
+  const warn=+document.getElementById('rsWarn').value||70;
+  const alarm=+document.getElementById('rsAlarm').value||90;
+  state.resource.warn=warn; state.resource.alarm=alarm;
+  document.getElementById('yardBody').innerHTML=state.resource.yards.map(y=>{
+    const u=y.cap? (y.stock/y.cap*100):0;
+    const [lab,cls]=yardLevel(u,warn,alarm);
+    return `<tr class="border-t">
+      <td class="px-3 py-2">${y.name}</td>
+      <td class="px-3 py-2"><input type="number" step="0.1" class="w-24 rounded border px-2 py-1" value="${y.stock}" onchange="updateYard('${y.id}','stock',this.value)"></td>
+      <td class="px-3 py-2"><input type="number" step="0.1" class="w-24 rounded border px-2 py-1" value="${y.cap}" onchange="updateYard('${y.id}','cap',this.value)"></td>
+      <td class="px-3 py-2">${u.toFixed(0)}%</td>
+      <td class="px-3 py-2 ${cls}">${lab}</td>
+    </tr>`;
+  }).join('');
+  markDirty();
+}
+function updateYard(id,k,v){
+  const y=state.resource.yards.find(x=>x.id===id); if(!y) return;
+  y[k]=+v; renderYards();
+}
+
+function renderBerth(){
+  document.getElementById('berthCards').innerHTML=state.berth.cards.map(c=>`<div class="rounded-xl border border-slate-200 p-3 space-y-2 text-sm">
+    <div class="font-semibold">${c.berth}</div>
+    <label class="text-xs text-slate-500 block">状态<select class="mt-1 w-full rounded border px-2 py-1.5" onchange="updateBerth('${c.id}','status',this.value)">
+      ${['空闲','占用','作业中','待离泊'].map(s=>`<option ${s===c.status?'selected':''}>${s}</option>`).join('')}
+    </select></label>
+    <label class="text-xs text-slate-500 block">船名<input class="mt-1 w-full rounded border px-2 py-1.5" value="${c.ship}" onchange="updateBerth('${c.id}','ship',this.value)"></label>
+    <label class="text-xs text-slate-500 block">货类<input class="mt-1 w-full rounded border px-2 py-1.5" value="${c.cargo}" onchange="updateBerth('${c.id}','cargo',this.value)"></label>
+    <label class="text-xs text-slate-500 block">进度 %<input type="number" class="mt-1 w-full rounded border px-2 py-1.5" value="${c.progress}" onchange="updateBerth('${c.id}','progress',this.value)"></label>
+    <label class="text-xs text-slate-500 block">疏运<select class="mt-1 w-full rounded border px-2 py-1.5" onchange="updateBerth('${c.id}','haul',this.value)">
+      ${HAUL.map(s=>`<option ${s===c.haul?'selected':''}>${s}</option>`).join('')}
+    </select></label>
+    <label class="text-xs text-slate-500 block">通关（模拟）<select class="mt-1 w-full rounded border px-2 py-1.5" onchange="updateBerth('${c.id}','customs',this.value)">
+      ${CUSTOMS.map(s=>`<option ${s===c.customs?'selected':''}>${s}</option>`).join('')}
+    </select></label>
+  </div>`).join('');
+  document.getElementById('waitBody').innerHTML=state.berth.waits.map(w=>`<tr class="border-t">
+    <td class="px-3 py-2">${w.ship}</td>
+    <td class="px-3 py-2"><select class="rounded border px-2 py-1" onchange="updateWait('${w.id}','status',this.value)">${WAIT_STATUS.map(s=>`<option ${s===w.status?'selected':''}>${s}</option>`).join('')}</select></td>
+    <td class="px-3 py-2"><input class="w-28 rounded border px-2 py-1" value="${w.cargo}" onchange="updateWait('${w.id}','cargo',this.value)"></td>
+    <td class="px-3 py-2"><select class="rounded border px-2 py-1" onchange="updateWait('${w.id}','haul',this.value)">${HAUL.map(s=>`<option ${s===w.haul?'selected':''}>${s}</option>`).join('')}</select></td>
+    <td class="px-3 py-2"><button class="text-rose-600" onclick="delWait('${w.id}')">删除</button></td>
+  </tr>`).join('');
+}
+function updateBerth(id,k,v){ const c=state.berth.cards.find(x=>x.id===id); if(!c) return; c[k]=k==='progress'?+v:v; markDirty(); }
+function updateWait(id,k,v){ const w=state.berth.waits.find(x=>x.id===id); if(!w) return; w[k]=v; markDirty(); }
+function delWait(id){ state.berth.waits=state.berth.waits.filter(x=>x.id!==id); markDirty(); renderBerth(); }
+function openWaitModal(){
+  openModal('新增待泊船舶', `
+    <label class="text-xs text-slate-500 block">船名<input id="mShip" class="mt-1 w-full rounded border px-2 py-1.5"></label>
+    <label class="text-xs text-slate-500 block">状态<select id="mStatus" class="mt-1 w-full rounded border px-2 py-1.5">${WAIT_STATUS.map(s=>`<option>${s}</option>`).join('')}</select></label>
+    <label class="text-xs text-slate-500 block">货种<input id="mCargo" class="mt-1 w-full rounded border px-2 py-1.5"></label>
+    <label class="text-xs text-slate-500 block">疏运<select id="mHaul" class="mt-1 w-full rounded border px-2 py-1.5">${HAUL.map(s=>`<option>${s}</option>`).join('')}</select></label>
+  `, ()=>{
+    const ship=document.getElementById('mShip').value.trim();
+    if(!ship){ toast('请填写船名'); return false; }
+    state.berth.waits.push({id:uid('w'), ship, status:document.getElementById('mStatus').value, cargo:document.getElementById('mCargo').value||'—', haul:document.getElementById('mHaul').value});
+    renderBerth(); markDirty(); return true;
+  });
+}
+
+function syncEqSum(){
+  const run=+document.getElementById('eqRun').value||0;
+  const watch=+document.getElementById('eqWatch').value||0;
+  const stop=+document.getElementById('eqStop').value||0;
+  const total=+document.getElementById('eqTotal').value||0;
+  document.getElementById('eqSumCheck').textContent=run+watch+stop;
+  document.getElementById('eqSumCheck').className=(run+watch+stop===total)?'text-emerald-600':'text-rose-600';
+  markDirty();
+}
+function renderEqGroups(){
+  document.getElementById('eqGroupBody').innerHTML=state.equipment.groups.map(g=>`<tr class="border-t">
+    <td class="px-3 py-2">${g.name}</td>
+    <td class="px-3 py-2"><input type="number" class="w-16 rounded border px-2 py-1" value="${g.total}" onchange="updateEqGroup('${g.id}','total',this.value)"></td>
+    <td class="px-3 py-2"><input type="number" class="w-16 rounded border px-2 py-1" value="${g.run}" onchange="updateEqGroup('${g.id}','run',this.value)"></td>
+    <td class="px-3 py-2"><input type="number" class="w-16 rounded border px-2 py-1" value="${g.watch}" onchange="updateEqGroup('${g.id}','watch',this.value)"></td>
+    <td class="px-3 py-2"><input type="number" class="w-16 rounded border px-2 py-1" value="${g.stop}" onchange="updateEqGroup('${g.id}','stop',this.value)"></td>
+  </tr>`).join('');
+}
+function updateEqGroup(id,k,v){ const g=state.equipment.groups.find(x=>x.id===id); if(!g) return; g[k]=+v; markDirty(); }
+
+function renderAlerts(){
+  document.getElementById('alertBody').innerHTML=state.alert.rows.map(r=>`<tr class="border-t">
+    <td class="px-3 py-2">${r.id}</td>
+    <td class="px-3 py-2">${r.title}<div class="text-[11px] text-slate-400">${r.note||''}</div></td>
+    <td class="px-3 py-2">${r.level}</td>
+    <td class="px-3 py-2">${r.status}</td>
+    <td class="px-3 py-2"><input type="checkbox" ${r.on?'checked':''} onchange="updateAlert('${r.id}','on',this.checked)"></td>
+    <td class="px-3 py-2 space-x-2"><button class="text-sky-700" onclick="editAlert('${r.id}')">编辑</button><button class="text-rose-600" onclick="delAlert('${r.id}')">删除</button></td>
+  </tr>`).join('');
+  refreshHome();
+}
+function updateAlert(id,k,v){ const r=state.alert.rows.find(x=>x.id===id); if(!r) return; r[k]=v; markDirty(); }
+function delAlert(id){ state.alert.rows=state.alert.rows.filter(x=>x.id!==id); markDirty(); renderAlerts(); }
+function openAlertModal(row){
+  const r=row||{id:'',title:'',level:'二级',status:'待响应',note:'',on:true,time:''};
+  openModal(row?'编辑告警':'新增告警', `
+    <label class="text-xs text-slate-500 block">编号<input id="mId" class="mt-1 w-full rounded border px-2 py-1.5" value="${r.id}" ${row?'disabled':''}></label>
+    <label class="text-xs text-slate-500 block">标题<input id="mTitle" class="mt-1 w-full rounded border px-2 py-1.5" value="${r.title}"></label>
+    <label class="text-xs text-slate-500 block">等级<select id="mLevel" class="mt-1 w-full rounded border px-2 py-1.5">${['一级','二级','三级'].map(s=>`<option ${s===r.level?'selected':''}>${s}</option>`).join('')}</select></label>
+    <label class="text-xs text-slate-500 block">状态<select id="mStatus" class="mt-1 w-full rounded border px-2 py-1.5">${['待响应','处理中','已闭环'].map(s=>`<option ${s===r.status?'selected':''}>${s}</option>`).join('')}</select></label>
+    <label class="text-xs text-slate-500 block">说明<input id="mNote" class="mt-1 w-full rounded border px-2 py-1.5" value="${r.note||''}"></label>
+  `, ()=>{
+    const id=document.getElementById('mId').value.trim();
+    const title=document.getElementById('mTitle').value.trim();
+    if(!id||!title){ toast('请填写编号和标题'); return false; }
+    if(row){
+      Object.assign(row,{title, level:document.getElementById('mLevel').value, status:document.getElementById('mStatus').value, note:document.getElementById('mNote').value});
+    }else{
+      if(state.alert.rows.some(x=>x.id===id)){ toast('编号已存在'); return false; }
+      state.alert.rows.unshift({id,title,level:document.getElementById('mLevel').value,status:document.getElementById('mStatus').value,note:document.getElementById('mNote').value,on:true,time:'—'});
+    }
+    renderAlerts(); markDirty(); return true;
+  });
+}
+function editAlert(id){ openAlertModal(state.alert.rows.find(x=>x.id===id)); }
+
+function openModal(title, html, onOk){
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('modalBody').innerHTML=html;
+  modalCtx=onOk;
+  document.getElementById('modal').classList.add('show');
+}
+function closeModal(){ document.getElementById('modal').classList.remove('show'); modalCtx=null; }
+document.getElementById('modalOk').onclick=()=>{ if(modalCtx && modalCtx()!==false) closeModal(); };
+
+function collectFromDom(){
+  state.throughput.onWall=document.getElementById('thOnWall').checked;
+  state.throughput.year={act:+document.getElementById('thYAct').value,tgt:+document.getElementById('thYTgt').value,src:document.getElementById('thYSrc').value};
+  state.throughput.quarter={act:+document.getElementById('thQAct').value,tgt:+document.getElementById('thQTgt').value,src:document.getElementById('thQSrc').value};
+  state.throughput.month={act:+document.getElementById('thMAct').value,tgt:+document.getElementById('thMTgt').value,src:document.getElementById('thMSrc').value};
+  state.cargo.onWall=document.getElementById('cgOnWall').checked;
+  state.customer.onWall=document.getElementById('cuOnWall').checked;
+  state.resource.onWall=document.getElementById('rsOnWall').checked;
+  state.resource.waitIn=+document.getElementById('rsWaitIn').value;
+  state.resource.inPort=+document.getElementById('rsInPort').value;
+  state.resource.waitBerth=+document.getElementById('rsWaitBerth').value;
+  state.resource.anchor=+document.getElementById('rsAnchor').value;
+  state.resource.warn=+document.getElementById('rsWarn').value;
+  state.resource.alarm=+document.getElementById('rsAlarm').value;
+  state.berth.onWall=document.getElementById('bhOnWall').checked;
+  state.equipment.onWall=document.getElementById('eqOnWall').checked;
+  state.equipment.total=+document.getElementById('eqTotal').value;
+  state.equipment.run=+document.getElementById('eqRun').value;
+  state.equipment.watch=+document.getElementById('eqWatch').value;
+  state.equipment.stop=+document.getElementById('eqStop').value;
+  state.alert.onWall=document.getElementById('alOnWall').checked;
+  state.weather.onWall=document.getElementById('wxOnWall').checked;
+  state.weather.desc=document.getElementById('wxDesc').value;
+  state.weather.wind=document.getElementById('wxWind').value;
+  state.weather.high=+document.getElementById('wxHigh').value;
+  state.weather.low=+document.getElementById('wxLow').value;
+  state.weather.work=document.getElementById('wxWork').value;
+  state.weather.src=document.getElementById('wxSrc').value;
+  state.global.demo=document.getElementById('gDemo').checked;
+  state.global.badge=document.getElementById('gBadge').checked;
+  state.global.asof=document.getElementById('gAsof').value;
+  state.global.formalNote=document.getElementById('gFormalNote').value;
+}
+
+function bindAll(){
+  document.getElementById('gDemo').checked=!!state.global.demo;
+  document.getElementById('gBadge').checked=!!state.global.badge;
+  document.getElementById('gAsof').value=state.global.asof||'';
+  document.getElementById('gFormalNote').value=state.global.formalNote||'';
+  document.getElementById('thOnWall').checked=state.throughput.onWall;
+  document.getElementById('thYAct').value=state.throughput.year.act;
+  document.getElementById('thYTgt').value=state.throughput.year.tgt;
+  document.getElementById('thYSrc').value=state.throughput.year.src;
+  document.getElementById('thQAct').value=state.throughput.quarter.act;
+  document.getElementById('thQTgt').value=state.throughput.quarter.tgt;
+  document.getElementById('thQSrc').value=state.throughput.quarter.src;
+  document.getElementById('thMAct').value=state.throughput.month.act;
+  document.getElementById('thMTgt').value=state.throughput.month.tgt;
+  document.getElementById('thMSrc').value=state.throughput.month.src;
+  recalcTh();
+  document.getElementById('cgOnWall').checked=state.cargo.onWall;
+  document.getElementById('cuOnWall').checked=state.customer.onWall;
+  document.getElementById('rsOnWall').checked=state.resource.onWall;
+  document.getElementById('rsWaitIn').value=state.resource.waitIn;
+  document.getElementById('rsInPort').value=state.resource.inPort;
+  document.getElementById('rsWaitBerth').value=state.resource.waitBerth;
+  document.getElementById('rsAnchor').value=state.resource.anchor;
+  document.getElementById('rsWarn').value=state.resource.warn;
+  document.getElementById('rsAlarm').value=state.resource.alarm;
+  document.getElementById('bhOnWall').checked=state.berth.onWall;
+  document.getElementById('eqOnWall').checked=state.equipment.onWall;
+  document.getElementById('eqTotal').value=state.equipment.total;
+  document.getElementById('eqRun').value=state.equipment.run;
+  document.getElementById('eqWatch').value=state.equipment.watch;
+  document.getElementById('eqStop').value=state.equipment.stop;
+  document.getElementById('alOnWall').checked=state.alert.onWall;
+  document.getElementById('wxOnWall').checked=state.weather.onWall;
+  document.getElementById('wxDesc').value=state.weather.desc;
+  document.getElementById('wxWind').value=state.weather.wind;
+  document.getElementById('wxHigh').value=state.weather.high;
+  document.getElementById('wxLow').value=state.weather.low;
+  document.getElementById('wxWork').value=state.weather.work;
+  document.getElementById('wxSrc').value=state.weather.src;
+  renderCargo(); renderCustomer(); renderYards(); renderBerth(); renderEqGroups(); renderAlerts(); syncEqSum(); refreshHome();
+}
+
+document.querySelectorAll('#sideNav .nav').forEach(a=>{
+  a.addEventListener('click', e=>{ e.preventDefault(); showPanel(a.getAttribute('data-nav')); });
+});
+window.addEventListener('beforeunload', e=>{ if(dirty){ e.preventDefault(); e.returnValue=''; }});
+
+loadState();
+bindAll();
+const init=(location.hash||'#home').replace('#','')||'home';
+showPanel(META[init]?init:'home');
+</script>
+</body>
+</html>
