@@ -238,7 +238,7 @@ function syncChrome() {
 function loadFrame(force) {
   const t = NAV[curTheme];
   const frame = document.getElementById('themeFrame');
-  const target = t.page + '?embed=1#' + curMod;
+  const target = t.page + '?embed=1&v=20261119s#' + curMod;
   if (!force && frameTheme === curTheme && frame.contentWindow) {
     try {
       if (frame.contentWindow.location.hash !== '#' + curMod) {

@@ -129,35 +129,54 @@
 
     <!-- 场景编辑 -->
     <section data-panel="scene" class="hidden space-y-4">
+      <div id="sceneSummary" class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs text-slate-600 flex flex-wrap items-center gap-x-4 gap-y-1"></div>
       <div class="flex flex-wrap items-center justify-between gap-2">
-        <p class="text-xs text-slate-500">拖动可发布模型调整摆放；草稿仅可查看。保存视角写入本地演示。</p>
-        <div class="flex flex-wrap gap-2 text-sm">
+        <div class="flex flex-wrap items-center gap-2 text-sm">
+          <label class="text-xs text-slate-500">方案</label>
+          <select id="scenePlan" class="rounded-xl border border-slate-300 bg-white px-3 py-1.5" onchange="switchScenePlan()"></select>
+          <button type="button" class="rounded-xl border border-slate-300 bg-white px-3 py-1.5" onclick="addScenePlan()">新建方案</button>
           <select id="sceneRatio" class="rounded-xl border border-slate-300 bg-white px-3 py-1.5" onchange="setSceneRatio()">
             <option value="16:9">预览 16:9 指挥墙</option>
             <option value="desk">预览工作站</option>
           </select>
-          <button type="button" class="rounded-xl bg-slate-800 text-white px-3 py-1.5" onclick="saveSceneView()">保存视角</button>
+        </div>
+        <div class="flex flex-wrap gap-2 text-sm">
+          <button type="button" class="rounded-xl border border-slate-300 bg-white px-3 py-1.5" onclick="toggleSceneGrid()">网格</button>
+          <button type="button" class="rounded-xl border border-slate-300 bg-white px-3 py-1.5" onclick="toggleSceneSafe()">安全边距</button>
+          <button type="button" class="rounded-xl bg-slate-800 text-white px-3 py-1.5" onclick="saveNamedSceneView()">保存命名视角</button>
           <button type="button" class="rounded-xl border border-slate-300 bg-white px-3 py-1.5" onclick="focusSceneObj()">聚焦主视中心</button>
+          <button type="button" class="rounded-xl border border-sky-300 bg-sky-50 text-sky-800 px-3 py-1.5" onclick="markSceneSyncOverview()">设为同步概览</button>
         </div>
       </div>
       <div class="grid xl:grid-cols-12 gap-4">
-        <aside class="xl:col-span-3 bg-white rounded-2xl p-3 border border-slate-200 shadow-sm">
-          <div class="font-semibold text-sm mb-2">场景树</div>
-          <div id="sceneTree" class="space-y-1 text-sm"></div>
-          <p class="text-[11px] text-slate-400 mt-3">未通过自检的模型不可放入上线场景。</p>
+        <aside class="xl:col-span-3 space-y-3">
+          <div class="bg-white rounded-2xl p-3 border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between mb-2">
+              <div class="font-semibold text-sm">场景树</div>
+              <button type="button" class="text-xs text-sky-700" onclick="openAddSceneModel()">加入模型</button>
+            </div>
+            <div id="sceneTree" class="space-y-1 text-sm max-h-[280px] overflow-auto"></div>
+            <p class="text-[11px] text-slate-400 mt-3">仅已发布模型可加入；草稿/失败只读不可上线。</p>
+          </div>
+          <div class="bg-white rounded-2xl p-3 border border-slate-200 shadow-sm">
+            <div class="font-semibold text-sm mb-2">命名视角</div>
+            <div id="sceneViews" class="space-y-1 text-sm"></div>
+          </div>
         </aside>
         <div class="xl:col-span-6">
           <div id="sceneStage" class="bg-slate-900 rounded-2xl relative overflow-hidden border border-slate-700" style="aspect-ratio:16/9">
             <div class="absolute inset-0 opacity-40" style="background:radial-gradient(circle at 40% 55%,#0e7490,transparent 42%),linear-gradient(160deg,#0f172a,#082f49)"></div>
+            <div id="sceneGrid" class="absolute inset-0 pointer-events-none hidden" style="background-image:linear-gradient(rgba(148,163,184,.18) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,.18) 1px,transparent 1px);background-size:10% 10%"></div>
+            <div id="sceneSafe" class="absolute inset-[6%] border border-dashed border-amber-300/50 rounded-lg pointer-events-none hidden"></div>
             <div id="sceneObjs" class="absolute inset-0"></div>
-            <div class="absolute left-3 bottom-3 text-[11px] text-slate-200 bg-slate-950/50 rounded-lg px-2 py-1">拖动对象调整摆放 · <span id="sceneViewLabel">指挥默认</span></div>
+            <div class="absolute left-3 bottom-3 text-[11px] text-slate-200 bg-slate-950/50 rounded-lg px-2 py-1">拖动调整摆放 · <span id="sceneViewLabel">指挥默认</span></div>
           </div>
         </div>
         <aside class="xl:col-span-3 bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
           <div class="font-semibold text-sm mb-3">对象属性</div>
           <div id="sceneProp" class="text-sm text-slate-500">点选场景中的对象</div>
           <div class="mt-4 rounded-xl bg-slate-50 p-3 text-xs text-slate-500 leading-5">
-            正常：保存后概览使用该视角。<br>边界：草稿模型灰色，不可上线摆放。<br>异常：自检失败保持灰色，不能发布。
+            正常：保存视角并可标记同步概览。<br>边界：隐藏对象不交互；锁定不可拖。<br>异常：非已发布对象灰色只读。
           </div>
         </aside>
       </div>
@@ -265,7 +284,7 @@ const META = {
   model: { title: '模型管理', desc: '模型清单、自检与发布；失败不可发布。本地演示存储。' },
   theme: { title: '多主题管理', desc: '六大屏启用、排序、默认主题；保存后大屏底栏同步。' },
   module: { title: '模块管理', desc: '跨主题模块上墙总控；保存后回写各主题后台开关。' },
-  scene: { title: '场景编辑', desc: '摆放已发布模型、保存指挥视角、按 16:9 大屏预览。' },
+  scene: { title: '场景编辑', desc: '多方案摆放、属性精调、命名视角，并可标记同步概览。' },
   resource: { title: '资源中心', desc: '专题模板检索并应用到六大屏主题；本地演示。' },
   session: { title: '大屏会话控制', desc: '指挥席绑定大屏，页内切换主题与焦点泊位。' },
   status: { title: '接口与数据状态', desc: '源系统接入健康、同步时延、失败重试与模块降级。' }
@@ -339,7 +358,7 @@ const MODULE_CATALOG = [
 const MODEL_STORE = 'hn_admin_model_v1';
 const THEME_STORE = 'hn_wall_theme_cfg_v1';
 const MODULE_STORE = 'hn_wall_module_cfg_v1';
-const SCENE_STORE = 'hn_admin_scene_v1';
+const SCENE_STORE = 'hn_admin_scene_v2';
 const RESOURCE_STORE = 'hn_admin_resource_v1';
 const SESSION_STORE = 'hn_admin_session_v1';
 const STATUS_STORE = 'hn_admin_status_v1';
@@ -377,17 +396,84 @@ function defaultModules() {
   };
 }
 
+function makeSceneItems() {
+  return [
+    { id: 'oblique', modelId: 'm1', name: '港区倾斜_2026Q3', ok: true, x: 18, y: 22, w: 46, h: 38, visible: true, locked: false, z: 1 },
+    { id: 'bim1', modelId: 'm2', name: '1号泊位BIM', ok: true, x: 22, y: 40, w: 18, h: 16, visible: true, locked: false, z: 2 },
+    { id: 'bim2', modelId: null, name: '2号泊位BIM', ok: true, x: 40, y: 46, w: 16, h: 14, visible: true, locked: false, z: 3 },
+    { id: 'yard', modelId: 'm3', name: '堆场A精细模', ok: false, x: 52, y: 58, w: 18, h: 14, visible: true, locked: false, z: 4 }
+  ];
+}
+
+function makeScenePlan(id, name, items) {
+  const layout = (items || makeSceneItems()).map((it) => ({ id: it.id, x: it.x, y: it.y, w: it.w, h: it.h }));
+  return {
+    id,
+    name,
+    current: (items && items[1] && items[1].id) || 'bim1',
+    items: items || makeSceneItems(),
+    views: [{ id: 'v_' + id, name: name + '视角', layout }],
+    activeViewId: 'v_' + id
+  };
+}
+
 const SCENE_DEFAULTS = {
   ratio: '16:9',
-  viewLabel: '指挥默认',
-  current: 'bim1',
-  items: [
-    { id: 'oblique', name: '港区倾斜_2026Q3', ok: true, x: 18, y: 22, w: 46, h: 38 },
-    { id: 'bim1', name: '1号泊位BIM', ok: true, x: 22, y: 40, w: 18, h: 16 },
-    { id: 'bim2', name: '2号泊位BIM', ok: true, x: 40, y: 46, w: 16, h: 14 },
-    { id: 'yard', name: '堆场A精细模', ok: false, x: 52, y: 58, w: 18, h: 14 }
+  showGrid: true,
+  showSafe: true,
+  dirty: false,
+  activePlanId: 'p1',
+  overviewSync: { planId: 'p1', viewId: 'v_p1' },
+  plans: [
+    makeScenePlan('p1', '指挥默认'),
+    makeScenePlan('p2', '汇报视角', [
+      { id: 'oblique', modelId: 'm1', name: '港区倾斜_2026Q3', ok: true, x: 12, y: 18, w: 50, h: 42, visible: true, locked: false, z: 1 },
+      { id: 'bim1', modelId: 'm2', name: '1号泊位BIM', ok: true, x: 30, y: 36, w: 20, h: 18, visible: true, locked: false, z: 2 },
+      { id: 'bim2', modelId: null, name: '2号泊位BIM', ok: true, x: 52, y: 42, w: 18, h: 16, visible: true, locked: false, z: 3 }
+    ])
   ]
 };
+
+function normalizeScene(raw) {
+  if (!raw) return AdminKit.clone(SCENE_DEFAULTS);
+  if (raw.plans && Array.isArray(raw.plans)) {
+    raw.plans.forEach((p) => {
+      (p.items || []).forEach((it, i) => {
+        if (it.visible == null) it.visible = true;
+        if (it.locked == null) it.locked = false;
+        if (it.z == null) it.z = i + 1;
+      });
+      if (!p.views) p.views = [];
+      if (!p.activeViewId && p.views[0]) p.activeViewId = p.views[0].id;
+    });
+    if (!raw.overviewSync) raw.overviewSync = { planId: raw.activePlanId, viewId: (raw.plans[0] && raw.plans[0].activeViewId) || '' };
+    if (raw.showGrid == null) raw.showGrid = true;
+    if (raw.showSafe == null) raw.showSafe = true;
+    return raw;
+  }
+  // 兼容旧版扁平结构
+  const items = (raw.items || makeSceneItems()).map((it, i) => ({
+    id: it.id,
+    modelId: it.modelId || null,
+    name: it.name,
+    ok: !!it.ok,
+    x: it.x, y: it.y, w: it.w, h: it.h,
+    visible: true,
+    locked: false,
+    z: i + 1
+  }));
+  const plan = makeScenePlan('p1', '指挥默认', items);
+  plan.current = raw.current || plan.current;
+  return {
+    ratio: raw.ratio || '16:9',
+    showGrid: true,
+    showSafe: true,
+    dirty: false,
+    activePlanId: 'p1',
+    overviewSync: { planId: 'p1', viewId: plan.activeViewId },
+    plans: [plan, makeScenePlan('p2', '汇报视角')]
+  };
+}
 
 const RESOURCE_TPLS = [
   { name: '双泊位指挥', desc: '1#水泥熟料 / 2#河砂，KPI 与告警同屏', parts: '泊位对、货种条、视频四宫格' },
@@ -435,7 +521,8 @@ const STATUS_DEFAULTS = {
 let models = AdminKit.load(MODEL_STORE, MODEL_DEFAULTS);
 let themes = AdminKit.load(THEME_STORE, THEME_DEFAULTS);
 let modules = AdminKit.load(MODULE_STORE, defaultModules());
-let scene = AdminKit.load(SCENE_STORE, SCENE_DEFAULTS);
+let scene = normalizeScene(AdminKit.load(SCENE_STORE, SCENE_DEFAULTS));
+let sceneDirty = !!scene.dirty;
 let resources = AdminKit.load(RESOURCE_STORE, RESOURCE_DEFAULTS);
 let session = AdminKit.load(SESSION_STORE, SESSION_DEFAULTS);
 let statusData = AdminKit.load(STATUS_STORE, STATUS_DEFAULTS);
@@ -683,7 +770,10 @@ function saveCurrent() {
     return;
   }
   if (curPanel === 'scene') {
+    clearSceneDirty();
+    scene.dirty = false;
     AdminKit.save(SCENE_STORE, scene);
+    renderSceneSummary();
     return;
   }
   if (curPanel === 'resource') {
@@ -715,7 +805,8 @@ function resetCurrent() {
     syncModuleToThemeStores();
     renderModules();
   } else if (curPanel === 'scene') {
-    scene = AdminKit.clone(SCENE_DEFAULTS);
+    scene = normalizeScene(AdminKit.clone(SCENE_DEFAULTS));
+    clearSceneDirty();
     AdminKit.save(SCENE_STORE, scene);
     renderScene();
   } else if (curPanel === 'resource') {
@@ -735,39 +826,147 @@ function resetCurrent() {
 }
 
 /* —— 场景编辑 —— */
+function activePlan() {
+  if (!scene.plans || !scene.plans.length) {
+    scene = AdminKit.clone(SCENE_DEFAULTS);
+  }
+  let plan = scene.plans.find((p) => p.id === scene.activePlanId);
+  if (!plan) {
+    plan = scene.plans[0];
+    scene.activePlanId = plan.id;
+  }
+  return plan;
+}
+
+function markSceneDirty() {
+  sceneDirty = true;
+  scene.dirty = true;
+  const el = document.getElementById('sceneSummary');
+  if (el && !el.innerHTML.includes('未保存')) renderSceneSummary();
+}
+
+function clearSceneDirty() {
+  sceneDirty = false;
+  scene.dirty = false;
+}
+
+function renderSceneSummary() {
+  const plan = activePlan();
+  const view = (plan.views || []).find((v) => v.id === plan.activeViewId);
+  const sync = scene.overviewSync || {};
+  const syncPlan = (scene.plans || []).find((p) => p.id === sync.planId);
+  const syncView = syncPlan && (syncPlan.views || []).find((v) => v.id === sync.viewId);
+  const dirtyTag = sceneDirty
+    ? '<span class="text-amber-700 bg-amber-50 border border-amber-100 px-1.5 py-0.5 rounded">未保存</span>'
+    : '<span class="text-emerald-700 bg-emerald-50 border border-emerald-100 px-1.5 py-0.5 rounded">已保存</span>';
+  document.getElementById('sceneSummary').innerHTML = `
+    <span>当前方案：<b class="text-slate-800">${plan.name}</b></span>
+    <span>当前视角：<b class="text-slate-800">${view ? view.name : '未命名'}</b></span>
+    <span>同步概览：<b class="text-slate-800">${syncPlan ? syncPlan.name : '—'} / ${syncView ? syncView.name : '—'}</b></span>
+    ${dirtyTag}`;
+}
+
 function renderScene() {
-  const items = scene.items || [];
-  if (!items.some((x) => x.id === scene.current)) scene.current = (items[0] && items[0].id) || '';
+  const plan = activePlan();
+  const items = plan.items || [];
+  if (!items.some((x) => x.id === plan.current)) plan.current = (items[0] && items[0].id) || '';
+
+  const planSel = document.getElementById('scenePlan');
+  planSel.innerHTML = scene.plans.map((p) =>
+    `<option value="${p.id}" ${p.id === plan.id ? 'selected' : ''}>${p.name}</option>`
+  ).join('');
+
   document.getElementById('sceneRatio').value = scene.ratio || '16:9';
   document.getElementById('sceneStage').style.aspectRatio = scene.ratio === 'desk' ? '16/10' : '16/9';
-  document.getElementById('sceneViewLabel').textContent = scene.viewLabel || '指挥默认';
-  document.getElementById('sceneTree').innerHTML = items.map((it) =>
-    `<button type="button" data-id="${it.id}" class="w-full text-left rounded-xl px-3 py-2 ${it.id === scene.current ? 'bg-slate-800 text-white' : 'hover:bg-slate-50 text-slate-700'}">${it.name}${it.ok ? '' : ' · 草稿'}</button>`
-  ).join('');
-  document.getElementById('sceneObjs').innerHTML = items.map((it) =>
-    `<button type="button" data-id="${it.id}" class="absolute rounded-lg border text-[11px] px-2 py-1 ${it.ok ? 'bg-sky-500/80 border-sky-200 text-white' : 'bg-slate-500/70 border-slate-300 text-slate-100'} ${it.id === scene.current ? 'ring-2 ring-amber-300' : ''}" style="left:${it.x}%;top:${it.y}%;width:${it.w}%;height:${it.h}%">${it.name}</button>`
-  ).join('');
-  const it = items.find((x) => x.id === scene.current);
-  document.getElementById('sceneProp').innerHTML = it
-    ? `<div class="font-medium text-slate-800 mb-2">${it.name}</div>
-      <div class="flex justify-between py-1 border-b border-slate-100"><span>状态</span><span>${it.ok ? '可发布' : '草稿，不可上线'}</span></div>
-      <div class="flex justify-between py-1 border-b border-slate-100"><span>水平位置</span><span>${Math.round(it.x)}%</span></div>
-      <div class="flex justify-between py-1"><span>垂直位置</span><span>${Math.round(it.y)}%</span></div>`
-    : '点选场景中的对象';
+  document.getElementById('sceneGrid').classList.toggle('hidden', !scene.showGrid);
+  document.getElementById('sceneSafe').classList.toggle('hidden', !scene.showSafe);
+
+  const view = (plan.views || []).find((v) => v.id === plan.activeViewId);
+  document.getElementById('sceneViewLabel').textContent = view ? view.name : plan.name;
+
+  const sorted = items.slice().sort((a, b) => (a.z || 0) - (b.z || 0));
+  document.getElementById('sceneTree').innerHTML = sorted.map((it) => {
+    const on = it.id === plan.current;
+    const tags = [
+      it.ok ? '' : '草稿',
+      it.visible === false ? '隐藏' : '',
+      it.locked ? '锁定' : ''
+    ].filter(Boolean).join(' · ');
+    return `<button type="button" data-id="${it.id}" class="w-full text-left rounded-xl px-3 py-2 ${on ? 'bg-slate-800 text-white' : 'hover:bg-slate-50 text-slate-700'}">
+      <div class="truncate">${it.name}</div>
+      ${tags ? `<div class="text-[11px] ${on ? 'text-slate-300' : 'text-slate-400'} mt-0.5">${tags}</div>` : ''}
+    </button>`;
+  }).join('') || '<p class="text-xs text-slate-400 px-2 py-3">场景为空，请加入已发布模型</p>';
+
+  document.getElementById('sceneObjs').innerHTML = sorted.filter((it) => it.visible !== false).map((it) => {
+    const on = it.id === plan.current;
+    const tone = it.ok ? 'bg-sky-500/80 border-sky-200 text-white' : 'bg-slate-500/70 border-slate-300 text-slate-100';
+    return `<button type="button" data-id="${it.id}" class="absolute rounded-lg border text-[11px] px-2 py-1 ${tone} ${on ? 'ring-2 ring-amber-300' : ''}" style="left:${it.x}%;top:${it.y}%;width:${it.w}%;height:${it.h}%;z-index:${it.z || 1}">${it.name}${it.locked ? ' 🔒' : ''}</button>`;
+  }).join('');
+
+  renderSceneProp();
+  renderSceneViews();
+  renderSceneSummary();
   bindSceneEvents();
 }
 
+function renderSceneProp() {
+  const plan = activePlan();
+  const it = (plan.items || []).find((x) => x.id === plan.current);
+  if (!it) {
+    document.getElementById('sceneProp').innerHTML = '点选场景中的对象';
+    return;
+  }
+  const disabled = !it.ok ? 'disabled' : '';
+  document.getElementById('sceneProp').innerHTML = `
+    <div class="font-medium text-slate-800 mb-2">${it.name}</div>
+    <div class="flex justify-between py-1 border-b border-slate-100 text-xs"><span>状态</span><span>${it.ok ? '可发布' : '草稿，不可上线'}</span></div>
+    <div class="grid grid-cols-2 gap-2 mt-3">
+      <label class="text-[11px] text-slate-500">X%<input type="number" id="sc_x" class="mt-1 w-full rounded border px-2 py-1 text-sm" value="${Math.round(it.x)}" ${disabled}></label>
+      <label class="text-[11px] text-slate-500">Y%<input type="number" id="sc_y" class="mt-1 w-full rounded border px-2 py-1 text-sm" value="${Math.round(it.y)}" ${disabled}></label>
+      <label class="text-[11px] text-slate-500">宽%<input type="number" id="sc_w" class="mt-1 w-full rounded border px-2 py-1 text-sm" value="${Math.round(it.w)}" ${disabled}></label>
+      <label class="text-[11px] text-slate-500">高%<input type="number" id="sc_h" class="mt-1 w-full rounded border px-2 py-1 text-sm" value="${Math.round(it.h)}" ${disabled}></label>
+    </div>
+    <div class="flex flex-wrap gap-2 mt-3">
+      <button type="button" class="rounded-lg border px-2 py-1 text-xs" onclick="toggleSceneVisible('${it.id}')">${it.visible === false ? '显示' : '隐藏'}</button>
+      <button type="button" class="rounded-lg border px-2 py-1 text-xs" onclick="toggleSceneLock('${it.id}')" ${disabled}>${it.locked ? '解锁' : '锁定'}</button>
+      <button type="button" class="rounded-lg border px-2 py-1 text-xs" onclick="moveSceneLayer('${it.id}',1)" ${disabled}>上移层</button>
+      <button type="button" class="rounded-lg border px-2 py-1 text-xs" onclick="moveSceneLayer('${it.id}',-1)" ${disabled}>下移层</button>
+    </div>
+    <div class="flex flex-wrap gap-2 mt-2">
+      <button type="button" class="rounded-lg bg-slate-800 text-white px-2 py-1 text-xs" onclick="applySceneProp()" ${disabled}>应用数值</button>
+      <button type="button" class="rounded-lg border border-rose-200 text-rose-600 px-2 py-1 text-xs" onclick="removeSceneObj('${it.id}')">从场景移除</button>
+    </div>`;
+}
+
+function renderSceneViews() {
+  const plan = activePlan();
+  const sync = scene.overviewSync || {};
+  document.getElementById('sceneViews').innerHTML = (plan.views || []).map((v) => {
+    const on = v.id === plan.activeViewId;
+    const synced = sync.planId === plan.id && sync.viewId === v.id;
+    return `<div class="flex items-center gap-1">
+      <button type="button" class="flex-1 text-left rounded-xl px-3 py-2 ${on ? 'bg-slate-800 text-white' : 'hover:bg-slate-50'}" onclick="applySceneView('${v.id}')">
+        ${v.name}${synced ? ' · 同步概览' : ''}
+      </button>
+      <button type="button" class="text-xs text-rose-600 px-1" title="删除视角" onclick="deleteSceneView('${v.id}')">删</button>
+    </div>`;
+  }).join('') || '<p class="text-xs text-slate-400 px-2">暂无命名视角</p>';
+}
+
 function bindSceneEvents() {
-  document.querySelectorAll('#sceneTree button, #sceneObjs button').forEach((b) => {
-    b.onclick = () => { scene.current = b.getAttribute('data-id'); renderScene(); };
+  const plan = activePlan();
+  document.querySelectorAll('#sceneTree [data-id]').forEach((b) => {
+    b.onclick = () => { plan.current = b.getAttribute('data-id'); renderScene(); };
   });
-  document.querySelectorAll('#sceneObjs button').forEach((b) => {
+  document.querySelectorAll('#sceneObjs [data-id]').forEach((b) => {
     b.onpointerdown = (ev) => {
-      const it = scene.items.find((x) => x.id === b.getAttribute('data-id'));
+      const it = plan.items.find((x) => x.id === b.getAttribute('data-id'));
       if (!it) return;
-      if (!it.ok) { AdminKit.toast('草稿模型仅可查看，不能调整上线摆放'); return; }
+      plan.current = it.id;
+      if (!it.ok) { AdminKit.toast('草稿模型仅可查看，不能调整上线摆放'); renderScene(); return; }
+      if (it.locked) { AdminKit.toast('对象已锁定，请先解锁'); renderScene(); return; }
       const stage = document.getElementById('sceneStage').getBoundingClientRect();
-      scene.current = it.id;
       const move = (e) => {
         it.x = Math.max(2, Math.min(80, ((e.clientX - stage.left) / stage.width) * 100 - it.w / 2));
         it.y = Math.max(2, Math.min(75, ((e.clientY - stage.top) / stage.height) * 100 - it.h / 2));
@@ -777,6 +976,7 @@ function bindSceneEvents() {
       const up = () => {
         window.removeEventListener('pointermove', move);
         window.removeEventListener('pointerup', up);
+        markSceneDirty();
         renderScene();
       };
       window.addEventListener('pointermove', move);
@@ -785,29 +985,230 @@ function bindSceneEvents() {
   });
 }
 
+function switchScenePlan() {
+  scene.activePlanId = document.getElementById('scenePlan').value;
+  renderScene();
+}
+
+function addScenePlan() {
+  AdminKit.openModal('新建场景方案', AdminKit.field('方案名称', 'f_plan_name', { value: '新方案' }), () => {
+    const name = String(AdminKit.val('f_plan_name') || '').trim();
+    if (!name) { AdminKit.toast('请填写方案名称'); return false; }
+    const id = AdminKit.uid('p');
+    const plan = makeScenePlan(id, name, []);
+    plan.current = '';
+    plan.views = [];
+    plan.activeViewId = '';
+    scene.plans.push(plan);
+    scene.activePlanId = id;
+    markSceneDirty();
+    renderScene();
+    AdminKit.toast('已新建方案「' + name + '」');
+    return true;
+  });
+}
+
 function setSceneRatio() {
   scene.ratio = document.getElementById('sceneRatio').value;
+  markSceneDirty();
   document.getElementById('sceneStage').style.aspectRatio = scene.ratio === 'desk' ? '16/10' : '16/9';
   AdminKit.toast(scene.ratio === '16:9' ? '已按指挥墙 16:9 预览' : '已按工作站比例预览');
 }
 
-function saveSceneView() {
-  const it = scene.items.find((x) => x.id === scene.current);
+function toggleSceneGrid() {
+  scene.showGrid = !scene.showGrid;
+  markSceneDirty();
+  renderScene();
+}
+
+function toggleSceneSafe() {
+  scene.showSafe = !scene.showSafe;
+  markSceneDirty();
+  renderScene();
+}
+
+function openAddSceneModel() {
+  const plan = activePlan();
+  const published = (models.rows || []).filter((m) => m.status === '已发布' && m.check === '通过');
+  if (!published.length) {
+    AdminKit.toast('模型台账暂无已发布模型，请先在模型管理发布');
+    return;
+  }
+  const options = published.map((m) => m.name + '（' + m.id + '）');
+  const body = AdminKit.field('选择已发布模型', 'f_add_model', { value: options[0], options }, 'select');
+  AdminKit.openModal('加入模型到场景', body, () => {
+    const picked = AdminKit.val('f_add_model');
+    const mid = (picked.match(/（(m[^）]+)）/) || [])[1];
+    const row = published.find((m) => m.id === mid) || published.find((m) => picked.indexOf(m.name) === 0);
+    if (!row) { AdminKit.toast('未找到模型'); return false; }
+    if ((plan.items || []).some((x) => x.modelId === row.id || x.name === row.name)) {
+      AdminKit.toast('该模型已在场景中');
+      return false;
+    }
+    const maxZ = Math.max(0, ...(plan.items || []).map((x) => x.z || 0));
+    const obj = {
+      id: AdminKit.uid('obj'),
+      modelId: row.id,
+      name: row.name,
+      ok: true,
+      x: 28, y: 32, w: 18, h: 16,
+      visible: true,
+      locked: false,
+      z: maxZ + 1
+    };
+    plan.items = plan.items || [];
+    plan.items.push(obj);
+    plan.current = obj.id;
+    markSceneDirty();
+    renderScene();
+    AdminKit.toast('已加入「' + row.name + '」');
+    return true;
+  });
+}
+
+function applySceneProp() {
+  const plan = activePlan();
+  const it = (plan.items || []).find((x) => x.id === plan.current);
+  if (!it || !it.ok) { AdminKit.toast('当前对象不可编辑'); return; }
+  it.x = Math.max(0, Math.min(90, +document.getElementById('sc_x').value || 0));
+  it.y = Math.max(0, Math.min(90, +document.getElementById('sc_y').value || 0));
+  it.w = Math.max(6, Math.min(70, +document.getElementById('sc_w').value || 10));
+  it.h = Math.max(6, Math.min(60, +document.getElementById('sc_h').value || 10));
+  markSceneDirty();
+  renderScene();
+  AdminKit.toast('属性已应用');
+}
+
+function toggleSceneVisible(id) {
+  const plan = activePlan();
+  const it = plan.items.find((x) => x.id === id);
   if (!it) return;
-  scene.viewLabel = it.name + '构图';
-  document.getElementById('sceneViewLabel').textContent = scene.viewLabel;
-  AdminKit.save(SCENE_STORE, scene);
-  if (!it.ok) AdminKit.toast('当前对象未通过发布条件，视角已保存，对象不会上线');
-  else AdminKit.toast('视角已保存，概览将使用「' + it.name + '」所在构图');
+  it.visible = !(it.visible !== false);
+  markSceneDirty();
+  renderScene();
+}
+
+function toggleSceneLock(id) {
+  const plan = activePlan();
+  const it = plan.items.find((x) => x.id === id);
+  if (!it || !it.ok) return;
+  it.locked = !it.locked;
+  markSceneDirty();
+  renderScene();
+}
+
+function moveSceneLayer(id, dir) {
+  const plan = activePlan();
+  const list = (plan.items || []).slice().sort((a, b) => (a.z || 0) - (b.z || 0));
+  const i = list.findIndex((x) => x.id === id);
+  const j = i + dir;
+  if (i < 0 || j < 0 || j >= list.length) return;
+  const tmp = list[i].z;
+  list[i].z = list[j].z;
+  list[j].z = tmp;
+  markSceneDirty();
+  renderScene();
+}
+
+function removeSceneObj(id) {
+  const plan = activePlan();
+  if (!confirm('从当前方案移除该对象？（不删除模型台账）')) return;
+  plan.items = (plan.items || []).filter((x) => x.id !== id);
+  if (plan.current === id) plan.current = (plan.items[0] && plan.items[0].id) || '';
+  markSceneDirty();
+  renderScene();
+  AdminKit.toast('已从场景移除');
 }
 
 function focusSceneObj() {
-  const it = scene.items.find((x) => x.id === scene.current);
+  const plan = activePlan();
+  const it = (plan.items || []).find((x) => x.id === plan.current);
   if (!it) return;
+  if (!it.ok) { AdminKit.toast('草稿对象不可作为上线焦点'); return; }
+  if (it.locked) { AdminKit.toast('对象已锁定，请先解锁'); return; }
   it.x = 34;
   it.y = 36;
+  it.visible = true;
+  markSceneDirty();
   renderScene();
   AdminKit.toast('已将「' + it.name + '」聚焦到主视中心');
+}
+
+function snapshotLayout(plan) {
+  return (plan.items || []).map((it) => ({ id: it.id, x: it.x, y: it.y, w: it.w, h: it.h, visible: it.visible !== false, z: it.z || 1 }));
+}
+
+function saveNamedSceneView() {
+  const plan = activePlan();
+  AdminKit.openModal('保存命名视角', AdminKit.field('视角名称', 'f_view_name', { value: plan.name + '视角' }), () => {
+    const name = String(AdminKit.val('f_view_name') || '').trim();
+    if (!name) { AdminKit.toast('请填写视角名称'); return false; }
+    const id = AdminKit.uid('v');
+    plan.views = plan.views || [];
+    plan.views.unshift({ id, name, layout: snapshotLayout(plan) });
+    plan.activeViewId = id;
+    markSceneDirty();
+    renderScene();
+    AdminKit.toast('视角「' + name + '」已保存到当前方案');
+    return true;
+  });
+}
+
+function applySceneView(viewId) {
+  const plan = activePlan();
+  const view = (plan.views || []).find((v) => v.id === viewId);
+  if (!view) return;
+  (view.layout || []).forEach((lay) => {
+    const it = (plan.items || []).find((x) => x.id === lay.id);
+    if (!it) return;
+    it.x = lay.x; it.y = lay.y; it.w = lay.w; it.h = lay.h;
+    if (lay.visible != null) it.visible = lay.visible;
+    if (lay.z != null) it.z = lay.z;
+  });
+  plan.activeViewId = viewId;
+  markSceneDirty();
+  renderScene();
+  AdminKit.toast('已应用视角「' + view.name + '」');
+}
+
+function deleteSceneView(viewId) {
+  const plan = activePlan();
+  if ((plan.views || []).length <= 1) { AdminKit.toast('至少保留 1 个命名视角'); return; }
+  if (!confirm('删除该命名视角？')) return;
+  plan.views = plan.views.filter((v) => v.id !== viewId);
+  if (plan.activeViewId === viewId) plan.activeViewId = plan.views[0].id;
+  if (scene.overviewSync && scene.overviewSync.planId === plan.id && scene.overviewSync.viewId === viewId) {
+    scene.overviewSync.viewId = plan.activeViewId;
+  }
+  markSceneDirty();
+  renderScene();
+}
+
+function markSceneSyncOverview() {
+  const plan = activePlan();
+  if (!(plan.views || []).length) {
+    AdminKit.toast('请先保存命名视角');
+    return;
+  }
+  if (!plan.activeViewId) plan.activeViewId = plan.views[0].id;
+  const view = plan.views.find((v) => v.id === plan.activeViewId) || plan.views[0];
+  // 用当前摆放刷新该视角快照后再同步
+  view.layout = snapshotLayout(plan);
+  scene.overviewSync = { planId: plan.id, viewId: view.id };
+  localStorage.setItem('hn_wall_scene_sync_v1', JSON.stringify({
+    planId: plan.id,
+    planName: plan.name,
+    viewId: view.id,
+    viewName: view.name,
+    ratio: scene.ratio,
+    layout: view.layout,
+    updatedAt: new Date().toISOString()
+  }));
+  clearSceneDirty();
+  scene.dirty = false;
+  localStorage.setItem(SCENE_STORE, JSON.stringify(scene));
+  renderScene();
+  AdminKit.toast('已标记「' + plan.name + ' / ' + view.name + '」同步概览（演示）');
 }
 
 /* —— 资源中心 —— */
