@@ -57,13 +57,13 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
   <div class="wall">
     <header class="shrink-0 flex flex-col" style="height:9.2%">
       <div class="flex items-center justify-between px-4 border-b border-[#1e293b] bg-[#0a1220]" style="height:38%">
-        <div class="text-[11px] text-[#94a3b8]">经营分析一张图 · V7 客户世界地图版 · 演示数据不可作经营决策依据</div>
+        <div class="text-[11px] text-[#94a3b8]">经营分析一张图 · V7 客户世界地图版 · <span data-wall-source-badge>演示数据</span>不可作经营决策依据</div>
         <div class="flex items-center gap-1.5">
           <button type="button" class="tool-btn" onclick="toast('操控席 · 领导席（演示）')">操控席 领导⌄</button>
           <a class="tool-btn" href="../index.html">入口</a>
           <a class="tool-btn" href="pc_wall_command_screen.html?from=%E7%BB%8F%E8%90%A5">概览总览</a>
           <button type="button" class="tool-btn" id="btnPresent">汇报全屏</button>
-          <span class="pill demo">演示数据</span>
+          <span class="pill demo" data-wall-source-badge>演示数据</span>
           <button type="button" class="tool-btn on" id="btnPeriod">2026年10月</button>
           <button type="button" class="tool-btn" onclick="toast('年月切换（演示）')">年月</button>
           <button type="button" class="tool-btn" onclick="toast('筛选面板（演示）')">筛选 ▾</button>
@@ -341,7 +341,9 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
   </div>
 </div>
 
+<script src="wall_source_badge.js"></script>
 <script src="wall_domain.js"></script>
+<script>WallSourceBadge.apply('business');</script>
 <script src="wall_theme_nav.js"></script>
 <script>
 const THEME_LABEL={概览:'港区概览',生产:'生产运行',交通:'港区交通',设备:'设备设施',经营:'经营分析',调度:'智慧调度'};

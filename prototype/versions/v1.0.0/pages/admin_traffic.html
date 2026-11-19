@@ -6,6 +6,7 @@
 <title>港区交通一张图 · 管理后台 · v1.0.0</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="admin_common.js"></script>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex">
 <aside class="w-64 shrink-0 bg-slate-800 text-slate-100 min-h-screen p-4 flex flex-col sticky top-0 h-screen">
@@ -27,7 +28,7 @@
   </nav>
   <div class="space-y-2 text-xs text-slate-400 mt-3">
     <a class="hover:text-white block" href="pc_wall_theme_traffic.html" target="_blank">打开对应大屏</a>
-    <a class="hover:text-white block" href="admin_overview.html">港区概览后台</a>
+    <a class="hover:text-white block" href="admin_console.html">返回统一管理后台</a>
     <a class="hover:text-white block" href="../index.html">返回版本首页</a>
   </div>
 </aside>
@@ -68,7 +69,7 @@
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         <div class="px-4 py-3 border-b font-semibold text-sm">模块清单</div>
         <table class="w-full text-sm"><thead class="bg-slate-50 text-xs text-slate-600"><tr>
-          <th class="text-left px-3 py-2">模块</th><th class="text-left px-3 py-2">记录数</th><th class="text-left px-3 py-2">上墙</th><th class="text-left px-3 py-2">操作</th>
+          <th class="text-left px-3 py-2">模块</th><th class="text-left px-3 py-2">记录数</th><th class="text-left px-3 py-2">数据来源</th><th class="text-left px-3 py-2">上墙</th><th class="text-left px-3 py-2">操作</th>
         </tr></thead><tbody id="homeBody"></tbody></table>
       </div>
     </section>
@@ -229,10 +230,19 @@
 
   </div>
 </main>
-<script src="admin_common.js"></script>
 <script>
 
 const STORE = 'hn_admin_traffic_v1';
+const THEME_KEY = 'traffic';
+const SOURCE_PRESETS = {
+  stat: { system: '卡口通行系统', api: '卡口-通行统计', note: '默认演示；正式接卡口进/出/在港统计接口。' },
+  struct: { system: '卡口通行系统', api: '卡口-在港结构', note: '默认演示；正式接在港车辆结构接口。' },
+  eff: { system: '卡口通行系统', api: '卡口-集疏运效率', note: '默认演示；正式接集疏运效率指标。' },
+  focus: { system: '卡口通行系统', api: '卡口-重点车辆', note: '默认演示；正式接重点车辆动态。' },
+  node: { system: '卡口通行系统', api: '卡口-关键节点', note: '默认演示；正式接卡口/地磅节点运行。' },
+  warn: { system: '卡口通行系统', api: '卡口-交通预警', note: '默认演示；正式接交通预警与处置。' },
+  video: { system: '视频监控平台', api: '视频-交通节点', note: '默认演示；正式接重点交通节点视频通道。' }
+};
 const META = {"home": {"title": "总控", "desc": "本专题大屏数据维护入口；支持新增/查看/编辑/删除。"}, "stat": {"title": "车辆通行统计", "desc": "今日进/出/在港"}, "struct": {"title": "在港车辆结构", "desc": "作业状态结构"}, "eff": {"title": "集疏运效率", "desc": "效率类指标"}, "focus": {"title": "重点车辆动态", "desc": "重点车辆列表"}, "node": {"title": "关键节点运行", "desc": "卡口/地磅等节点"}, "warn": {"title": "交通预警与处置", "desc": "预警列表"}, "video": {"title": "重点交通节点视频", "desc": "视频通道清单"}};
 const SCHEMAS = {"stat": {"cols": [["name", "指标"], ["value", "数值"], ["unit", "单位"], ["on", "上墙"]], "fields": [["name", "指标", "text"], ["value", "数值", "number"], ["unit", "单位", "text"], ["on", "上墙", "checkbox"]], "derived_rate": false}, "struct": {"cols": [["name", "状态"], ["count", "辆数"], ["on", "上墙"]], "fields": [["name", "状态", "text"], ["count", "辆数", "number"], ["on", "上墙", "checkbox"]], "derived_rate": false}, "eff": {"cols": [["name", "指标"], ["value", "数值"], ["note", "说明"], ["on", "上墙"]], "fields": [["name", "指标", "text"], ["value", "数值", "text"], ["note", "说明", "text"], ["on", "上墙", "checkbox"]], "derived_rate": false}, "focus": {"cols": [["plate", "车牌"], ["type", "类型"], ["status", "状态"], ["pos", "位置"], ["on", "上墙"]], "fields": [["plate", "车牌", "text"], ["type", "类型", "select", ["作业车", "运输车", "社会车"]], ["status", "状态", "select", ["行驶", "排队", "装卸作业", "待离港"]], ["pos", "位置", "text"], ["on", "上墙", "checkbox"]], "derived_rate": false}, "node": {"cols": [["name", "节点"], ["status", "状态"], ["metric", "指标"], ["on", "上墙"]], "fields": [["name", "节点", "text"], ["status", "状态", "select", ["正常", "缓行", "拥堵", "离线"]], ["metric", "指标", "text"], ["on", "上墙", "checkbox"]], "derived_rate": false}, "warn": {"cols": [["code", "编号"], ["title", "标题"], ["level", "等级"], ["status", "状态"], ["on", "上墙"]], "fields": [["code", "编号", "text"], ["title", "标题", "text"], ["level", "等级", "select", ["一级", "二级", "三级"]], ["status", "状态", "select", ["待处置", "处置中", "已闭环"]], ["on", "上墙", "checkbox"]], "derived_rate": false}, "video": {"cols": [["code", "机位"], ["name", "名称"], ["status", "状态"], ["on", "上墙"]], "fields": [["code", "机位", "text"], ["name", "名称", "text"], ["status", "状态", "select", ["在线", "离线", "故障"]], ["on", "上墙", "checkbox"]], "derived_rate": false}};
 const DEFAULTS = {"global": {"demo": true, "asof": ""}, "walls": {"stat": true, "struct": true, "eff": true, "focus": true, "node": true, "warn": true, "video": true}, "rows": {"stat": [{"id": "t1", "name": "今日进港", "value": 128, "unit": "车次", "on": true}, {"id": "t2", "name": "今日出港", "value": 116, "unit": "车次", "on": true}, {"id": "t3", "name": "当前在港", "value": 46, "unit": "辆", "on": true}], "struct": [{"id": "s1", "name": "行驶", "count": 12, "on": true}, {"id": "s2", "name": "排队", "count": 14, "on": true}, {"id": "s3", "name": "装卸作业", "count": 14, "on": true}, {"id": "s4", "name": "待离港", "count": 4, "on": true}, {"id": "s5", "name": "待核实", "count": 2, "on": true}], "eff": [{"id": "e1", "name": "平均在港时长", "value": "2.4小时", "note": "演示", "on": true}, {"id": "e2", "name": "卡口通过率", "value": "98.2%", "note": "识别成功", "on": true}], "focus": [{"id": "f1", "plate": "琼C·D1234", "type": "运输车", "status": "装卸作业", "pos": "1#仓库", "on": true}, {"id": "f2", "plate": "琼C·A5678", "type": "作业车", "status": "行驶", "pos": "廊道", "on": true}], "node": [{"id": "n1", "name": "卡口1", "status": "正常", "metric": "今日进港326", "on": true}, {"id": "n2", "name": "地磅#1", "status": "正常", "metric": "今日过磅88票", "on": true}], "warn": [{"id": "w1", "code": "T001", "title": "东门排队偏长", "level": "三级", "status": "处置中", "on": true}], "video": [{"id": "c1", "code": "CAM-T01", "name": "东门卡口", "status": "在线", "on": true}, {"id": "c2", "code": "CAM-T02", "name": "地磅通道", "status": "在线", "on": true}]}};
@@ -242,7 +252,10 @@ let dirty = false;
 function markDirty(){ dirty = true; }
 
 function doSave(){
+  const err = AdminKit.validateAllSources(state, Object.keys(SCHEMAS), META);
+  if (err) { AdminKit.toast(err); return; }
   AdminKit.save(STORE, state);
+  AdminKit.publishWallSource(THEME_KEY, state, Object.keys(SCHEMAS));
   dirty = false;
   refreshHome();
 }
@@ -250,7 +263,9 @@ function doReset(){
   if(!confirm('恢复演示初值？')) return;
   state = AdminKit.clone(DEFAULTS);
   if(!state.global.asof) state.global.asof = AdminKit.nowAsof();
+  AdminKit.ensureSources(state, Object.keys(SCHEMAS), SOURCE_PRESETS);
   AdminKit.save(STORE, state);
+  AdminKit.publishWallSource(THEME_KEY, state, Object.keys(SCHEMAS));
   bindAll();
   dirty = false;
 }
@@ -259,6 +274,7 @@ function syncGlobal(){
   state.global.asof = document.getElementById('gAsof').value;
   document.getElementById('modeBadge').textContent = state.global.demo ? '演示数据 · 开' : '演示数据 · 关';
   markDirty(); refreshHome();
+  AdminKit.publishWallSource(THEME_KEY, state, Object.keys(SCHEMAS));
 }
 function toggleWall(key){
   state.walls[key] = document.getElementById(key+'OnWall').checked;
@@ -275,6 +291,7 @@ function refreshHome(){
     const on = state.walls[k];
     return `<tr class="border-t border-slate-100"><td class="px-3 py-2 font-medium">${META[k].title}</td>
       <td class="px-3 py-2">${n}</td>
+      <td class="px-3 py-2 text-xs text-slate-600">${AdminKit.homeSourceCell(state, k)}</td>
       <td class="px-3 py-2 ${on?'text-emerald-600':'text-slate-400'}">${on?'启用':'停用'}</td>
       <td class="px-3 py-2"><button class="text-sky-700" onclick="AdminKit.showPanel('${k}', META)">维护</button></td></tr>`;
   }).join('');
@@ -368,14 +385,21 @@ function bindAll(){
   document.getElementById('gDemo').checked = !!state.global.demo;
   document.getElementById('gAsof').value = state.global.asof || '';
   document.getElementById('modeBadge').textContent = state.global.demo ? '演示数据 · 开' : '演示数据 · 关';
+  AdminKit.mountSources(state, Object.keys(SCHEMAS), () => {
+    markDirty();
+    refreshHome();
+    AdminKit.publishWallSource(THEME_KEY, state, Object.keys(SCHEMAS));
+  });
   renderAll();
 }
 
 state = AdminKit.load(STORE, DEFAULTS);
 if(!state.global.asof) state.global.asof = AdminKit.nowAsof();
+AdminKit.ensureSources(state, Object.keys(SCHEMAS), SOURCE_PRESETS);
 AdminKit.ensureModal();
 AdminKit.bindNav(META);
 bindAll();
+AdminKit.publishWallSource(THEME_KEY, state, Object.keys(SCHEMAS));
 const init = (location.hash||'#home').replace('#','');
 AdminKit.showPanel(META[init]?init:'home', META);
 window.addEventListener('beforeunload', e=>{ if(dirty){ e.preventDefault(); e.returnValue=''; } });

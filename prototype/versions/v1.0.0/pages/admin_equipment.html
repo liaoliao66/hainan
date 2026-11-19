@@ -6,6 +6,7 @@
 <title>设备设施一张图 · 管理后台 · v1.0.0</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="admin_common.js"></script>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex">
 <aside class="w-64 shrink-0 bg-slate-800 text-slate-100 min-h-screen p-4 flex flex-col sticky top-0 h-screen">
@@ -27,7 +28,7 @@
   </nav>
   <div class="space-y-2 text-xs text-slate-400 mt-3">
     <a class="hover:text-white block" href="pc_wall_theme_equipment.html" target="_blank">打开对应大屏</a>
-    <a class="hover:text-white block" href="admin_overview.html">港区概览后台</a>
+    <a class="hover:text-white block" href="admin_console.html">返回统一管理后台</a>
     <a class="hover:text-white block" href="../index.html">返回版本首页</a>
   </div>
 </aside>
@@ -68,7 +69,7 @@
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         <div class="px-4 py-3 border-b font-semibold text-sm">模块清单</div>
         <table class="w-full text-sm"><thead class="bg-slate-50 text-xs text-slate-600"><tr>
-          <th class="text-left px-3 py-2">模块</th><th class="text-left px-3 py-2">记录数</th><th class="text-left px-3 py-2">上墙</th><th class="text-left px-3 py-2">操作</th>
+          <th class="text-left px-3 py-2">模块</th><th class="text-left px-3 py-2">记录数</th><th class="text-left px-3 py-2">数据来源</th><th class="text-left px-3 py-2">上墙</th><th class="text-left px-3 py-2">操作</th>
         </tr></thead><tbody id="homeBody"></tbody></table>
       </div>
     </section>
@@ -229,10 +230,19 @@
 
   </div>
 </main>
-<script src="admin_common.js"></script>
 <script>
 
 const STORE = 'hn_admin_equipment_v1';
+const THEME_KEY = 'equipment';
+const SOURCE_PRESETS = {
+  stat: { system: '设备设施监测系统', api: '设备-作业统计', note: '默认演示；正式接设备作业统计接口。' },
+  ledger: { system: '设备设施监测系统', api: '设备-台账', note: '默认演示；正式接设备台账接口。' },
+  util: { system: '设备设施监测系统', api: '设备-利用率', note: '默认演示；正式接利用率时间构成。' },
+  monitor: { system: '设备设施监测系统', api: '设备-关键监测', note: '默认演示；正式接关键设备监测读数。' },
+  alarm: { system: '设备设施监测系统', api: '设备-报警中心', note: '默认演示；正式接设备报警接口。' },
+  maint: { system: '设备设施监测系统', api: '设备-维保列表', note: '默认演示；正式接维保计划接口。' },
+  video: { system: '视频监控平台', api: '视频-重点设备', note: '默认演示；正式接重点设备监控视频。' }
+};
 const META = {"home": {"title": "总控", "desc": "本专题大屏数据维护入口；支持新增/查看/编辑/删除。"}, "stat": {"title": "作业统计", "desc": "今日作业量与四态"}, "ledger": {"title": "设备台账", "desc": "分类总数/在线/离线"}, "util": {"title": "利用率时间构成", "desc": "合计应为100%"}, "monitor": {"title": "关键设备监测", "desc": "重点机台读数"}, "alarm": {"title": "设备报警中心", "desc": "未闭环报警"}, "maint": {"title": "维保设备列表", "desc": "预计完成时间"}, "video": {"title": "重点设备监控视频", "desc": "视频通道"}};
 const SCHEMAS = {"stat": {"cols": [["name", "指标"], ["value", "数值"], ["unit", "单位"], ["on", "上墙"]], "fields": [["name", "指标", "text"], ["value", "数值", "text"], ["unit", "单位", "text"], ["on", "上墙", "checkbox"]], "derived_rate": false}, "ledger": {"cols": [["name", "类别"], ["total", "总数"], ["online", "在线"], ["offline", "离线"], ["on", "上墙"]], "fields": [["name", "类别", "text"], ["total", "总数", "number"], ["online", "在线", "number"], ["offline", "离线", "number"], ["on", "上墙", "checkbox"]], "derived_rate": false}, "util": {"cols": [["name", "构成"], ["pct", "占比%"], ["on", "上墙"]], "fields": [["name", "构成", "text"], ["pct", "占比%", "number"], ["on", "上墙", "checkbox"]], "derived_rate": false}, "monitor": {"cols": [["code", "编码"], ["name", "设备"], ["status", "状态"], ["metric", "读数"], ["on", "上墙"]], "fields": [["code", "编码", "text"], ["name", "设备", "text"], ["status", "状态", "select", ["运行", "待机", "预警", "故障", "检修"]], ["metric", "读数", "text"], ["on", "上墙", "checkbox"]], "derived_rate": false}, "alarm": {"cols": [["code", "编号"], ["title", "标题"], ["status", "状态"], ["impact", "影响"], ["on", "上墙"]], "fields": [["code", "编号", "text"], ["title", "标题", "text"], ["status", "状态", "select", ["待响应", "处理中", "已闭环"]], ["impact", "影响", "text"], ["on", "上墙", "checkbox"]], "derived_rate": false}, "maint": {"cols": [["code", "设备"], ["type", "类型"], ["eta", "预计完成"], ["on", "上墙"]], "fields": [["code", "设备", "text"], ["type", "类型", "select", ["维修", "保养"]], ["eta", "预计完成", "text"], ["note", "说明", "text"], ["on", "上墙", "checkbox"]], "derived_rate": false}, "video": {"cols": [["code", "机位"], ["name", "名称"], ["status", "状态"], ["on", "上墙"]], "fields": [["code", "机位", "text"], ["name", "名称", "text"], ["status", "状态", "select", ["在线", "离线", "故障"]], ["on", "上墙", "checkbox"]], "derived_rate": false}};
 const DEFAULTS = {"global": {"demo": true, "asof": ""}, "walls": {"stat": true, "ledger": true, "util": true, "monitor": true, "alarm": true, "maint": true, "video": true}, "rows": {"stat": [{"id": "s1", "name": "今日作业量", "value": "1.86", "unit": "万吨", "on": true}, {"id": "s2", "name": "综合利用率", "value": "68.4", "unit": "%", "on": true}, {"id": "s3", "name": "在用", "value": "102", "unit": "台", "on": true}, {"id": "s4", "name": "待用", "value": "39", "unit": "台", "on": true}, {"id": "s5", "name": "故障", "value": "2", "unit": "台", "on": true}, {"id": "s6", "name": "维护", "value": "1", "unit": "台", "on": true}], "ledger": [{"id": "l1", "name": "卸船机", "total": 2, "online": 2, "offline": 0, "on": true}, {"id": "l2", "name": "输送系统", "total": 12, "online": 12, "offline": 0, "on": true}, {"id": "l3", "name": "供配电及岸电", "total": 18, "online": 18, "offline": 0, "on": true}, {"id": "l4", "name": "闸口与地磅", "total": 8, "online": 8, "offline": 0, "on": true}, {"id": "l5", "name": "监控与通信", "total": 80, "online": 79, "offline": 1, "on": true}, {"id": "l6", "name": "照明与充电", "total": 24, "online": 23, "offline": 1, "on": true}], "util": [{"id": "u1", "name": "有效作业", "pct": 68.4, "on": true}, {"id": "u2", "name": "空转", "pct": 8.6, "on": true}, {"id": "u3", "name": "待资源", "pct": 16, "on": true}, {"id": "u4", "name": "故障停机", "pct": 7, "on": true}], "monitor": [{"id": "m1", "code": "SC-01", "name": "卸船机", "status": "运行", "metric": "负载72% 电流180A", "on": true}, {"id": "m2", "code": "BM-01", "name": "主皮带", "status": "运行", "metric": "带速2.5m/s 900吨/时", "on": true}, {"id": "m3", "code": "T2-DRV", "name": "T2输送驱动", "status": "预警", "metric": "轴承78℃ 振动3.2", "on": true}], "alarm": [{"id": "a1", "code": "A001", "title": "T2输送驱动轴承温升", "status": "处理中", "impact": "风险核查", "on": true}, {"id": "a2", "code": "A002", "title": "SC-02驱动故障", "status": "待响应", "impact": "卸船环节受限", "on": true}, {"id": "a3", "code": "A003", "title": "CAM-03离线", "status": "待响应", "impact": "2#泊位视频", "on": true}], "maint": [{"id": "mt1", "code": "SC-02 卸船机", "type": "维修", "eta": "16:30", "note": "待备件", "on": true}, {"id": "mt2", "code": "GL-07 高杆灯", "type": "保养", "eta": "15:00", "note": "进行中", "on": true}], "video": [{"id": "v1", "code": "CAM-01", "name": "1#泊位卸船机", "status": "在线", "on": true}, {"id": "v2", "code": "CAM-02", "name": "T2转运站", "status": "在线", "on": true}, {"id": "v3", "code": "CAM-03", "name": "2#泊位", "status": "离线", "on": true}]}};
@@ -242,7 +252,10 @@ let dirty = false;
 function markDirty(){ dirty = true; }
 
 function doSave(){
+  const err = AdminKit.validateAllSources(state, Object.keys(SCHEMAS), META);
+  if (err) { AdminKit.toast(err); return; }
   AdminKit.save(STORE, state);
+  AdminKit.publishWallSource(THEME_KEY, state, Object.keys(SCHEMAS));
   dirty = false;
   refreshHome();
 }
@@ -250,7 +263,9 @@ function doReset(){
   if(!confirm('恢复演示初值？')) return;
   state = AdminKit.clone(DEFAULTS);
   if(!state.global.asof) state.global.asof = AdminKit.nowAsof();
+  AdminKit.ensureSources(state, Object.keys(SCHEMAS), SOURCE_PRESETS);
   AdminKit.save(STORE, state);
+  AdminKit.publishWallSource(THEME_KEY, state, Object.keys(SCHEMAS));
   bindAll();
   dirty = false;
 }
@@ -259,6 +274,7 @@ function syncGlobal(){
   state.global.asof = document.getElementById('gAsof').value;
   document.getElementById('modeBadge').textContent = state.global.demo ? '演示数据 · 开' : '演示数据 · 关';
   markDirty(); refreshHome();
+  AdminKit.publishWallSource(THEME_KEY, state, Object.keys(SCHEMAS));
 }
 function toggleWall(key){
   state.walls[key] = document.getElementById(key+'OnWall').checked;
@@ -275,6 +291,7 @@ function refreshHome(){
     const on = state.walls[k];
     return `<tr class="border-t border-slate-100"><td class="px-3 py-2 font-medium">${META[k].title}</td>
       <td class="px-3 py-2">${n}</td>
+      <td class="px-3 py-2 text-xs text-slate-600">${AdminKit.homeSourceCell(state, k)}</td>
       <td class="px-3 py-2 ${on?'text-emerald-600':'text-slate-400'}">${on?'启用':'停用'}</td>
       <td class="px-3 py-2"><button class="text-sky-700" onclick="AdminKit.showPanel('${k}', META)">维护</button></td></tr>`;
   }).join('');
@@ -368,14 +385,21 @@ function bindAll(){
   document.getElementById('gDemo').checked = !!state.global.demo;
   document.getElementById('gAsof').value = state.global.asof || '';
   document.getElementById('modeBadge').textContent = state.global.demo ? '演示数据 · 开' : '演示数据 · 关';
+  AdminKit.mountSources(state, Object.keys(SCHEMAS), () => {
+    markDirty();
+    refreshHome();
+    AdminKit.publishWallSource(THEME_KEY, state, Object.keys(SCHEMAS));
+  });
   renderAll();
 }
 
 state = AdminKit.load(STORE, DEFAULTS);
 if(!state.global.asof) state.global.asof = AdminKit.nowAsof();
+AdminKit.ensureSources(state, Object.keys(SCHEMAS), SOURCE_PRESETS);
 AdminKit.ensureModal();
 AdminKit.bindNav(META);
 bindAll();
+AdminKit.publishWallSource(THEME_KEY, state, Object.keys(SCHEMAS));
 const init = (location.hash||'#home').replace('#','');
 AdminKit.showPanel(META[init]?init:'home', META);
 window.addEventListener('beforeunload', e=>{ if(dirty){ e.preventDefault(); e.returnValue=''; } });

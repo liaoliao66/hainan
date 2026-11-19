@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数字孪生管理后台 · v1.0.0</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  html,body{height:100%}
+  .work-area{height:calc(100vh - 48px)}
+  iframe{width:100%;height:100%;border:0;background:#f8fafc}
+</style>
+</head>
+<body class="bg-slate-100 text-slate-800 h-screen overflow-hidden flex flex-col">
+<!-- 一级菜单：六大屏 -->
+<header class="shrink-0 h-12 bg-slate-800 text-slate-100 flex items-center px-3 gap-3 border-b border-slate-700">
+  <div class="shrink-0 flex items-center gap-2 pr-3 border-r border-slate-600">
+    <i class="fa-solid fa-screwdriver-wrench text-slate-300"></i>
+    <span class="text-sm font-semibold whitespace-nowrap">数字孪生管理后台</span>
+  </div>
+  <nav id="topNav" class="flex-1 min-w-0 flex items-center gap-0.5 overflow-x-auto text-sm h-full">
+    <!-- filled by JS -->
+  </nav>
+  <div class="shrink-0 flex items-center gap-3 text-xs text-slate-400 pl-2">
+    <a id="hdrWall" class="hover:text-white" href="#" target="_blank">打开大屏</a>
+    <a class="hover:text-white" href="../index.html">版本首页</a>
+  </div>
+</header>
+
+<div class="flex-1 min-h-0 flex work-area">
+  <!-- 二级菜单：当前大屏数据模块 -->
+  <aside class="w-56 shrink-0 bg-white border-r border-slate-200 flex flex-col">
+    <div class="px-4 py-3 border-b border-slate-100">
+      <div class="text-[11px] text-slate-400">二级菜单 · 数据模块</div>
+      <div class="text-sm font-semibold mt-0.5 truncate" id="sideTheme">港区概览</div>
+    </div>
+    <nav id="sideNav" class="flex-1 overflow-auto p-2 space-y-0.5 text-sm"></nav>
+  </aside>
+
+  <!-- 内容区 -->
+  <main class="flex-1 min-w-0 flex flex-col bg-slate-50">
+    <div class="shrink-0 h-11 bg-white border-b border-slate-200 px-4 flex items-center justify-between gap-3">
+      <div class="text-sm text-slate-500 truncate">
+        <span>管理后台</span>
+        <span class="mx-1.5 text-slate-300">/</span>
+        <span id="crumbTheme">港区概览</span>
+        <span class="mx-1.5 text-slate-300">/</span>
+        <span class="text-slate-800 font-medium" id="crumbMod">概览总控</span>
+      </div>
+      <span class="text-[11px] px-2 py-0.5 rounded bg-slate-100 text-slate-500 border border-slate-200">本地演示</span>
+    </div>
+    <div class="flex-1 min-h-0">
+      <iframe id="themeFrame" title="配置内容" src="about:blank"></iframe>
+    </div>
+  </main>
+</div>
+
+<script>
+const THEMES = {
+  overview: {
+    title: '港区概览',
+    page: 'admin_overview.html',
+    wall: 'pc_wall_command_screen.html',
+    icon: 'fa-map',
+    modules: [
+      { key: 'home', title: '概览总控', icon: 'fa-gauge' },
+      { key: 'throughput', title: '吞吐量', icon: 'fa-chart-simple' },
+      { key: 'cargo', title: '当年货类分布', icon: 'fa-chart-pie' },
+      { key: 'customer', title: '当年客户排行', icon: 'fa-ranking-star' },
+      { key: 'resource', title: '资源占用', icon: 'fa-boxes-stacked' },
+      { key: 'berth', title: '正在作业', icon: 'fa-ship' },
+      { key: 'equipment', title: '设备信息', icon: 'fa-gears' },
+      { key: 'alert', title: '未闭环告警', icon: 'fa-bell' },
+      { key: 'weather', title: '今日气象', icon: 'fa-cloud-sun' }
+    ]
+  },
+  production: {
+    title: '生产运行',
+    page: 'admin_production.html',
+    wall: 'pc_wall_theme_production.html',
+    icon: 'fa-ship',
+    modules: [
+      { key: 'home', title: '总控', icon: 'fa-gauge' },
+      { key: 'summary', title: '作业汇总', icon: 'fa-chart-simple' },
+      { key: 'berth', title: '泊位作业与任务', icon: 'fa-anchor' },
+      { key: 'plan', title: '待泊船舶计划', icon: 'fa-ship' },
+      { key: 'vehicle', title: '待进港预约车辆', icon: 'fa-truck' },
+      { key: 'alarm', title: '报警中心', icon: 'fa-bell' },
+      { key: 'device', title: '作业设备监测', icon: 'fa-gears' },
+      { key: 'env', title: '作业环境监测', icon: 'fa-wind' },
+      { key: 'storage', title: '仓储接收能力', icon: 'fa-warehouse' }
+    ]
+  },
+  traffic: {
+    title: '港区交通',
+    page: 'admin_traffic.html',
+    wall: 'pc_wall_theme_traffic.html',
+    icon: 'fa-truck',
+    modules: [
+      { key: 'home', title: '总控', icon: 'fa-gauge' },
+      { key: 'stat', title: '车辆通行统计', icon: 'fa-chart-line' },
+      { key: 'struct', title: '在港车辆结构', icon: 'fa-car' },
+      { key: 'eff', title: '集疏运效率', icon: 'fa-gauge-high' },
+      { key: 'focus', title: '重点车辆动态', icon: 'fa-truck-fast' },
+      { key: 'node', title: '关键节点运行', icon: 'fa-map-location-dot' },
+      { key: 'warn', title: '交通预警与处置', icon: 'fa-triangle-exclamation' },
+      { key: 'video', title: '重点交通节点视频', icon: 'fa-video' }
+    ]
+  },
+  equipment: {
+    title: '设备设施',
+    page: 'admin_equipment.html',
+    wall: 'pc_wall_theme_equipment.html',
+    icon: 'fa-gears',
+    modules: [
+      { key: 'home', title: '总控', icon: 'fa-gauge' },
+      { key: 'stat', title: '作业统计', icon: 'fa-chart-simple' },
+      { key: 'ledger', title: '设备台账', icon: 'fa-list' },
+      { key: 'util', title: '利用率时间构成', icon: 'fa-clock' },
+      { key: 'monitor', title: '关键设备监测', icon: 'fa-heart-pulse' },
+      { key: 'alarm', title: '设备报警中心', icon: 'fa-bell' },
+      { key: 'maint', title: '维保设备列表', icon: 'fa-wrench' },
+      { key: 'video', title: '重点设备监控视频', icon: 'fa-video' }
+    ]
+  },
+  business: {
+    title: '经营分析',
+    page: 'admin_business.html',
+    wall: 'pc_wall_theme_business.html',
+    icon: 'fa-chart-pie',
+    modules: [
+      { key: 'home', title: '总控', icon: 'fa-gauge' },
+      { key: 'tp', title: '吞吐汇总', icon: 'fa-chart-simple' },
+      { key: 'flow', title: '货种与流向', icon: 'fa-right-left' },
+      { key: 'cust', title: '客户规模与结构', icon: 'fa-users' },
+      { key: 'region', title: '国家区域占比', icon: 'fa-globe' },
+      { key: 'eff', title: '效率与泊位', icon: 'fa-anchor' },
+      { key: 'contract', title: '合同额', icon: 'fa-file-signature' },
+      { key: 'cash', title: '资金回收', icon: 'fa-coins' }
+    ]
+  },
+  dispatch: {
+    title: '智慧调度',
+    page: 'admin_dispatch.html',
+    wall: 'pc_wall_theme_dispatch.html',
+    icon: 'fa-bell',
+    modules: [
+      { key: 'home', title: '总控', icon: 'fa-gauge' },
+      { key: 'biz', title: '调度业务', icon: 'fa-briefcase' },
+      { key: 'duty', title: '值守与响应', icon: 'fa-user-shield' },
+      { key: 'event', title: '重点事件监控', icon: 'fa-bell' },
+      { key: 'review', title: '事件回顾', icon: 'fa-clock-rotate-left' },
+      { key: 'res', title: '应急资源台账', icon: 'fa-boxes-stacked' },
+      { key: 'point', title: '应急物资点', icon: 'fa-location-dot' },
+      { key: 'video', title: '安全监控', icon: 'fa-video' }
+    ]
+  }
+};
+
+const THEME_KEYS = Object.keys(THEMES);
+let curTheme = 'overview';
+let curMod = 'home';
+let frameTheme = '';
+
+function paintTopNav() {
+  document.getElementById('topNav').innerHTML = THEME_KEYS.map((k) => {
+    const t = THEMES[k];
+    return `<a href="#${k}/home" data-theme="${k}" class="l1 shrink-0 h-full flex items-center gap-1.5 px-3 border-b-2 border-transparent text-slate-300 hover:text-white hover:bg-slate-700/50">
+      <i class="fa-solid ${t.icon} text-xs opacity-80"></i><span>${t.title}</span>
+    </a>`;
+  }).join('');
+  document.querySelectorAll('#topNav .l1').forEach((a) => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      go(a.getAttribute('data-theme'), 'home');
+    });
+  });
+}
+
+function paintSideNav() {
+  const t = THEMES[curTheme];
+  document.getElementById('sideTheme').textContent = t.title;
+  document.getElementById('sideNav').innerHTML = t.modules.map((m) => {
+    const on = m.key === curMod;
+    return `<a href="#${curTheme}/${m.key}" data-mod="${m.key}" class="l2 flex items-center gap-2 rounded-lg px-3 py-2 ${on ? 'bg-slate-800 text-white' : 'text-slate-600 hover:bg-slate-100'}">
+      <i class="fa-solid ${m.icon} w-4 text-center text-xs ${on ? 'opacity-90' : 'text-slate-400'}"></i>
+      <span class="truncate">${m.title}</span>
+    </a>`;
+  }).join('');
+  document.querySelectorAll('#sideNav .l2').forEach((a) => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      go(curTheme, a.getAttribute('data-mod'));
+    });
+  });
+}
+
+function setTopActive() {
+  document.querySelectorAll('#topNav .l1').forEach((a) => {
+    const on = a.getAttribute('data-theme') === curTheme;
+    a.classList.toggle('border-sky-400', on);
+    a.classList.toggle('text-white', on);
+    a.classList.toggle('bg-slate-700/40', on);
+    a.classList.toggle('text-slate-300', !on);
+  });
+}
+
+function syncChrome() {
+  const t = THEMES[curTheme];
+  const m = t.modules.find((x) => x.key === curMod) || t.modules[0];
+  document.getElementById('crumbTheme').textContent = t.title;
+  document.getElementById('crumbMod').textContent = m.title;
+  document.getElementById('hdrWall').href = t.wall;
+  setTopActive();
+  paintSideNav();
+}
+
+function loadFrame(force) {
+  const t = THEMES[curTheme];
+  const frame = document.getElementById('themeFrame');
+  const target = t.page + '?embed=1#' + curMod;
+  if (!force && frameTheme === curTheme && frame.contentWindow) {
+    try {
+      if (frame.contentWindow.location.hash !== '#' + curMod) {
+        frame.contentWindow.location.hash = curMod;
+      }
+      return;
+    } catch (e) {}
+  }
+  frameTheme = curTheme;
+  frame.src = target;
+}
+
+function applyRoute(theme, mod) {
+  if (!THEMES[theme]) theme = 'overview';
+  const t = THEMES[theme];
+  if (!t.modules.some((m) => m.key === mod)) mod = 'home';
+  const themeChanged = curTheme !== theme || frameTheme !== theme;
+  const modChanged = curMod !== mod;
+  curTheme = theme;
+  curMod = mod;
+  syncChrome();
+  if (themeChanged || !frameTheme) loadFrame(true);
+  else if (modChanged) loadFrame(false);
+}
+
+function go(theme, mod) {
+  if (!THEMES[theme]) theme = 'overview';
+  const t = THEMES[theme];
+  if (!t.modules.some((m) => m.key === mod)) mod = 'home';
+  const next = '#' + theme + '/' + mod;
+  if (location.hash !== next) location.hash = next;
+  else applyRoute(theme, mod);
+}
+
+function route() {
+  const raw = (location.hash || '#overview/home').replace(/^#/, '');
+  const parts = raw.split('/');
+  applyRoute(parts[0] || 'overview', parts[1] || 'home');
+}
+
+paintTopNav();
+window.addEventListener('hashchange', route);
+route();
+</script>
+</body>
+</html>

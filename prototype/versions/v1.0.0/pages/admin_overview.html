@@ -6,6 +6,7 @@
 <title>港区概览 · 管理后台 · v1.0.0</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="admin_common.js"></script>
 <style>
   [data-panel].hidden{display:none!important}
   .toast{position:fixed;right:20px;bottom:20px;z-index:80;background:#0f172a;color:#fff;padding:10px 14px;border-radius:10px;font-size:13px;opacity:0;transform:translateY(8px);transition:.2s}
@@ -35,6 +36,7 @@
     <a href="#weather" data-nav="weather" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-cloud-sun w-4 text-center"></i><span>今日气象</span></a>
   </nav>
   <div class="space-y-2 text-xs text-slate-400 mt-3">
+    <a class="hover:text-white block" href="admin_console.html">返回统一管理后台</a>
     <a class="hover:text-white block" href="pc_wall_command_screen.html" target="_blank">打开港区概览大屏</a>
     <a class="hover:text-white block" href="../index.html">返回版本首页</a>
   </div>
@@ -88,7 +90,7 @@
         <div class="px-4 py-3 border-b border-slate-100 font-semibold text-sm">模块与大屏对应（点击进入维护）</div>
         <table class="w-full text-sm">
           <thead class="bg-slate-50 text-xs text-slate-600"><tr>
-            <th class="text-left px-3 py-2">后台模块</th><th class="text-left px-3 py-2">大屏位置</th><th class="text-left px-3 py-2">上墙</th><th class="text-left px-3 py-2">数据模式</th><th class="text-left px-3 py-2">操作</th>
+            <th class="text-left px-3 py-2">后台模块</th><th class="text-left px-3 py-2">大屏位置</th><th class="text-left px-3 py-2">上墙</th><th class="text-left px-3 py-2">数据来源</th><th class="text-left px-3 py-2">操作</th>
           </tr></thead>
           <tbody id="moduleMapBody"></tbody>
         </table>
@@ -305,6 +307,18 @@
 
 <script>
 const STORE_KEY = 'hn_admin_overview_v1';
+const THEME_KEY = 'overview';
+const SOURCE_KEYS = ['throughput','cargo','customer','resource','berth','equipment','alert','weather'];
+const SOURCE_PRESETS = {
+  throughput: { system: '码头生产管理系统', api: '生产系统-吞吐汇总', note: '默认演示；正式：年/季/月实际取码头生产，目标值本后台配置。' },
+  cargo: { system: '码头生产管理系统', api: '生产系统-货类分布', note: '默认演示；正式接当年货类分布接口。' },
+  customer: { system: '经营分析系统', api: '经营-客户排行', note: '默认演示；正式接当年客户排行。' },
+  resource: { system: '码头生产管理系统', api: '生产系统-资源占用', note: '默认演示；车辆/船舶可接生产与卡口，堆场容量本后台正式配置。' },
+  berth: { system: '码头生产管理系统', api: '生产系统-在泊作业', note: '默认演示；正式接在泊作业；通关状态可模拟。' },
+  equipment: { system: '设备设施监测系统', api: '设备-运行摘要', note: '默认演示；正式接设备运行摘要。' },
+  alert: { system: '设备设施监测系统', api: '监测-未闭环告警', note: '默认演示；正式接未闭环告警列表。' },
+  weather: { system: '气象通航信息', api: '气象-今日通航', note: '默认演示；正式接今日通航气象源。' }
+};
 const CUSTOMS = ['未申报','已申报','查验','放行','异常'];
 const WAIT_STATUS = ['预报','锚地','待靠','已排泊'];
 const HAUL = ['皮带直送','汽车','—'];
@@ -383,11 +397,29 @@ function loadState(){
     const n=new Date(); const p=x=>String(x).padStart(2,'0');
     state.global.asof=`${n.getFullYear()}-${p(n.getMonth()+1)}-${p(n.getDate())}T${p(n.getHours())}:${p(n.getMinutes())}`;
   }
+  AdminKit.ensureSources(state, SOURCE_KEYS, SOURCE_PRESETS);
+}
+
+function syncThroughputSrcFromModule(){
+  const mode = (state.sources && state.sources.throughput && state.sources.throughput.mode) || 'demo';
+  const flag = mode === 'formal' ? 'formal' : 'demo';
+  state.throughput.year.src = flag;
+  state.throughput.quarter.src = flag;
+  state.throughput.month.src = flag;
+  const y=document.getElementById('thYSrc'), q=document.getElementById('thQSrc'), m=document.getElementById('thMSrc');
+  if(y) y.value=flag; if(q) q.value=flag; if(m) m.value=flag;
+  if(state.sources && state.sources.weather){
+    state.weather.src = state.sources.weather.mode === 'formal' ? 'formal' : 'demo';
+    const wx=document.getElementById('wxSrc'); if(wx) wx.value=state.weather.src;
+  }
 }
 
 function saveAll(){
   collectFromDom();
+  const err = AdminKit.validateAllSources(state, SOURCE_KEYS, META);
+  if(err){ toast(err); return; }
   localStorage.setItem(STORE_KEY, JSON.stringify(state));
+  AdminKit.publishWallSource(THEME_KEY, state, SOURCE_KEYS);
   dirty=false;
   refreshHome();
   toast('已保存到本地演示存储');
@@ -395,7 +427,9 @@ function saveAll(){
 function resetDemo(){
   if(!confirm('恢复演示初值？当前本地修改将清除。')) return;
   state=clone(DEFAULTS);
+  AdminKit.ensureSources(state, SOURCE_KEYS, SOURCE_PRESETS);
   localStorage.setItem(STORE_KEY, JSON.stringify(state));
+  AdminKit.publishWallSource(THEME_KEY, state, SOURCE_KEYS);
   bindAll();
   dirty=false;
   toast('已恢复演示初值');
@@ -407,6 +441,7 @@ function onGlobalChange(){
   state.global.asof=document.getElementById('gAsof').value;
   state.global.formalNote=document.getElementById('gFormalNote').value;
   markDirty(); refreshHome();
+  AdminKit.publishWallSource(THEME_KEY, state, SOURCE_KEYS);
 }
 
 const META={
@@ -421,7 +456,8 @@ const META={
   weather:{title:'今日气象',desc:'对应大屏顶栏今日通航气象。'}
 };
 
-function showPanel(name){
+function showPanel(name, opts){
+  if(!META[name]) name='home';
   document.querySelectorAll('[data-panel]').forEach(el=>el.classList.toggle('hidden', el.getAttribute('data-panel')!==name));
   document.querySelectorAll('#sideNav .nav').forEach(a=>{
     const on=a.getAttribute('data-nav')===name;
@@ -432,7 +468,7 @@ function showPanel(name){
   const m=META[name]||META.home;
   document.getElementById('pageTitle').textContent=m.title;
   document.getElementById('pageDesc').textContent=m.desc;
-  location.hash=name;
+  if(!(opts&&opts.silentHash) && location.hash!=='#'+name) location.hash=name;
 }
 
 function refreshHome(){
@@ -449,20 +485,20 @@ function refreshHome(){
     badge.className='text-xs px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200';
   }
   const rows=[
-    ['吞吐量','左侧 KPI',state.throughput.onWall, state.throughput.year.src,'throughput'],
-    ['当年货类分布','左侧',state.cargo.onWall,'演示/维护','cargo'],
-    ['当年客户排行','左侧',state.customer.onWall,'演示/维护','customer'],
-    ['资源占用','左侧',state.resource.onWall,'演示+正式容量','resource'],
-    ['正在作业','右侧',state.berth.onWall,'演示/通关模拟','berth'],
-    ['设备信息','右侧',state.equipment.onWall,'演示摘要','equipment'],
-    ['未闭环告警','右侧',state.alert.onWall,'演示/可上墙','alert'],
-    ['今日气象','顶栏右侧',state.weather.onWall,state.weather.src==='demo'?'演示':'正式待接','weather']
+    ['吞吐量','左侧 KPI',state.throughput.onWall,'throughput'],
+    ['当年货类分布','左侧',state.cargo.onWall,'cargo'],
+    ['当年客户排行','左侧',state.customer.onWall,'customer'],
+    ['资源占用','左侧',state.resource.onWall,'resource'],
+    ['正在作业','右侧',state.berth.onWall,'berth'],
+    ['设备信息','右侧',state.equipment.onWall,'equipment'],
+    ['未闭环告警','右侧',state.alert.onWall,'alert'],
+    ['今日气象','顶栏右侧',state.weather.onWall,'weather']
   ];
   document.getElementById('moduleMapBody').innerHTML=rows.map(r=>`<tr class="border-t border-slate-100">
     <td class="px-3 py-2 font-medium">${r[0]}</td><td class="px-3 py-2">${r[1]}</td>
     <td class="px-3 py-2 ${r[2]?'text-emerald-600':'text-slate-400'}">${r[2]?'启用':'停用'}</td>
-    <td class="px-3 py-2">${r[3]}</td>
-    <td class="px-3 py-2"><button class="text-sky-700" onclick="showPanel('${r[4]}')">维护</button></td>
+    <td class="px-3 py-2 text-xs text-slate-600">${AdminKit.homeSourceCell(state, r[3])}</td>
+    <td class="px-3 py-2"><button class="text-sky-700" onclick="showPanel('${r[3]}')">维护</button></td>
   </tr>`).join('');
 }
 
@@ -741,17 +777,28 @@ function bindAll(){
   document.getElementById('wxWork').value=state.weather.work;
   document.getElementById('wxSrc').value=state.weather.src;
   renderCargo(); renderCustomer(); renderYards(); renderBerth(); renderEqGroups(); renderAlerts(); syncEqSum(); refreshHome();
+  AdminKit.mountSources(state, SOURCE_KEYS, (key) => {
+    markDirty();
+    if(key==='throughput' || key==='weather') syncThroughputSrcFromModule();
+    refreshHome();
+    AdminKit.publishWallSource(THEME_KEY, state, SOURCE_KEYS);
+  });
 }
 
 document.querySelectorAll('#sideNav .nav').forEach(a=>{
   a.addEventListener('click', e=>{ e.preventDefault(); showPanel(a.getAttribute('data-nav')); });
 });
+window.addEventListener('hashchange', ()=>{
+  const name=(location.hash||'#home').replace(/^#/,'')||'home';
+  showPanel(META[name]?name:'home', {silentHash:true});
+});
 window.addEventListener('beforeunload', e=>{ if(dirty){ e.preventDefault(); e.returnValue=''; }});
 
 loadState();
 bindAll();
-const init=(location.hash||'#home').replace('#','')||'home';
-showPanel(META[init]?init:'home');
+AdminKit.publishWallSource(THEME_KEY, state, SOURCE_KEYS);
+const init=(location.hash||'#home').replace(/^#/,'')||'home';
+showPanel(META[init]?init:'home', {silentHash:true});
 </script>
 </body>
 </html>

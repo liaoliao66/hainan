@@ -104,7 +104,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 
     <header class="shrink-0 flex flex-col" style="height:9.26%">
       <div class="flex items-center justify-between px-4 border-b border-[#1e293b] bg-[#0a1220]" style="height:36%">
-        <div class="text-[11px] text-[#94a3b8] whitespace-nowrap">港区交通一张图 V2 · 演示数据不可作交通指挥依据</div>
+        <div class="text-[11px] text-[#94a3b8] whitespace-nowrap">港区交通一张图 V2 · <span data-wall-source-badge>演示数据</span>不可作交通指挥依据</div>
         <div class="flex items-center gap-1.5">
           <button type="button" class="tool-btn" onclick="toast('操控席 · 领导席切换（演示）')">操控席  领导⌄</button>
           <a class="tool-btn" href="../index.html">入口</a>
@@ -443,7 +443,9 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
   </div>
 </div>
 
+<script src="wall_source_badge.js"></script>
 <script src="wall_domain.js"></script>
+<script>WallSourceBadge.apply('traffic');</script>
 <script src="wall_ov_detail.js"></script>
 <script src="wall_theme_nav.js"></script>
 <script>

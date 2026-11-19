@@ -6,6 +6,7 @@
 <title>经营分析一张图 · 管理后台 · v1.0.0</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="admin_common.js"></script>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex">
 <aside class="w-64 shrink-0 bg-slate-800 text-slate-100 min-h-screen p-4 flex flex-col sticky top-0 h-screen">
@@ -27,7 +28,7 @@
   </nav>
   <div class="space-y-2 text-xs text-slate-400 mt-3">
     <a class="hover:text-white block" href="pc_wall_theme_business.html" target="_blank">打开对应大屏</a>
-    <a class="hover:text-white block" href="admin_overview.html">港区概览后台</a>
+    <a class="hover:text-white block" href="admin_console.html">返回统一管理后台</a>
     <a class="hover:text-white block" href="../index.html">返回版本首页</a>
   </div>
 </aside>
@@ -68,7 +69,7 @@
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         <div class="px-4 py-3 border-b font-semibold text-sm">模块清单</div>
         <table class="w-full text-sm"><thead class="bg-slate-50 text-xs text-slate-600"><tr>
-          <th class="text-left px-3 py-2">模块</th><th class="text-left px-3 py-2">记录数</th><th class="text-left px-3 py-2">上墙</th><th class="text-left px-3 py-2">操作</th>
+          <th class="text-left px-3 py-2">模块</th><th class="text-left px-3 py-2">记录数</th><th class="text-left px-3 py-2">数据来源</th><th class="text-left px-3 py-2">上墙</th><th class="text-left px-3 py-2">操作</th>
         </tr></thead><tbody id="homeBody"></tbody></table>
       </div>
     </section>
@@ -229,10 +230,19 @@
 
   </div>
 </main>
-<script src="admin_common.js"></script>
 <script>
 
 const STORE = 'hn_admin_business_v1';
+const THEME_KEY = 'business';
+const SOURCE_PRESETS = {
+  tp: { system: '经营分析系统', api: '经营-吞吐汇总', note: '默认演示；正式接经营吞吐月/季/年接口。' },
+  flow: { system: '经营分析系统', api: '经营-货种流向', note: '默认演示；正式接货种与流向接口。' },
+  cust: { system: '经营分析系统', api: '经营-客户结构', note: '默认演示；正式接客户规模与结构。' },
+  region: { system: '经营分析系统', api: '经营-区域占比', note: '默认演示；正式接国家区域货量占比。' },
+  eff: { system: '码头生产管理系统', api: '生产-效率泊位', note: '默认演示；正式接效率与泊位利用率。' },
+  contract: { system: '经营分析系统', api: '经营-合同额', note: '默认演示；正式接合同额接口。' },
+  cash: { system: '经营分析系统', api: '经营-资金回收', note: '默认演示；正式接资金回收接口。' }
+};
 const META = {"home": {"title": "总控", "desc": "本专题大屏数据维护入口；支持新增/查看/编辑/删除。"}, "tp": {"title": "吞吐汇总", "desc": "月/季/年实际与计划"}, "flow": {"title": "货种与流向", "desc": "进港/出港与货种"}, "cust": {"title": "客户规模与结构", "desc": "活跃/存量/新增"}, "region": {"title": "国家区域占比", "desc": "八区域货量"}, "eff": {"title": "效率与泊位", "desc": "利用率区间展示"}, "contract": {"title": "合同额", "desc": "新增生效合同"}, "cash": {"title": "资金回收", "desc": "到账与应收"}};
 const SCHEMAS = {"tp": {"cols": [["period", "周期"], ["actual", "实际"], ["plan", "计划"], ["rate", "达成%"], ["on", "上墙"]], "fields": [["period", "周期", "text"], ["actual", "实际", "number"], ["plan", "计划", "number"], ["on", "上墙", "checkbox"]], "derived_rate": true}, "flow": {"cols": [["name", "货种"], ["ton", "万吨"], ["dir", "流向"], ["on", "上墙"]], "fields": [["name", "货种", "text"], ["ton", "万吨", "number"], ["dir", "流向", "select", ["进港", "出港", "综合"]], ["on", "上墙", "checkbox"]], "derived_rate": false}, "cust": {"cols": [["name", "指标"], ["value", "数值"], ["note", "说明"], ["on", "上墙"]], "fields": [["name", "指标", "text"], ["value", "数值", "text"], ["note", "说明", "text"], ["on", "上墙", "checkbox"]], "derived_rate": false}, "region": {"cols": [["name", "区域"], ["pct", "占比%"], ["on", "上墙"]], "fields": [["name", "区域", "text"], ["pct", "占比%", "number"], ["on", "上墙", "checkbox"]], "derived_rate": false}, "eff": {"cols": [["name", "指标"], ["value", "展示值"], ["on", "上墙"]], "fields": [["name", "指标", "text"], ["value", "展示值", "text"], ["on", "上墙", "checkbox"]], "derived_rate": false}, "contract": {"cols": [["name", "分项"], ["amount", "万元"], ["on", "上墙"]], "fields": [["name", "分项", "text"], ["amount", "万元", "number"], ["on", "上墙", "checkbox"]], "derived_rate": false}, "cash": {"cols": [["name", "指标"], ["value", "数值"], ["unit", "单位"], ["on", "上墙"]], "fields": [["name", "指标", "text"], ["value", "数值", "text"], ["unit", "单位", "text"], ["on", "上墙", "checkbox"]], "derived_rate": false}};
 const DEFAULTS = {"global": {"demo": true, "asof": ""}, "walls": {"tp": true, "flow": true, "cust": true, "region": true, "eff": true, "contract": true, "cash": true}, "rows": {"tp": [{"id": "t1", "period": "本月", "actual": 53.8, "plan": 58.0, "on": true}, {"id": "t2", "period": "本季", "actual": 162.4, "plan": 172.5, "on": true}, {"id": "t3", "period": "本年", "actual": 538.2, "plan": 587.0, "on": true}], "flow": [{"id": "f1", "name": "粮食", "ton": 24.8, "dir": "进港", "on": true}, {"id": "f2", "name": "矿建", "ton": 17.7, "dir": "进港", "on": true}, {"id": "f3", "name": "件杂", "ton": 11.3, "dir": "综合", "on": true}], "cust": [{"id": "c1", "name": "活跃客户", "value": "24", "note": "家", "on": true}, {"id": "c2", "name": "存量", "value": "20", "note": "家", "on": true}, {"id": "c3", "name": "新增", "value": "4", "note": "家", "on": true}], "region": [{"id": "r1", "name": "境内", "pct": 46, "on": true}, {"id": "r2", "name": "东南亚", "pct": 18, "on": true}, {"id": "r3", "name": "中东", "pct": 12, "on": true}, {"id": "r4", "name": "欧洲", "pct": 9, "on": true}], "eff": [{"id": "e1", "name": "泊位综合利用率", "value": "78%—85%", "on": true}, {"id": "e2", "name": "散杂堆场占用", "value": "68%—75%", "on": true}], "contract": [{"id": "k1", "name": "装卸", "amount": 900, "on": true}, {"id": "k2", "name": "仓储", "amount": 330, "on": true}, {"id": "k3", "name": "港务服务", "amount": 210, "on": true}], "cash": [{"id": "h1", "name": "本月到账", "value": "980", "unit": "万元", "on": true}, {"id": "h2", "name": "到账计划", "value": "1050", "unit": "万元", "on": true}, {"id": "h3", "name": "本期应收", "value": "360", "unit": "万元", "on": true}, {"id": "h4", "name": "往期应收", "value": "620", "unit": "万元", "on": true}]}};
@@ -242,7 +252,10 @@ let dirty = false;
 function markDirty(){ dirty = true; }
 
 function doSave(){
+  const err = AdminKit.validateAllSources(state, Object.keys(SCHEMAS), META);
+  if (err) { AdminKit.toast(err); return; }
   AdminKit.save(STORE, state);
+  AdminKit.publishWallSource(THEME_KEY, state, Object.keys(SCHEMAS));
   dirty = false;
   refreshHome();
 }
@@ -250,7 +263,9 @@ function doReset(){
   if(!confirm('恢复演示初值？')) return;
   state = AdminKit.clone(DEFAULTS);
   if(!state.global.asof) state.global.asof = AdminKit.nowAsof();
+  AdminKit.ensureSources(state, Object.keys(SCHEMAS), SOURCE_PRESETS);
   AdminKit.save(STORE, state);
+  AdminKit.publishWallSource(THEME_KEY, state, Object.keys(SCHEMAS));
   bindAll();
   dirty = false;
 }
@@ -259,6 +274,7 @@ function syncGlobal(){
   state.global.asof = document.getElementById('gAsof').value;
   document.getElementById('modeBadge').textContent = state.global.demo ? '演示数据 · 开' : '演示数据 · 关';
   markDirty(); refreshHome();
+  AdminKit.publishWallSource(THEME_KEY, state, Object.keys(SCHEMAS));
 }
 function toggleWall(key){
   state.walls[key] = document.getElementById(key+'OnWall').checked;
@@ -275,6 +291,7 @@ function refreshHome(){
     const on = state.walls[k];
     return `<tr class="border-t border-slate-100"><td class="px-3 py-2 font-medium">${META[k].title}</td>
       <td class="px-3 py-2">${n}</td>
+      <td class="px-3 py-2 text-xs text-slate-600">${AdminKit.homeSourceCell(state, k)}</td>
       <td class="px-3 py-2 ${on?'text-emerald-600':'text-slate-400'}">${on?'启用':'停用'}</td>
       <td class="px-3 py-2"><button class="text-sky-700" onclick="AdminKit.showPanel('${k}', META)">维护</button></td></tr>`;
   }).join('');
@@ -368,14 +385,21 @@ function bindAll(){
   document.getElementById('gDemo').checked = !!state.global.demo;
   document.getElementById('gAsof').value = state.global.asof || '';
   document.getElementById('modeBadge').textContent = state.global.demo ? '演示数据 · 开' : '演示数据 · 关';
+  AdminKit.mountSources(state, Object.keys(SCHEMAS), () => {
+    markDirty();
+    refreshHome();
+    AdminKit.publishWallSource(THEME_KEY, state, Object.keys(SCHEMAS));
+  });
   renderAll();
 }
 
 state = AdminKit.load(STORE, DEFAULTS);
 if(!state.global.asof) state.global.asof = AdminKit.nowAsof();
+AdminKit.ensureSources(state, Object.keys(SCHEMAS), SOURCE_PRESETS);
 AdminKit.ensureModal();
 AdminKit.bindNav(META);
 bindAll();
+AdminKit.publishWallSource(THEME_KEY, state, Object.keys(SCHEMAS));
 const init = (location.hash||'#home').replace('#','');
 AdminKit.showPanel(META[init]?init:'home', META);
 window.addEventListener('beforeunload', e=>{ if(dirty){ e.preventDefault(); e.returnValue=''; } });

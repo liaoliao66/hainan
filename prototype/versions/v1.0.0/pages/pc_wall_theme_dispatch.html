@@ -135,7 +135,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
   <div class="wall mode-bim-full" id="wallRoot">
     <header class="shrink-0 flex flex-col" style="height:9.2%">
       <div class="flex items-center justify-between px-4 border-b border-[#1e293b] bg-[#0a1220]" style="height:38%">
-        <div class="text-[11px] text-[#94a3b8]">智慧调度一张图 · 演练只读 · 演示数据不可作正式调度依据</div>
+        <div class="text-[11px] text-[#94a3b8]">智慧调度一张图 · 演练只读 · <span data-wall-source-badge>演示数据</span>不可作正式调度依据</div>
         <div class="flex items-center gap-1.5">
           <button type="button" class="tool-btn" onclick="toast('操控席 · 领导席（演示）')">操控席 领导⌄</button>
           <a class="tool-btn" href="../index.html">入口</a>
@@ -470,7 +470,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
           <div class="text-[15px] font-extrabold text-[#00e4ff]" id="rv-title">H021 · 联络道车辆剐蹭回顾</div>
           <div class="text-[11px] text-[#91abc4]" id="rv-meta">11/07 · 已闭环 · 历时 25 分钟</div>
         </div>
-        <span class="pill m">演示数据</span>
+        <span class="pill m" data-wall-source-badge>演示数据</span>
       </div>
       <div class="flex items-center gap-2">
         <button type="button" class="tool-btn" id="rv-play"><i class="fa-solid fa-play mr-1"></i>演练回放</button>
@@ -534,7 +534,9 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
   </div>
 </div>
 
+<script src="wall_source_badge.js"></script>
 <script src="wall_domain.js"></script>
+<script>WallSourceBadge.apply('dispatch');</script>
 <script src="wall_ov_detail.js"></script>
 <script src="wall_theme_nav.js"></script>
 <script>

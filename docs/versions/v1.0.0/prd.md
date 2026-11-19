@@ -613,14 +613,15 @@ sequenceDiagram
 | P-DETAIL | 对象详情面板 | PC/大屏 | P0 | 通用详情 |
 | P-REMOTE | 移动遥控页 | 移动 | P1 | 扫码操控【待确认】 |
 | P-SCREEN | 指挥大屏布局页 | 大屏 | P0 | 投屏布局 |
-| P-ADMIN-OV | 港区概览管理后台 | PC | P0 | `admin_overview.html` | 对齐概览大屏模块；演示+正式配置；本地演示存储 |
-| P-ADMIN-PROD | 生产运行管理后台 | PC | P0 | `admin_production.html` | 作业汇总/泊位任务/待泊/预约车等；增删改查 |
-| P-ADMIN-TRAF | 港区交通管理后台 | PC | P0 | `admin_traffic.html` | 通行统计/车辆/节点/预警等；增删改查 |
-| P-ADMIN-EQ | 设备设施管理后台 | PC | P0 | `admin_equipment.html` | 台账/监测/报警/维保等；增删改查 |
-| P-ADMIN-BIZ | 经营分析管理后台 | PC | P0 | `admin_business.html` | 吞吐/货种/客户/合同/回款等；增删改查 |
-| P-ADMIN-DISP | 智慧调度管理后台 | PC | P0 | `admin_dispatch.html` | 事件/值守/应急资源等；增删改查 |
+| P-ADMIN | 数字孪生管理后台（统一入口） | PC | P0 | `admin_console.html` | 六大屏收拢为标准管理后台；侧栏切主题；iframe 嵌入各主题配置台 |
+| P-ADMIN-OV | 港区概览配置台 | PC | P0 | `admin_overview.html`（`?embed=1`） | 对齐概览大屏模块；演示+正式配置；本地演示存储 |
+| P-ADMIN-PROD | 生产运行配置台 | PC | P0 | `admin_production.html`（`?embed=1`） | 作业汇总/泊位任务/待泊/预约车等；增删改查 |
+| P-ADMIN-TRAF | 港区交通配置台 | PC | P0 | `admin_traffic.html`（`?embed=1`） | 通行统计/车辆/节点/预警等；增删改查 |
+| P-ADMIN-EQ | 设备设施配置台 | PC | P0 | `admin_equipment.html`（`?embed=1`） | 台账/监测/报警/维保等；增删改查 |
+| P-ADMIN-BIZ | 经营分析配置台 | PC | P0 | `admin_business.html`（`?embed=1`） | 吞吐/货种/客户/合同/回款等；增删改查 |
+| P-ADMIN-DISP | 智慧调度配置台 | PC | P0 | `admin_dispatch.html`（`?embed=1`） | 事件/值守/应急资源等；增删改查 |
 
-> 管理后台视觉为 Slate 政务风；与大屏模块一一对应；无权限矩阵（单入口配置）。公共脚本：`admin_common.js`。
+> 管理后台视觉为 Slate 政务风；版本首页仅保留统一入口 `admin_console.html`；旧分主题地址自动跳转统一后台。无权限矩阵。公共脚本：`admin_common.js`。
 
 ### 5.2 跳转关系
 

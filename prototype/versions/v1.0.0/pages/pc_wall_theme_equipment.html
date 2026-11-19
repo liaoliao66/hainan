@@ -141,7 +141,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
       <div class="flex items-center justify-between px-6 border-b border-[#23435f] bg-[#0a1729]" style="height:31%">
         <div class="flex items-center gap-3 whitespace-nowrap">
           <span class="mono text-[11px] tracking-[2px] text-[#54d8ff]">JINGPAI PORT / COMMAND CENTER</span>
-          <span class="text-[12px] text-[#91abc4]">演示数据不可作运维依据 · 支持13类设备详情弹窗</span>
+          <span class="text-[12px] text-[#91abc4]"><span data-wall-source-badge>演示数据</span>不可作运维依据 · 支持13类设备详情弹窗</span>
           <span class="text-[11px] text-[#637f99]">v1.0.0 · Figma 1:1</span>
         </div>
         <div class="flex items-center gap-2">
@@ -461,7 +461,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
         <h4 id="eqm-title">设备详情</h4>
         <span class="pill g" id="eqm-status">—</span>
         <span class="pill b" id="eqm-area">—</span>
-        <span class="pill m">演示数据</span>
+        <span class="pill m" data-wall-source-badge>演示数据</span>
       </div>
       <div class="acts">
         <button type="button" class="x" id="eqm-close" aria-label="关闭">×</button>
@@ -495,7 +495,9 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
   </div>
 </div>
 
+<script src="wall_source_badge.js"></script>
 <script src="wall_domain.js"></script>
+<script>WallSourceBadge.apply('equipment');</script>
 <script src="wall_eq_detail.js"></script>
 <script src="wall_ov_detail.js"></script>
 <script src="wall_theme_nav.js"></script>
