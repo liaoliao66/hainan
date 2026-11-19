@@ -1,4 +1,4 @@
-/** 大屏基础配置：主题启用/排序、模块上墙（由管理后台写入） */
+/** 基础配置：主题启用/排序、模块上墙（由管理后台写入） */
 window.WallBaseConfig = (function () {
   const THEME_KEY = 'hn_wall_theme_cfg_v1';
   const MODULE_KEY = 'hn_wall_module_cfg_v1';
