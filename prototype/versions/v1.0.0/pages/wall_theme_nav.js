@@ -7,9 +7,19 @@ const THEME_PAGES = {
   '调度': 'pc_wall_theme_dispatch.html'
 };
 
-/** 已开放主题列表；空数组表示全部可跳转 */
+/** 已开放主题列表；空数组表示全部可跳转（可由管理后台「多主题管理」写入） */
 const THEME_DISABLED = [];
-const THEME_DISABLED_TIP = '该主题本期未开放';
+const THEME_DISABLED_TIP = '该主题未启用（管理后台可配置）';
+
+function getThemeNavKeys() {
+  if (window.WallBaseConfig && typeof WallBaseConfig.getThemeKeysForNav === 'function') {
+    return WallBaseConfig.getThemeKeysForNav();
+  }
+  if (window.THEME_ORDER && window.THEME_ORDER.length) {
+    return window.THEME_ORDER.filter((k) => THEME_PAGES[k]);
+  }
+  return Object.keys(THEME_PAGES);
+}
 
 function toast(m) {
   let t = document.getElementById('toast');
@@ -46,9 +56,10 @@ function tickClock() {
 function renderThemeNav(active) {
   const el = document.getElementById('themes');
   if (!el) return;
+  if (window.WallBaseConfig) WallBaseConfig.applyThemeGlobals();
   const health = el.querySelector('.health');
   const extras = [...el.querySelectorAll(':scope > button')];
-  const links = Object.keys(THEME_PAGES)
+  const links = getThemeNavKeys()
     .map((k) => {
       if (THEME_DISABLED.includes(k)) {
         return `<span class="theme off" data-theme="${k}" title="${THEME_DISABLED_TIP}">${k}</span>`;
@@ -66,6 +77,25 @@ function renderThemeNav(active) {
       toast(THEME_DISABLED_TIP);
     });
   });
+}
+
+/** 底栏主题脚（各墙页可复用） */
+function renderThemeFoot(el, activeShort, labelMap) {
+  if (!el) return;
+  if (window.WallBaseConfig) WallBaseConfig.applyThemeGlobals();
+  const labels = labelMap || { 概览: '港区概览', 生产: '生产运行', 交通: '港区交通', 设备: '设备设施', 经营: '经营分析', 调度: '智慧调度' };
+  el.innerHTML = getThemeNavKeys()
+    .map((k) => {
+      const label = labels[k] || k;
+      if (THEME_DISABLED.includes(k)) {
+        return `<span class="theme" style="opacity:.4" title="${THEME_DISABLED_TIP}">${label}</span>`;
+      }
+      if (k === activeShort || labels[k] === activeShort) {
+        return `<button type="button" class="theme on">${label}</button>`;
+      }
+      return `<a class="theme" href="${THEME_PAGES[k]}">${label}</a>`;
+    })
+    .join('');
 }
 
 function openDrill(n, t, s) {

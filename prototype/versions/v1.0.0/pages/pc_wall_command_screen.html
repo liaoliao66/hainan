@@ -193,7 +193,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
       <div class="text-center flex-1 flex items-center justify-center">
         <h1 class="m-0 text-[20px] font-extrabold tracking-[2px] text-[#00e4ff]" style="text-shadow:0 0 16px rgba(0,228,255,.35)">海南金牌港数字孪生平台</h1>
       </div>
-      <div class="w-[280px] flex items-center justify-end" data-weather="today"></div>
+      <div class="w-[280px] flex items-center justify-end" data-weather="today" data-wall-mod="weather"></div>
     </header>
 
     <!-- 主体 · BIM 全屏铺满，左右浮层 -->
@@ -209,7 +209,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
       <div class="float-panels">
       <!-- 左 -->
       <div class="side-col">
-        <div class="card shrink-0">
+        <div class="card shrink-0" data-wall-mod="throughput">
           <div class="flex items-center gap-1.5 mb-1.5"><span class="mark"></span><span class="text-[13px] font-bold text-[#36bffa]">吞吐量</span><span class="chip ml-auto">年 / 季 / 月 万吨</span></div>
           <div class="flex justify-between gap-1.5">
             <div class="gauge"><div class="text-[16px] text-[#00e4ff]">186</div><div class="text-[9px] text-[#b4c7e7]">年</div><div class="text-[10px] font-bold text-[#7dffc8]">26.6%</div><div class="text-[8px] text-[rgba(180,199,231,.65)]">目标700</div></div>
@@ -217,7 +217,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
             <div class="gauge"><div class="text-[16px] text-[#00e4ff]">15.2</div><div class="text-[9px] text-[#b4c7e7]">月</div><div class="text-[10px] font-bold text-[#7dffc8]">26.1%</div><div class="text-[8px] text-[rgba(180,199,231,.65)]">目标58.3</div></div>
           </div>
         </div>
-        <div class="card shrink-0">
+        <div class="card shrink-0" data-wall-mod="cargo">
           <div class="flex items-center gap-1.5 mb-1.5"><span class="mark"></span><span class="text-[13px] font-bold text-[#36bffa]">当年货类分布</span><span class="chip ml-auto">标准货类</span></div>
           <div class="flex gap-2.5">
             <div id="cargoChart" class="w-[96px] h-[112px] shrink-0"></div>
@@ -230,11 +230,11 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
             </div>
           </div>
         </div>
-        <div class="card card-top5">
+        <div class="card card-top5" data-wall-mod="customer">
           <div class="flex items-center gap-1.5 mb-1.5 shrink-0"><span class="mark"></span><span class="text-[13px] font-bold text-[#36bffa]">当年客户排行</span><span class="chip ml-auto">Top5 · 万吨</span></div>
           <div id="top5Chart"></div>
         </div>
-        <div class="card card-res shrink-0">
+        <div class="card card-res shrink-0" data-wall-mod="resource">
           <div class="flex items-center gap-1.5 mb-1.5"><span class="mark"></span><span class="text-[13px] font-bold text-[#36bffa]">资源占用</span><span class="chip ml-auto">车辆 · 船舶 · 堆场</span></div>
           <div class="grid grid-cols-2 gap-1.5 mb-1.5 text-[10px]">
             <div class="hit rounded border border-[rgba(14,116,240,.2)] bg-[rgba(14,116,240,.06)] px-2 py-1.5" data-ov="卡口1">
@@ -281,7 +281,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 
       <!-- 右 -->
       <div class="side-col">
-        <div class="card shrink-0">
+        <div class="card shrink-0" data-wall-mod="berth">
           <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[13px] font-bold text-[#36bffa]">正在作业</span><span class="chip ml-auto">卸船 · 待泊/锚地</span></div>
           <div class="grid grid-cols-2 gap-2 mb-2 text-[11px]">
             <div class="hit rounded border border-[rgba(14,116,240,.22)] bg-[rgba(14,116,240,.06)] p-2" data-ov="1号泊位">
@@ -305,7 +305,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
             <div class="hit flex border-t border-[rgba(14,116,240,.16)] py-1" data-ov="琼海9"><span class="w-[90px] text-[#e7eef8]">琼海9</span><span class="w-[60px] text-[#7eb6ff]">锚地</span><span class="flex-1 text-[#b4c7e7]">钢铁件杂</span><span class="w-[48px] text-[#b4c7e7]">汽车</span></div>
           </div>
         </div>
-        <div class="card shrink-0">
+        <div class="card shrink-0" data-wall-mod="equipment">
           <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[13px] font-bold text-[#36bffa]">设备信息</span><span class="chip ml-auto">总数 · 状态</span></div>
           <div class="grid grid-cols-4 gap-1.5 mb-2 text-center text-[10px]">
             <div class="rounded bg-[rgba(14,116,240,.08)] py-1.5"><div class="text-[16px] text-[#00e4ff]">15</div><div class="text-[#637f99]">设备总数</div></div>
@@ -319,7 +319,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
             <div class="hit" data-ov="岸电与闸口"><div class="flex justify-between"><span class="text-[#e7eef8]">岸电与闸口</span><span class="text-[#637f99]">共 7</span></div><div class="bar mt-1"><i style="width:85%"></i></div><div class="text-[#637f99] mt-0.5">运行 5 · 关注 1 · 停机 1</div></div>
           </div>
         </div>
-        <div class="card flex-1 min-h-0 overflow-auto">
+        <div class="card flex-1 min-h-0 overflow-auto" data-wall-mod="alert">
           <div class="flex items-center gap-1.5 mb-2"><span class="mark"></span><span class="text-[13px] font-bold text-[#36bffa]">未闭环告警</span><span class="chip ml-auto">3</span></div>
           <div class="space-y-2 text-[11px]">
             <div class="hit rounded border border-[rgba(255,170,0,.35)] bg-[rgba(255,170,0,.08)] p-2" data-ov="A001">
@@ -394,6 +394,7 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 </div>
 
 <script src="wall_domain.js"></script>
+<script src="wall_base_config.js"></script>
 <script src="wall_theme_nav.js"></script>
 <script src="wall_eq_detail.js"></script>
 <script src="wall_ov_detail.js"></script>
@@ -402,16 +403,9 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 WallSourceBadge.apply('overview');
 
 const THEME_LABEL={概览:'港区概览',生产:'生产运行',交通:'港区交通',设备:'设备设施',经营:'经营分析',调度:'智慧调度'};
-function renderFoot(){
-  const el=document.getElementById('theme-foot');
-  el.innerHTML=Object.keys(THEME_PAGES).map(k=>{
-    const label=THEME_LABEL[k]||k;
-    if(THEME_DISABLED.includes(k)) return `<span class="theme" style="opacity:.4" title="本期未开放">${label}</span>`;
-    if(k==='概览') return `<button type="button" class="theme on">${label}</button>`;
-    return `<a class="theme" href="${THEME_PAGES[k]}">${label}</a>`;
-  }).join('');
-}
+function renderFoot(){ renderThemeFoot(document.getElementById('theme-foot'), '概览', THEME_LABEL); }
 renderFoot();
+WallBaseConfig.applyModuleVisibility('overview');
 mountWeather();
 
 function pad(n){return String(n).padStart(2,'0')}

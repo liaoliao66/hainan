@@ -13,15 +13,12 @@
 </style>
 </head>
 <body class="bg-slate-100 text-slate-800 h-screen overflow-hidden flex flex-col">
-<!-- 一级菜单：六大屏 -->
 <header class="shrink-0 h-12 bg-slate-800 text-slate-100 flex items-center px-3 gap-3 border-b border-slate-700">
   <div class="shrink-0 flex items-center gap-2 pr-3 border-r border-slate-600">
     <i class="fa-solid fa-screwdriver-wrench text-slate-300"></i>
     <span class="text-sm font-semibold whitespace-nowrap">数字孪生管理后台</span>
   </div>
-  <nav id="topNav" class="flex-1 min-w-0 flex items-center gap-0.5 overflow-x-auto text-sm h-full">
-    <!-- filled by JS -->
-  </nav>
+  <nav id="topNav" class="flex-1 min-w-0 flex items-center gap-0.5 overflow-x-auto text-sm h-full"></nav>
   <div class="shrink-0 flex items-center gap-3 text-xs text-slate-400 pl-2">
     <a id="hdrWall" class="hover:text-white" href="#" target="_blank">打开大屏</a>
     <a class="hover:text-white" href="../index.html">版本首页</a>
@@ -29,16 +26,14 @@
 </header>
 
 <div class="flex-1 min-h-0 flex work-area">
-  <!-- 二级菜单：当前大屏数据模块 -->
   <aside class="w-56 shrink-0 bg-white border-r border-slate-200 flex flex-col">
     <div class="px-4 py-3 border-b border-slate-100">
-      <div class="text-[11px] text-slate-400">二级菜单 · 数据模块</div>
+      <div class="text-[11px] text-slate-400" id="sideHint">二级菜单</div>
       <div class="text-sm font-semibold mt-0.5 truncate" id="sideTheme">港区概览</div>
     </div>
     <nav id="sideNav" class="flex-1 overflow-auto p-2 space-y-0.5 text-sm"></nav>
   </aside>
 
-  <!-- 内容区 -->
   <main class="flex-1 min-w-0 flex flex-col bg-slate-50">
     <div class="shrink-0 h-11 bg-white border-b border-slate-200 px-4 flex items-center justify-between gap-3">
       <div class="text-sm text-slate-500 truncate">
@@ -57,12 +52,29 @@
 </div>
 
 <script>
-const THEMES = {
+const NAV = {
+  base: {
+    title: '大屏基础配置',
+    page: 'admin_base.html',
+    wall: 'pc_wall_command_screen.html',
+    icon: 'fa-sliders',
+    sideHint: '二级菜单 · 底座配置',
+    modules: [
+      { key: 'model', title: '模型管理', icon: 'fa-cube' },
+      { key: 'theme', title: '多主题管理', icon: 'fa-layer-group' },
+      { key: 'module', title: '模块管理', icon: 'fa-table-cells' },
+      { key: 'scene', title: '场景编辑', icon: 'fa-pen-ruler' },
+      { key: 'resource', title: '资源中心', icon: 'fa-boxes-stacked' },
+      { key: 'session', title: '大屏会话控制', icon: 'fa-tower-broadcast' },
+      { key: 'status', title: '接口与数据状态', icon: 'fa-heart-pulse' }
+    ]
+  },
   overview: {
     title: '港区概览',
     page: 'admin_overview.html',
     wall: 'pc_wall_command_screen.html',
     icon: 'fa-map',
+    sideHint: '二级菜单 · 数据模块',
     modules: [
       { key: 'home', title: '概览总控', icon: 'fa-gauge' },
       { key: 'throughput', title: '吞吐量', icon: 'fa-chart-simple' },
@@ -80,6 +92,7 @@ const THEMES = {
     page: 'admin_production.html',
     wall: 'pc_wall_theme_production.html',
     icon: 'fa-ship',
+    sideHint: '二级菜单 · 数据模块',
     modules: [
       { key: 'home', title: '总控', icon: 'fa-gauge' },
       { key: 'summary', title: '作业汇总', icon: 'fa-chart-simple' },
@@ -97,6 +110,7 @@ const THEMES = {
     page: 'admin_traffic.html',
     wall: 'pc_wall_theme_traffic.html',
     icon: 'fa-truck',
+    sideHint: '二级菜单 · 数据模块',
     modules: [
       { key: 'home', title: '总控', icon: 'fa-gauge' },
       { key: 'stat', title: '车辆通行统计', icon: 'fa-chart-line' },
@@ -113,6 +127,7 @@ const THEMES = {
     page: 'admin_equipment.html',
     wall: 'pc_wall_theme_equipment.html',
     icon: 'fa-gears',
+    sideHint: '二级菜单 · 数据模块',
     modules: [
       { key: 'home', title: '总控', icon: 'fa-gauge' },
       { key: 'stat', title: '作业统计', icon: 'fa-chart-simple' },
@@ -129,6 +144,7 @@ const THEMES = {
     page: 'admin_business.html',
     wall: 'pc_wall_theme_business.html',
     icon: 'fa-chart-pie',
+    sideHint: '二级菜单 · 数据模块',
     modules: [
       { key: 'home', title: '总控', icon: 'fa-gauge' },
       { key: 'tp', title: '吞吐汇总', icon: 'fa-chart-simple' },
@@ -145,6 +161,7 @@ const THEMES = {
     page: 'admin_dispatch.html',
     wall: 'pc_wall_theme_dispatch.html',
     icon: 'fa-bell',
+    sideHint: '二级菜单 · 数据模块',
     modules: [
       { key: 'home', title: '总控', icon: 'fa-gauge' },
       { key: 'biz', title: '调度业务', icon: 'fa-briefcase' },
@@ -158,28 +175,30 @@ const THEMES = {
   }
 };
 
-const THEME_KEYS = Object.keys(THEMES);
-let curTheme = 'overview';
-let curMod = 'home';
+const NAV_KEYS = Object.keys(NAV);
+let curTheme = 'base';
+let curMod = 'model';
 let frameTheme = '';
 
 function paintTopNav() {
-  document.getElementById('topNav').innerHTML = THEME_KEYS.map((k) => {
-    const t = THEMES[k];
-    return `<a href="#${k}/home" data-theme="${k}" class="l1 shrink-0 h-full flex items-center gap-1.5 px-3 border-b-2 border-transparent text-slate-300 hover:text-white hover:bg-slate-700/50">
+  document.getElementById('topNav').innerHTML = NAV_KEYS.map((k) => {
+    const t = NAV[k];
+    return `<a href="#${k}/${t.modules[0].key}" data-theme="${k}" class="l1 shrink-0 h-full flex items-center gap-1.5 px-3 border-b-2 border-transparent text-slate-300 hover:text-white hover:bg-slate-700/50">
       <i class="fa-solid ${t.icon} text-xs opacity-80"></i><span>${t.title}</span>
     </a>`;
   }).join('');
   document.querySelectorAll('#topNav .l1').forEach((a) => {
     a.addEventListener('click', (e) => {
       e.preventDefault();
-      go(a.getAttribute('data-theme'), 'home');
+      const key = a.getAttribute('data-theme');
+      go(key, NAV[key].modules[0].key);
     });
   });
 }
 
 function paintSideNav() {
-  const t = THEMES[curTheme];
+  const t = NAV[curTheme];
+  document.getElementById('sideHint').textContent = t.sideHint || '二级菜单';
   document.getElementById('sideTheme').textContent = t.title;
   document.getElementById('sideNav').innerHTML = t.modules.map((m) => {
     const on = m.key === curMod;
@@ -207,7 +226,7 @@ function setTopActive() {
 }
 
 function syncChrome() {
-  const t = THEMES[curTheme];
+  const t = NAV[curTheme];
   const m = t.modules.find((x) => x.key === curMod) || t.modules[0];
   document.getElementById('crumbTheme').textContent = t.title;
   document.getElementById('crumbMod').textContent = m.title;
@@ -217,7 +236,7 @@ function syncChrome() {
 }
 
 function loadFrame(force) {
-  const t = THEMES[curTheme];
+  const t = NAV[curTheme];
   const frame = document.getElementById('themeFrame');
   const target = t.page + '?embed=1#' + curMod;
   if (!force && frameTheme === curTheme && frame.contentWindow) {
@@ -233,9 +252,9 @@ function loadFrame(force) {
 }
 
 function applyRoute(theme, mod) {
-  if (!THEMES[theme]) theme = 'overview';
-  const t = THEMES[theme];
-  if (!t.modules.some((m) => m.key === mod)) mod = 'home';
+  if (!NAV[theme]) theme = 'base';
+  const t = NAV[theme];
+  if (!t.modules.some((m) => m.key === mod)) mod = t.modules[0].key;
   const themeChanged = curTheme !== theme || frameTheme !== theme;
   const modChanged = curMod !== mod;
   curTheme = theme;
@@ -246,18 +265,18 @@ function applyRoute(theme, mod) {
 }
 
 function go(theme, mod) {
-  if (!THEMES[theme]) theme = 'overview';
-  const t = THEMES[theme];
-  if (!t.modules.some((m) => m.key === mod)) mod = 'home';
+  if (!NAV[theme]) theme = 'base';
+  const t = NAV[theme];
+  if (!t.modules.some((m) => m.key === mod)) mod = t.modules[0].key;
   const next = '#' + theme + '/' + mod;
   if (location.hash !== next) location.hash = next;
   else applyRoute(theme, mod);
 }
 
 function route() {
-  const raw = (location.hash || '#overview/home').replace(/^#/, '');
+  const raw = (location.hash || '#base/model').replace(/^#/, '');
   const parts = raw.split('/');
-  applyRoute(parts[0] || 'overview', parts[1] || 'home');
+  applyRoute(parts[0] || 'base', parts[1] || 'model');
 }
 
 paintTopNav();

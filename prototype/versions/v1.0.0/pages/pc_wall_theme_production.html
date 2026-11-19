@@ -476,21 +476,13 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 <script src="wall_domain.js"></script>
 <script>WallSourceBadge.apply('production');</script>
 <script src="wall_ov_detail.js"></script>
+<script src="wall_base_config.js"></script>
 <script src="wall_theme_nav.js"></script>
 <script>
 const THEME_LABEL={'概览':'港区概览','生产':'生产运行','交通':'港区交通','设备':'设备设施','经营':'经营分析','调度':'智慧调度'};
-function renderThemes(){
-  const el=document.getElementById('theme-foot');
-  if(!el) return;
-  el.innerHTML=Object.keys(THEME_PAGES).map(k=>{
-    const label=THEME_LABEL[k]||k;
-    if(THEME_DISABLED.includes(k)) return `<span class="theme" style="opacity:.4">${label}</span>`;
-    if(k==='生产') return `<button type="button" class="theme on">${label}</button>`;
-    const href=k==='概览'?THEME_PAGES[k]+'?from='+encodeURIComponent('生产'):THEME_PAGES[k];
-    return `<a class="theme" href="${href}">${label}</a>`;
-  }).join('');
-}
+function renderThemes(){ renderThemeFoot(document.getElementById('theme-foot'), '生产'); }
 renderThemes();
+WallBaseConfig.applyModuleVisibility('production');
 initWallTheme('生产');
 initWallBimLayout({hintFull:'演示态 · BIM 铺满',hintClassic:'演示态 · 分栏布局'});
 OvDetail.bind();

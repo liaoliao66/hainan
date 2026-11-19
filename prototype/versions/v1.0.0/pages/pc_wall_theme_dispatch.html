@@ -538,21 +538,13 @@ body.present .stage{position:fixed;inset:0;z-index:50;background:#020617}
 <script src="wall_domain.js"></script>
 <script>WallSourceBadge.apply('dispatch');</script>
 <script src="wall_ov_detail.js"></script>
+<script src="wall_base_config.js"></script>
 <script src="wall_theme_nav.js"></script>
 <script>
 const THEME_LABEL={概览:'港区概览',生产:'生产运行',交通:'港区交通',设备:'设备设施',经营:'经营分析',调度:'智慧调度'};
-function renderThemes(){
-  const el=document.getElementById('theme-foot');
-  if(!el) return;
-  el.innerHTML=Object.keys(THEME_PAGES).map(k=>{
-    const label=THEME_LABEL[k]||k;
-    if(THEME_DISABLED.includes(k)) return `<span class="theme" style="opacity:.4" title="本期未开放">${label}</span>`;
-    if(k==='调度') return `<button type="button" class="theme on">${label}</button>`;
-    const href=k==='概览'?THEME_PAGES[k]+'?from='+encodeURIComponent('调度'):THEME_PAGES[k];
-    return `<a class="theme" href="${href}">${label}</a>`;
-  }).join('');
-}
+function renderThemes(){ renderThemeFoot(document.getElementById('theme-foot'), '调度'); }
 renderThemes();
+WallBaseConfig.applyModuleVisibility('dispatch');
 mountWeather();
 bindVidRails();
 initWallBimLayout({poiBox:'#ovMap',hintFull:'演示态 · BIM 铺满',hintClassic:'演示态 · 分栏布局'});

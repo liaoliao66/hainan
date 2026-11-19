@@ -4,6 +4,7 @@
     const params = new URLSearchParams(location.search);
     const file = (location.pathname.split('/').pop() || '').toLowerCase();
     const hashMap = {
+      'admin_base.html': 'base',
       'admin_overview.html': 'overview',
       'admin_production.html': 'production',
       'admin_traffic.html': 'traffic',

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大屏基础配置 · 管理后台 · v1.0.0</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="admin_common.js"></script>
+<style>
+  [data-panel].hidden{display:none!important}
+</style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex">
+<aside class="w-64 shrink-0 bg-slate-800 text-slate-100 min-h-screen p-4 flex flex-col sticky top-0 h-screen">
+  <div class="mb-5">
+    <div class="text-[11px] text-slate-400">海南金牌港 · 管理后台</div>
+    <div class="text-lg font-semibold mt-1">大屏基础配置</div>
+    <div class="text-[11px] text-slate-400 mt-1">模型 · 主题 · 模块</div>
+  </div>
+  <nav id="sideNav" class="space-y-1 text-sm flex-1 overflow-auto">
+    <a href="#model" data-nav="model" class="nav flex items-center gap-2 rounded-xl px-3 py-2 bg-slate-700 text-white"><i class="fa-solid fa-cube w-4 text-center"></i><span>模型管理</span></a>
+    <a href="#theme" data-nav="theme" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-layer-group w-4 text-center"></i><span>多主题管理</span></a>
+    <a href="#module" data-nav="module" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-table-cells w-4 text-center"></i><span>模块管理</span></a>
+    <div class="text-[11px] text-slate-500 px-3 pt-3 pb-1">扩展入口</div>
+    <a href="#scene" data-nav="scene" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-pen-ruler w-4 text-center"></i><span>场景编辑</span></a>
+    <a href="#resource" data-nav="resource" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-boxes-stacked w-4 text-center"></i><span>资源中心</span></a>
+    <a href="#session" data-nav="session" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-tower-broadcast w-4 text-center"></i><span>大屏会话控制</span></a>
+    <a href="#status" data-nav="status" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-heart-pulse w-4 text-center"></i><span>接口与数据状态</span></a>
+  </nav>
+  <div class="space-y-2 text-xs text-slate-400 mt-3">
+    <a class="hover:text-white block" href="admin_console.html#base/model">返回统一管理后台</a>
+    <a class="hover:text-white block" href="../index.html">返回版本首页</a>
+  </div>
+</aside>
+
+<main class="flex-1 min-w-0 p-5 md:p-6 overflow-auto">
+  <div class="max-w-[1180px] mx-auto">
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+      <div>
+        <div class="text-xs text-slate-400">管理后台 / 大屏基础配置</div>
+        <h1 id="pageTitle" class="text-2xl font-semibold mt-1">模型管理</h1>
+        <p id="pageDesc" class="text-sm text-slate-500 mt-1">模型清单、自检与发布（本地演示）。</p>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <button type="button" id="btnSave" class="rounded-xl bg-slate-800 text-white px-3 py-2 text-sm" onclick="saveCurrent()">保存</button>
+        <button type="button" class="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" onclick="resetCurrent()">恢复初值</button>
+      </div>
+    </div>
+
+    <!-- 模型管理 -->
+    <section data-panel="model" class="space-y-4">
+      <div class="grid md:grid-cols-4 gap-3">
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm"><div class="text-xs text-slate-500">模型总数</div><div class="text-2xl font-semibold mt-1" id="mKpiTotal">0</div></div>
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm"><div class="text-xs text-slate-500">已发布</div><div class="text-2xl font-semibold text-emerald-600 mt-1" id="mKpiPub">0</div></div>
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm"><div class="text-xs text-slate-500">待校准</div><div class="text-2xl font-semibold text-amber-600 mt-1" id="mKpiCal">0</div></div>
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm"><div class="text-xs text-slate-500">自检失败</div><div class="text-2xl font-semibold text-rose-600 mt-1" id="mKpiFail">0</div></div>
+      </div>
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div>
+            <h2 class="font-semibold">模型台账</h2>
+            <p class="text-xs text-slate-500 mt-1">支持新增/编辑/删除；自检失败不可发布</p>
+          </div>
+          <button type="button" class="rounded-xl bg-sky-700 text-white px-3 py-1.5 text-sm" onclick="addModel()">新增模型</button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-xs text-slate-600"><tr>
+              <th class="text-left px-3 py-2">名称</th><th class="text-left px-3 py-2">类型</th><th class="text-left px-3 py-2">分区</th>
+              <th class="text-left px-3 py-2">绑定主题</th><th class="text-left px-3 py-2">自检</th><th class="text-left px-3 py-2">状态</th><th class="text-left px-3 py-2">操作</th>
+            </tr></thead>
+            <tbody id="modelBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 多主题管理 -->
+    <section data-panel="theme" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div>
+            <h2 class="font-semibold">六大屏主题</h2>
+            <p class="text-xs text-slate-500 mt-1">启用、排序、默认主题；保存后大屏底栏同步</p>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-xs text-slate-600"><tr>
+              <th class="text-left px-3 py-2">排序</th><th class="text-left px-3 py-2">主题</th><th class="text-left px-3 py-2">启用</th>
+              <th class="text-left px-3 py-2">默认</th><th class="text-left px-3 py-2">大屏页</th><th class="text-left px-3 py-2">操作</th>
+            </tr></thead>
+            <tbody id="themeBody"></tbody>
+          </table>
+        </div>
+        <p class="text-xs text-slate-500 mt-3">边界：至少保留 1 个启用主题；默认主题必须处于启用状态。</p>
+      </div>
+    </section>
+
+    <!-- 模块管理 -->
+    <section data-panel="module" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div>
+            <h2 class="font-semibold">跨主题模块上墙</h2>
+            <p class="text-xs text-slate-500 mt-1">统一控制各主题模块是否上墙；保存后回写各主题后台上墙开关</p>
+          </div>
+          <select id="modFilter" class="rounded-xl border border-slate-300 px-3 py-1.5 text-sm" onchange="renderModules()">
+            <option value="all">全部主题</option>
+            <option value="overview">港区概览</option>
+            <option value="production">生产运行</option>
+            <option value="traffic">港区交通</option>
+            <option value="equipment">设备设施</option>
+            <option value="business">经营分析</option>
+            <option value="dispatch">智慧调度</option>
+          </select>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-xs text-slate-600"><tr>
+              <th class="text-left px-3 py-2">主题</th><th class="text-left px-3 py-2">模块</th>
+              <th class="text-left px-3 py-2">排序</th><th class="text-left px-3 py-2">上墙</th><th class="text-left px-3 py-2">说明</th>
+            </tr></thead>
+            <tbody id="moduleBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- P1 入口 -->
+    <section data-panel="scene" class="hidden">
+      <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm text-center">
+        <div class="text-sky-700 text-3xl mb-3"><i class="fa-solid fa-pen-ruler"></i></div>
+        <h2 class="font-semibold text-lg">场景编辑</h2>
+        <p class="text-sm text-slate-500 mt-2">摆放、聚焦、16:9 预览。本期以独立业务页交付，后台提供入口。</p>
+        <a class="inline-flex mt-5 rounded-xl bg-slate-800 text-white px-4 py-2 text-sm" href="pc_scene_edit.html" target="_blank">打开场景编辑</a>
+      </div>
+    </section>
+    <section data-panel="resource" class="hidden">
+      <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm text-center">
+        <div class="text-sky-700 text-3xl mb-3"><i class="fa-solid fa-boxes-stacked"></i></div>
+        <h2 class="font-semibold text-lg">资源中心</h2>
+        <p class="text-sm text-slate-500 mt-2">模板组件应用到专题页。</p>
+        <a class="inline-flex mt-5 rounded-xl bg-slate-800 text-white px-4 py-2 text-sm" href="pc_resource_center.html" target="_blank">打开资源中心</a>
+      </div>
+    </section>
+    <section data-panel="session" class="hidden">
+      <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm text-center">
+        <div class="text-sky-700 text-3xl mb-3"><i class="fa-solid fa-tower-broadcast"></i></div>
+        <h2 class="font-semibold text-lg">大屏会话控制</h2>
+        <p class="text-sm text-slate-500 mt-2">PC 指挥席切换大屏模式与主题。</p>
+        <a class="inline-flex mt-5 rounded-xl bg-slate-800 text-white px-4 py-2 text-sm" href="pc_remote_session.html" target="_blank">打开会话控制</a>
+      </div>
+    </section>
+    <section data-panel="status" class="hidden">
+      <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm text-center">
+        <div class="text-sky-700 text-3xl mb-3"><i class="fa-solid fa-heart-pulse"></i></div>
+        <h2 class="font-semibold text-lg">接口与数据状态</h2>
+        <p class="text-sm text-slate-500 mt-2">9 系统接入与降级策略巡检。</p>
+        <a class="inline-flex mt-5 rounded-xl bg-slate-800 text-white px-4 py-2 text-sm" href="pc_data_status.html" target="_blank">打开接口状态</a>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+const META = {
+  model: { title: '模型管理', desc: '模型清单、自检与发布；失败不可发布。本地演示存储。' },
+  theme: { title: '多主题管理', desc: '六大屏启用、排序、默认主题；保存后大屏底栏同步。' },
+  module: { title: '模块管理', desc: '跨主题模块上墙总控；保存后回写各主题后台开关。' },
+  scene: { title: '场景编辑', desc: 'P1 入口：跳转独立场景编辑页。' },
+  resource: { title: '资源中心', desc: 'P1 入口：跳转资源中心。' },
+  session: { title: '大屏会话控制', desc: 'P1 入口：跳转大屏会话控制。' },
+  status: { title: '接口与数据状态', desc: 'P1 入口：跳转接口巡检页。' }
+};
+
+const THEME_PAGE = {
+  '概览': 'pc_wall_command_screen.html',
+  '生产': 'pc_wall_theme_production.html',
+  '交通': 'pc_wall_theme_traffic.html',
+  '设备': 'pc_wall_theme_equipment.html',
+  '经营': 'pc_wall_theme_business.html',
+  '调度': 'pc_wall_theme_dispatch.html'
+};
+
+const THEME_ID_MAP = {
+  overview: '港区概览',
+  production: '生产运行',
+  traffic: '港区交通',
+  equipment: '设备设施',
+  business: '经营分析',
+  dispatch: '智慧调度'
+};
+
+const MODULE_CATALOG = [
+  { themeId: 'overview', key: 'throughput', title: '吞吐量', note: '左侧 KPI' },
+  { themeId: 'overview', key: 'cargo', title: '当年货类分布', note: '左侧' },
+  { themeId: 'overview', key: 'customer', title: '当年客户排行', note: '左侧' },
+  { themeId: 'overview', key: 'resource', title: '资源占用', note: '左侧' },
+  { themeId: 'overview', key: 'berth', title: '正在作业', note: '右侧' },
+  { themeId: 'overview', key: 'equipment', title: '设备信息', note: '右侧' },
+  { themeId: 'overview', key: 'alert', title: '未闭环告警', note: '右侧' },
+  { themeId: 'overview', key: 'weather', title: '今日气象', note: '顶栏' },
+  { themeId: 'production', key: 'summary', title: '作业汇总', note: '生产' },
+  { themeId: 'production', key: 'berth', title: '泊位作业与任务', note: '生产' },
+  { themeId: 'production', key: 'plan', title: '待泊船舶计划', note: '生产' },
+  { themeId: 'production', key: 'vehicle', title: '待进港预约车辆', note: '生产' },
+  { themeId: 'production', key: 'alarm', title: '报警中心', note: '生产' },
+  { themeId: 'production', key: 'device', title: '作业设备监测', note: '生产' },
+  { themeId: 'production', key: 'env', title: '作业环境监测', note: '生产' },
+  { themeId: 'production', key: 'storage', title: '仓储接收能力', note: '生产' },
+  { themeId: 'traffic', key: 'stat', title: '车辆通行统计', note: '交通' },
+  { themeId: 'traffic', key: 'struct', title: '在港车辆结构', note: '交通' },
+  { themeId: 'traffic', key: 'eff', title: '集疏运效率', note: '交通' },
+  { themeId: 'traffic', key: 'focus', title: '重点车辆动态', note: '交通' },
+  { themeId: 'traffic', key: 'node', title: '关键节点运行', note: '交通' },
+  { themeId: 'traffic', key: 'warn', title: '交通预警与处置', note: '交通' },
+  { themeId: 'traffic', key: 'video', title: '重点交通节点视频', note: '交通' },
+  { themeId: 'equipment', key: 'stat', title: '作业统计', note: '设备' },
+  { themeId: 'equipment', key: 'ledger', title: '设备台账', note: '设备' },
+  { themeId: 'equipment', key: 'util', title: '利用率时间构成', note: '设备' },
+  { themeId: 'equipment', key: 'monitor', title: '关键设备监测', note: '设备' },
+  { themeId: 'equipment', key: 'alarm', title: '设备报警中心', note: '设备' },
+  { themeId: 'equipment', key: 'maint', title: '维保设备列表', note: '设备' },
+  { themeId: 'equipment', key: 'video', title: '重点设备监控视频', note: '设备' },
+  { themeId: 'business', key: 'tp', title: '吞吐汇总', note: '经营' },
+  { themeId: 'business', key: 'flow', title: '货种与流向', note: '经营' },
+  { themeId: 'business', key: 'cust', title: '客户规模与结构', note: '经营' },
+  { themeId: 'business', key: 'region', title: '国家区域占比', note: '经营' },
+  { themeId: 'business', key: 'eff', title: '效率与泊位', note: '经营' },
+  { themeId: 'business', key: 'contract', title: '合同额', note: '经营' },
+  { themeId: 'business', key: 'cash', title: '资金回收', note: '经营' },
+  { themeId: 'dispatch', key: 'biz', title: '调度业务', note: '调度' },
+  { themeId: 'dispatch', key: 'duty', title: '值守与响应', note: '调度' },
+  { themeId: 'dispatch', key: 'event', title: '重点事件监控', note: '调度' },
+  { themeId: 'dispatch', key: 'review', title: '事件回顾', note: '调度' },
+  { themeId: 'dispatch', key: 'res', title: '应急资源台账', note: '调度' },
+  { themeId: 'dispatch', key: 'point', title: '应急物资点', note: '调度' },
+  { themeId: 'dispatch', key: 'video', title: '安全监控', note: '调度' }
+];
+
+const MODEL_STORE = 'hn_admin_model_v1';
+const THEME_STORE = 'hn_wall_theme_cfg_v1';
+const MODULE_STORE = 'hn_wall_module_cfg_v1';
+
+const MODEL_DEFAULTS = {
+  rows: [
+    { id: 'm1', name: '港区倾斜_2026Q3', type: '倾斜摄影', zone: '全域', theme: '概览', check: '通过', status: '已发布' },
+    { id: 'm2', name: '1号泊位BIM', type: 'BIM', zone: '码头', theme: '生产', check: '坐标待校准', status: '待校准' },
+    { id: 'm3', name: '堆场A精细模', type: '人工模型', zone: '堆场', theme: '概览', check: '通过', status: '草稿' },
+    { id: 'm4', name: '陆域道路_补测', type: '倾斜摄影', zone: '陆域', theme: '交通', check: '失败', status: '自检失败' }
+  ]
+};
+
+const THEME_DEFAULTS = {
+  themes: [
+    { key: '概览', enabled: true, sort: 1, isDefault: true },
+    { key: '生产', enabled: true, sort: 2, isDefault: false },
+    { key: '交通', enabled: true, sort: 3, isDefault: false },
+    { key: '设备', enabled: true, sort: 4, isDefault: false },
+    { key: '经营', enabled: true, sort: 5, isDefault: false },
+    { key: '调度', enabled: true, sort: 6, isDefault: false }
+  ]
+};
+
+function defaultModules() {
+  return {
+    modules: MODULE_CATALOG.map((m, i) => ({
+      themeId: m.themeId,
+      key: m.key,
+      title: m.title,
+      note: m.note,
+      sort: i + 1,
+      onWall: true
+    }))
+  };
+}
+
+let models = AdminKit.load(MODEL_STORE, MODEL_DEFAULTS);
+let themes = AdminKit.load(THEME_STORE, THEME_DEFAULTS);
+let modules = AdminKit.load(MODULE_STORE, defaultModules());
+let curPanel = 'model';
+
+function ensureModuleCatalog() {
+  const map = {};
+  (modules.modules || []).forEach((m) => { map[m.themeId + '/' + m.key] = m; });
+  modules.modules = MODULE_CATALOG.map((c, i) => {
+    const hit = map[c.themeId + '/' + c.key];
+    return {
+      themeId: c.themeId,
+      key: c.key,
+      title: c.title,
+      note: c.note,
+      sort: hit && hit.sort != null ? hit.sort : i + 1,
+      onWall: hit ? !!hit.onWall : true
+    };
+  });
+}
+ensureModuleCatalog();
+
+function showPanel(name, opts) {
+  if (!META[name]) name = 'model';
+  curPanel = name;
+  AdminKit.showPanel(name, META, opts);
+  const saveable = name === 'model' || name === 'theme' || name === 'module';
+  document.getElementById('btnSave').style.display = saveable ? '' : 'none';
+  if (name === 'model') renderModels();
+  if (name === 'theme') renderThemes();
+  if (name === 'module') renderModules();
+}
+
+function renderModels() {
+  const rows = models.rows || [];
+  document.getElementById('mKpiTotal').textContent = rows.length;
+  document.getElementById('mKpiPub').textContent = rows.filter((r) => r.status === '已发布').length;
+  document.getElementById('mKpiCal').textContent = rows.filter((r) => r.status === '待校准').length;
+  document.getElementById('mKpiFail').textContent = rows.filter((r) => r.status === '自检失败' || r.check === '失败').length;
+  document.getElementById('modelBody').innerHTML = rows.map((r) => {
+    const canPub = r.check === '通过' && r.status !== '已发布';
+    return `<tr class="border-t border-slate-100">
+      <td class="px-3 py-2 font-medium">${r.name}</td>
+      <td class="px-3 py-2">${r.type}</td>
+      <td class="px-3 py-2">${r.zone}</td>
+      <td class="px-3 py-2">${r.theme || '—'}</td>
+      <td class="px-3 py-2 ${r.check==='通过'?'text-emerald-600':r.check==='失败'?'text-rose-600':'text-amber-600'}">${r.check}</td>
+      <td class="px-3 py-2">${r.status}</td>
+      <td class="px-3 py-2 space-x-2 whitespace-nowrap">
+        <button class="text-slate-600" onclick="editModel('${r.id}')">编辑</button>
+        ${canPub ? `<button class="text-sky-700" onclick="publishModel('${r.id}')">发布</button>` : ''}
+        <button class="text-rose-600" onclick="delModel('${r.id}')">删除</button>
+      </td></tr>`;
+  }).join('') || `<tr><td class="px-3 py-6 text-slate-400" colspan="7">暂无模型</td></tr>`;
+}
+
+function modelForm(row, viewOnly) {
+  const types = ['倾斜摄影', 'BIM', '人工模型', 'GIS图层'];
+  const zones = ['全域', '码头', '堆场', '陆域配套'];
+  const themesOpts = Object.keys(THEME_PAGE);
+  const checks = ['通过', '坐标待校准', '失败'];
+  const status = ['草稿', '待校准', '已发布', '自检失败'];
+  return [
+    AdminKit.field('模型名称', 'f_name', { value: row ? row.name : '', disabled: viewOnly }),
+    AdminKit.field('类型', 'f_type', { value: (row && row.type) || types[0], options: types, disabled: viewOnly }, 'select'),
+    AdminKit.field('分区', 'f_zone', { value: (row && row.zone) || zones[0], options: zones, disabled: viewOnly }, 'select'),
+    AdminKit.field('绑定主题', 'f_theme', { value: (row && row.theme) || themesOpts[0], options: themesOpts, disabled: viewOnly }, 'select'),
+    AdminKit.field('自检', 'f_check', { value: (row && row.check) || '通过', options: checks, disabled: viewOnly }, 'select'),
+    AdminKit.field('状态', 'f_status', { value: (row && row.status) || '草稿', options: status, disabled: viewOnly }, 'select')
+  ].join('');
+}
+
+function readModelForm() {
+  return {
+    name: AdminKit.val('f_name'),
+    type: AdminKit.val('f_type'),
+    zone: AdminKit.val('f_zone'),
+    theme: AdminKit.val('f_theme'),
+    check: AdminKit.val('f_check'),
+    status: AdminKit.val('f_status')
+  };
+}
+
+function addModel() {
+  AdminKit.openModal('新增模型', modelForm(null, false), () => {
+    const obj = readModelForm();
+    if (!String(obj.name || '').trim()) { AdminKit.toast('请填写模型名称'); return false; }
+    if (obj.check === '失败') obj.status = '自检失败';
+    obj.id = AdminKit.uid('m');
+    models.rows.unshift(obj);
+    renderModels();
+    return true;
+  });
+}
+
+function editModel(id) {
+  const row = models.rows.find((x) => x.id === id);
+  if (!row) return;
+  AdminKit.openModal('编辑模型', modelForm(row, false), () => {
+    const obj = readModelForm();
+    if (!String(obj.name || '').trim()) { AdminKit.toast('请填写模型名称'); return false; }
+    if (obj.check === '失败') obj.status = '自检失败';
+    Object.assign(row, obj);
+    renderModels();
+    return true;
+  });
+}
+
+function publishModel(id) {
+  const row = models.rows.find((x) => x.id === id);
+  if (!row) return;
+  if (row.check !== '通过') { AdminKit.toast('自检未通过，不可发布'); return; }
+  row.status = '已发布';
+  renderModels();
+  AdminKit.toast('已发布到场景（演示）');
+}
+
+function delModel(id) {
+  if (!confirm('确认删除该模型？')) return;
+  models.rows = models.rows.filter((x) => x.id !== id);
+  renderModels();
+}
+
+function renderThemes() {
+  const list = themes.themes.slice().sort((a, b) => a.sort - b.sort);
+  document.getElementById('themeBody').innerHTML = list.map((t) => `<tr class="border-t border-slate-100">
+    <td class="px-3 py-2"><input type="number" class="w-16 rounded border px-2 py-1" value="${t.sort}" onchange="updTheme('${t.key}','sort',this.value)"></td>
+    <td class="px-3 py-2 font-medium">${t.key}</td>
+    <td class="px-3 py-2"><input type="checkbox" ${t.enabled ? 'checked' : ''} onchange="updTheme('${t.key}','enabled',this.checked)"></td>
+    <td class="px-3 py-2"><input type="radio" name="defTheme" ${t.isDefault ? 'checked' : ''} onchange="setDefaultTheme('${t.key}')"></td>
+    <td class="px-3 py-2 text-xs"><a class="text-sky-700" href="${THEME_PAGE[t.key]}" target="_blank">${THEME_PAGE[t.key]}</a></td>
+    <td class="px-3 py-2"><button class="text-sky-700 text-xs" onclick="moveTheme('${t.key}',-1)">上移</button>
+      <button class="text-sky-700 text-xs ml-2" onclick="moveTheme('${t.key}',1)">下移</button></td>
+  </tr>`).join('');
+}
+
+function updTheme(key, field, val) {
+  const t = themes.themes.find((x) => x.key === key);
+  if (!t) return;
+  if (field === 'sort') t.sort = +val || 1;
+  if (field === 'enabled') {
+    t.enabled = !!val;
+    if (!t.enabled && t.isDefault) {
+      const other = themes.themes.find((x) => x.enabled);
+      if (other) { t.isDefault = false; other.isDefault = true; }
+      else { t.enabled = true; AdminKit.toast('至少保留 1 个启用主题'); }
+    }
+  }
+  renderThemes();
+}
+
+function setDefaultTheme(key) {
+  themes.themes.forEach((t) => {
+    t.isDefault = t.key === key;
+    if (t.isDefault) t.enabled = true;
+  });
+  renderThemes();
+}
+
+function moveTheme(key, dir) {
+  const list = themes.themes.slice().sort((a, b) => a.sort - b.sort);
+  const i = list.findIndex((x) => x.key === key);
+  const j = i + dir;
+  if (i < 0 || j < 0 || j >= list.length) return;
+  const tmp = list[i].sort;
+  list[i].sort = list[j].sort;
+  list[j].sort = tmp;
+  renderThemes();
+}
+
+function renderModules() {
+  const filter = document.getElementById('modFilter').value;
+  const rows = modules.modules
+    .filter((m) => filter === 'all' || m.themeId === filter)
+    .slice()
+    .sort((a, b) => a.sort - b.sort);
+  document.getElementById('moduleBody').innerHTML = rows.map((m) => `<tr class="border-t border-slate-100">
+    <td class="px-3 py-2">${THEME_ID_MAP[m.themeId] || m.themeId}</td>
+    <td class="px-3 py-2 font-medium">${m.title}</td>
+    <td class="px-3 py-2"><input type="number" class="w-16 rounded border px-2 py-1" value="${m.sort}" onchange="updMod('${m.themeId}','${m.key}','sort',this.value)"></td>
+    <td class="px-3 py-2"><input type="checkbox" ${m.onWall ? 'checked' : ''} onchange="updMod('${m.themeId}','${m.key}','onWall',this.checked)"></td>
+    <td class="px-3 py-2 text-xs text-slate-500">${m.note || ''}</td>
+  </tr>`).join('');
+}
+
+function updMod(themeId, key, field, val) {
+  const m = modules.modules.find((x) => x.themeId === themeId && x.key === key);
+  if (!m) return;
+  if (field === 'sort') m.sort = +val || 1;
+  if (field === 'onWall') m.onWall = !!val;
+}
+
+function syncModuleToThemeStores() {
+  const storeMap = {
+    overview: 'hn_admin_overview_v1',
+    production: 'hn_admin_production_v1',
+    traffic: 'hn_admin_traffic_v1',
+    equipment: 'hn_admin_equipment_v1',
+    business: 'hn_admin_business_v1',
+    dispatch: 'hn_admin_dispatch_v1'
+  };
+  Object.keys(storeMap).forEach((tid) => {
+    const key = storeMap[tid];
+    let data = null;
+    try { data = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { data = null; }
+    if (!data) return;
+    const mods = modules.modules.filter((m) => m.themeId === tid);
+    if (tid === 'overview') {
+      mods.forEach((m) => {
+        if (data[m.key] && typeof data[m.key] === 'object') data[m.key].onWall = !!m.onWall;
+      });
+    } else {
+      if (!data.walls) data.walls = {};
+      mods.forEach((m) => { data.walls[m.key] = !!m.onWall; });
+    }
+    localStorage.setItem(key, JSON.stringify(data));
+  });
+}
+
+function saveCurrent() {
+  if (curPanel === 'model') {
+    AdminKit.save(MODEL_STORE, models);
+    return;
+  }
+  if (curPanel === 'theme') {
+    const enabled = themes.themes.filter((t) => t.enabled);
+    if (!enabled.length) { AdminKit.toast('至少启用 1 个主题'); return; }
+    if (!themes.themes.some((t) => t.isDefault && t.enabled)) {
+      enabled[0].isDefault = true;
+      themes.themes.forEach((t) => { if (t !== enabled[0]) t.isDefault = false; });
+    }
+    localStorage.setItem(THEME_STORE, JSON.stringify(themes));
+    AdminKit.toast('主题配置已保存，大屏底栏将同步');
+    return;
+  }
+  if (curPanel === 'module') {
+    localStorage.setItem(MODULE_STORE, JSON.stringify(modules));
+    syncModuleToThemeStores();
+    AdminKit.toast('模块上墙已保存，并回写各主题后台');
+  }
+}
+
+function resetCurrent() {
+  if (!confirm('恢复当前页演示初值？')) return;
+  if (curPanel === 'model') {
+    models = AdminKit.clone(MODEL_DEFAULTS);
+    AdminKit.save(MODEL_STORE, models);
+    renderModels();
+  } else if (curPanel === 'theme') {
+    themes = AdminKit.clone(THEME_DEFAULTS);
+    localStorage.setItem(THEME_STORE, JSON.stringify(themes));
+    renderThemes();
+  } else if (curPanel === 'module') {
+    modules = defaultModules();
+    localStorage.setItem(MODULE_STORE, JSON.stringify(modules));
+    syncModuleToThemeStores();
+    renderModules();
+  }
+}
+
+AdminKit.ensureModal();
+document.querySelectorAll('#sideNav .nav').forEach((a) => {
+  a.addEventListener('click', (e) => {
+    e.preventDefault();
+    location.hash = a.getAttribute('data-nav');
+  });
+});
+window.addEventListener('hashchange', () => {
+  const name = (location.hash || '#model').replace(/^#/, '') || 'model';
+  showPanel(META[name] ? name : 'model', { silentHash: true });
+});
+showPanel(META[(location.hash || '#model').replace(/^#/, '')] ? (location.hash || '#model').replace(/^#/, '') : 'model', { silentHash: true });
+</script>
+</body>
+</html>
