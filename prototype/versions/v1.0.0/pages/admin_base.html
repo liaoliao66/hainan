@@ -34,7 +34,7 @@
 </aside>
 
 <main class="flex-1 min-w-0 p-5 md:p-6 overflow-auto">
-  <div class="max-w-[1280px] mx-auto">
+  <div class="max-w-[1440px] mx-auto">
     <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
       <div>
         <div class="text-xs text-slate-400">管理后台 / 基础配置</div>
@@ -128,57 +128,99 @@
     </section>
 
     <!-- 场景编辑 -->
-    <section data-panel="scene" class="hidden space-y-4">
-      <div id="sceneSummary" class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs text-slate-600 flex flex-wrap items-center gap-x-4 gap-y-1"></div>
-      <div class="flex flex-wrap items-center justify-between gap-2">
-        <div class="flex flex-wrap items-center gap-2 text-sm">
-          <label class="text-xs text-slate-500">方案</label>
-          <select id="scenePlan" class="rounded-xl border border-slate-300 bg-white px-3 py-1.5" onchange="switchScenePlan()"></select>
-          <button type="button" class="rounded-xl border border-slate-300 bg-white px-3 py-1.5" onclick="addScenePlan()">新建方案</button>
-          <select id="sceneRatio" class="rounded-xl border border-slate-300 bg-white px-3 py-1.5" onchange="setSceneRatio()">
-            <option value="16:9">预览 16:9 指挥墙</option>
-            <option value="desk">预览工作站</option>
-          </select>
-        </div>
-        <div class="flex flex-wrap gap-2 text-sm">
-          <button type="button" class="rounded-xl border border-slate-300 bg-white px-3 py-1.5" onclick="toggleSceneGrid()">网格</button>
-          <button type="button" class="rounded-xl border border-slate-300 bg-white px-3 py-1.5" onclick="toggleSceneSafe()">安全边距</button>
-          <button type="button" class="rounded-xl bg-slate-800 text-white px-3 py-1.5" onclick="saveNamedSceneView()">保存命名视角</button>
-          <button type="button" class="rounded-xl border border-slate-300 bg-white px-3 py-1.5" onclick="focusSceneObj()">聚焦主视中心</button>
-          <button type="button" class="rounded-xl border border-sky-300 bg-sky-50 text-sky-800 px-3 py-1.5" onclick="markSceneSyncOverview()">设为同步概览</button>
-        </div>
-      </div>
-      <div class="grid xl:grid-cols-12 gap-4">
-        <aside class="xl:col-span-3 space-y-3">
-          <div class="bg-white rounded-2xl p-3 border border-slate-200 shadow-sm">
-            <div class="flex items-center justify-between mb-2">
-              <div class="font-semibold text-sm">场景树</div>
-              <button type="button" class="text-xs text-sky-700" onclick="openAddSceneModel()">加入模型</button>
-            </div>
-            <div id="sceneTree" class="space-y-1 text-sm max-h-[280px] overflow-auto"></div>
-            <p class="text-[11px] text-slate-400 mt-3">仅已发布模型可加入；草稿/失败只读不可上线。</p>
+    <section data-panel="scene" class="hidden">
+      <div class="grid lg:grid-cols-12 gap-4 items-start">
+        <!-- 左：配置 -->
+        <aside class="lg:col-span-4 space-y-3 lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto pr-0.5">
+          <div class="rounded-2xl border border-slate-200 bg-slate-800 text-slate-100 px-4 py-3">
+            <div class="text-sm font-semibold">布景配置</div>
+            <p class="text-xs text-slate-300 mt-1 leading-5">左侧改配置，右侧看<strong class="text-white">指挥大屏主视</strong>效果。流程：选方案 → 加入模型并拖动 → 保存视角 → 同步概览。</p>
           </div>
+
+          <div id="sceneSummary" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-600 space-y-1"></div>
+
+          <div class="bg-white rounded-2xl p-3 border border-slate-200 shadow-sm space-y-2">
+            <div class="flex items-center justify-between gap-2">
+              <div>
+                <div class="text-[11px] text-slate-400">方案管理</div>
+                <div class="font-semibold text-sm">多套布景方案</div>
+              </div>
+              <button type="button" class="rounded-xl bg-sky-700 text-white px-3 py-1.5 text-xs" onclick="addScenePlan()">新建方案</button>
+            </div>
+            <div id="scenePlanList" class="space-y-1.5 max-h-[200px] overflow-auto"></div>
+            <p class="text-[11px] text-slate-400 leading-4">每套方案独立对象与视角；可复制后微调。至少保留 1 套。</p>
+          </div>
+
+          <div class="bg-white rounded-2xl p-3 border border-slate-200 shadow-sm space-y-2">
+            <div class="text-[11px] text-slate-400">当前方案操作</div>
+            <select id="sceneRatio" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-sm" onchange="setSceneRatio()">
+              <option value="16:9">预览比例：指挥墙 16:9</option>
+              <option value="desk">预览比例：工作站</option>
+            </select>
+            <div class="grid grid-cols-2 gap-2 text-sm">
+              <button type="button" class="rounded-xl bg-sky-700 text-white px-3 py-2" onclick="openAddSceneModel()">加入模型</button>
+              <button type="button" class="rounded-xl bg-slate-800 text-white px-3 py-2" onclick="saveNamedSceneView()">保存视角</button>
+              <button type="button" class="rounded-xl border border-sky-300 bg-sky-50 text-sky-800 px-3 py-2 col-span-2" onclick="markSceneSyncOverview()">将本方案设为同步概览</button>
+            </div>
+            <div class="flex flex-wrap gap-2 text-xs">
+              <button type="button" class="rounded-lg border border-slate-200 px-2 py-1 hover:bg-slate-50" onclick="focusSceneObj()">聚焦中心</button>
+              <button type="button" class="rounded-lg border border-slate-200 px-2 py-1 hover:bg-slate-50" onclick="toggleSceneGrid()">网格</button>
+              <button type="button" class="rounded-lg border border-slate-200 px-2 py-1 hover:bg-slate-50" onclick="toggleSceneSafe()">安全边距</button>
+            </div>
+          </div>
+
           <div class="bg-white rounded-2xl p-3 border border-slate-200 shadow-sm">
+            <div class="text-[11px] text-slate-400 mb-1">对象列表</div>
+            <div class="font-semibold text-sm mb-2">场景中的模型</div>
+            <div id="sceneTree" class="space-y-1 text-sm max-h-[220px] overflow-auto"></div>
+            <p class="text-[11px] text-slate-400 mt-2 leading-4">仅已发布可加入；灰色草稿不可上线拖拽。</p>
+          </div>
+
+          <div class="bg-white rounded-2xl p-3 border border-slate-200 shadow-sm">
+            <div class="text-[11px] text-slate-400 mb-1">视角预设</div>
             <div class="font-semibold text-sm mb-2">命名视角</div>
             <div id="sceneViews" class="space-y-1 text-sm"></div>
           </div>
+
+          <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
+            <div class="text-[11px] text-slate-400 mb-1">选中对象</div>
+            <div class="font-semibold text-sm mb-3">摆放与属性</div>
+            <div id="sceneProp" class="text-sm text-slate-500">在列表或右侧大屏中点选模型</div>
+            <div class="mt-3 rounded-xl bg-slate-50 border border-slate-100 p-3 text-xs text-slate-500 leading-5">
+              正常：拖动/改数值 → 保存视角 → 同步概览。<br>
+              边界：隐藏不交互；锁定防误拖。<br>
+              异常：灰色草稿不能上线。
+            </div>
+          </div>
         </aside>
-        <div class="xl:col-span-6">
-          <div id="sceneStage" class="bg-slate-900 rounded-2xl relative overflow-hidden border border-slate-700" style="aspect-ratio:16/9">
+
+        <!-- 右：大屏 -->
+        <div class="lg:col-span-8 space-y-2 lg:sticky lg:top-2">
+          <div class="flex flex-wrap items-end justify-between gap-2">
+            <div>
+              <div class="text-sm font-semibold text-slate-800">指挥大屏主视 · <span id="scenePlanTitle" class="text-sky-700">指挥默认</span></div>
+              <div class="text-[11px] text-slate-500">正在预览当前选中方案；切换左侧方案可对比不同布景</div>
+            </div>
+            <div class="flex flex-wrap gap-3 text-[11px] text-slate-500">
+              <span class="inline-flex items-center gap-1"><i class="inline-block w-2.5 h-2.5 rounded bg-sky-500"></i>可发布</span>
+              <span class="inline-flex items-center gap-1"><i class="inline-block w-2.5 h-2.5 rounded bg-slate-400"></i>草稿</span>
+              <span class="inline-flex items-center gap-1"><i class="inline-block w-2.5 h-2.5 rounded border-2 border-amber-400"></i>选中</span>
+            </div>
+          </div>
+          <div id="sceneStage" class="bg-slate-900 rounded-2xl relative overflow-hidden border-2 border-slate-600 shadow-md w-full min-h-[420px]" style="aspect-ratio:16/9">
+            <div class="absolute top-3 left-3 z-10 text-[11px] px-2 py-1 rounded-lg bg-slate-950/70 text-slate-100 border border-slate-600">指挥大屏 · <span id="sceneRatioBadge">16:9</span></div>
             <div class="absolute inset-0 opacity-40" style="background:radial-gradient(circle at 40% 55%,#0e7490,transparent 42%),linear-gradient(160deg,#0f172a,#082f49)"></div>
             <div id="sceneGrid" class="absolute inset-0 pointer-events-none hidden" style="background-image:linear-gradient(rgba(148,163,184,.18) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,.18) 1px,transparent 1px);background-size:10% 10%"></div>
             <div id="sceneSafe" class="absolute inset-[6%] border border-dashed border-amber-300/50 rounded-lg pointer-events-none hidden"></div>
-            <div id="sceneObjs" class="absolute inset-0"></div>
-            <div class="absolute left-3 bottom-3 text-[11px] text-slate-200 bg-slate-950/50 rounded-lg px-2 py-1">拖动调整摆放 · <span id="sceneViewLabel">指挥默认</span></div>
+            <div id="sceneEmpty" class="absolute inset-0 z-[5] hidden flex flex-col items-center justify-center text-center px-6">
+              <div class="text-slate-300 text-sm font-medium">主视还没有可上线模型</div>
+              <p class="text-xs text-slate-400 mt-2 max-w-sm leading-5">在左侧点「加入模型」，选择已发布成果后，再拖到右侧大屏摆放。</p>
+              <button type="button" class="mt-4 rounded-xl bg-sky-600 text-white px-4 py-2 text-sm" onclick="openAddSceneModel()">加入已发布模型</button>
+            </div>
+            <div id="sceneObjs" class="absolute inset-0 z-[6]"></div>
+            <div class="absolute left-3 bottom-3 z-10 text-[11px] text-slate-200 bg-slate-950/55 rounded-lg px-2 py-1">拖动色块调整位置 · 当前视角：<span id="sceneViewLabel">指挥默认</span></div>
           </div>
         </div>
-        <aside class="xl:col-span-3 bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
-          <div class="font-semibold text-sm mb-3">对象属性</div>
-          <div id="sceneProp" class="text-sm text-slate-500">点选场景中的对象</div>
-          <div class="mt-4 rounded-xl bg-slate-50 p-3 text-xs text-slate-500 leading-5">
-            正常：保存视角并可标记同步概览。<br>边界：隐藏对象不交互；锁定不可拖。<br>异常：非已发布对象灰色只读。
-          </div>
-        </aside>
       </div>
     </section>
 
@@ -284,7 +326,7 @@ const META = {
   model: { title: '模型管理', desc: '模型清单、自检与发布；失败不可发布。本地演示存储。' },
   theme: { title: '多主题管理', desc: '六大屏启用、排序、默认主题；保存后大屏底栏同步。' },
   module: { title: '模块管理', desc: '跨主题模块上墙总控；保存后回写各主题后台开关。' },
-  scene: { title: '场景编辑', desc: '多方案摆放、属性精调、命名视角，并可标记同步概览。' },
+  scene: { title: '场景编辑', desc: '给指挥大屏主视布景：选方案 → 摆放已发布模型 → 保存视角并同步概览。' },
   resource: { title: '资源中心', desc: '专题模板检索并应用到六大屏主题；本地演示。' },
   session: { title: '大屏会话控制', desc: '指挥席绑定大屏，页内切换主题与焦点泊位。' },
   status: { title: '接口与数据状态', desc: '源系统接入健康、同步时延、失败重试与模块降级。' }
@@ -546,8 +588,14 @@ function ensureModuleCatalog() {
 }
 ensureModuleCatalog();
 
+function resolvePanelName(raw) {
+  let name = String(raw || 'model').replace(/^#/, '');
+  if (name.includes('/')) name = name.split('/').pop();
+  return META[name] ? name : 'model';
+}
+
 function showPanel(name, opts) {
-  if (!META[name]) name = 'model';
+  name = resolvePanelName(name);
   curPanel = name;
   AdminKit.showPanel(name, META, opts);
   const saveable = name === 'model' || name === 'theme' || name === 'module' || name === 'scene' || name === 'resource' || name === 'session' || name === 'status';
@@ -560,6 +608,7 @@ function showPanel(name, opts) {
   if (name === 'session') renderSession();
   if (name === 'status') renderStatus();
 }
+window.showPanel = showPanel;
 
 function renderModels() {
   const rows = models.rows || [];
@@ -850,20 +899,30 @@ function clearSceneDirty() {
   scene.dirty = false;
 }
 
+function sceneObjKind(it) {
+  const n = (it && it.name) || '';
+  if (/倾斜|航测|全域/.test(n)) return '倾斜摄影';
+  if (/BIM|泊位|堆场/.test(n)) return 'BIM/精细模';
+  if (!it.ok) return '草稿';
+  return '模型';
+}
+
 function renderSceneSummary() {
   const plan = activePlan();
   const view = (plan.views || []).find((v) => v.id === plan.activeViewId);
   const sync = scene.overviewSync || {};
   const syncPlan = (scene.plans || []).find((p) => p.id === sync.planId);
   const syncView = syncPlan && (syncPlan.views || []).find((v) => v.id === sync.viewId);
+  const count = (plan.items || []).filter((x) => x.visible !== false).length;
   const dirtyTag = sceneDirty
-    ? '<span class="text-amber-700 bg-amber-50 border border-amber-100 px-1.5 py-0.5 rounded">未保存</span>'
+    ? '<span class="text-amber-700 bg-amber-50 border border-amber-100 px-1.5 py-0.5 rounded">有未保存改动</span>'
     : '<span class="text-emerald-700 bg-emerald-50 border border-emerald-100 px-1.5 py-0.5 rounded">已保存</span>';
   document.getElementById('sceneSummary').innerHTML = `
-    <span>当前方案：<b class="text-slate-800">${plan.name}</b></span>
-    <span>当前视角：<b class="text-slate-800">${view ? view.name : '未命名'}</b></span>
-    <span>同步概览：<b class="text-slate-800">${syncPlan ? syncPlan.name : '—'} / ${syncView ? syncView.name : '—'}</b></span>
-    ${dirtyTag}`;
+    <div class="flex items-center justify-between gap-2"><span>布景方案</span><b class="text-slate-800">${plan.name}</b></div>
+    <div class="flex items-center justify-between gap-2"><span>主视对象</span><b class="text-slate-800">${count} 个</b></div>
+    <div class="flex items-center justify-between gap-2"><span>当前视角</span><b class="text-slate-800">${view ? view.name : '未命名'}</b></div>
+    <div class="flex items-center justify-between gap-2"><span>同步概览</span><b class="text-slate-800 text-right">${syncPlan ? syncPlan.name : '—'} / ${syncView ? syncView.name : '—'}</b></div>
+    <div class="pt-1">${dirtyTag}</div>`;
 }
 
 function renderScene() {
@@ -871,13 +930,14 @@ function renderScene() {
   const items = plan.items || [];
   if (!items.some((x) => x.id === plan.current)) plan.current = (items[0] && items[0].id) || '';
 
-  const planSel = document.getElementById('scenePlan');
-  planSel.innerHTML = scene.plans.map((p) =>
-    `<option value="${p.id}" ${p.id === plan.id ? 'selected' : ''}>${p.name}</option>`
-  ).join('');
+  renderScenePlans();
+  const planTitle = document.getElementById('scenePlanTitle');
+  if (planTitle) planTitle.textContent = plan.name;
 
   document.getElementById('sceneRatio').value = scene.ratio || '16:9';
   document.getElementById('sceneStage').style.aspectRatio = scene.ratio === 'desk' ? '16/10' : '16/9';
+  const ratioBadge = document.getElementById('sceneRatioBadge');
+  if (ratioBadge) ratioBadge.textContent = scene.ratio === 'desk' ? '工作站' : '16:9';
   document.getElementById('sceneGrid').classList.toggle('hidden', !scene.showGrid);
   document.getElementById('sceneSafe').classList.toggle('hidden', !scene.showSafe);
 
@@ -885,23 +945,35 @@ function renderScene() {
   document.getElementById('sceneViewLabel').textContent = view ? view.name : plan.name;
 
   const sorted = items.slice().sort((a, b) => (a.z || 0) - (b.z || 0));
+  const visibleItems = sorted.filter((it) => it.visible !== false);
+  const emptyEl = document.getElementById('sceneEmpty');
+  if (emptyEl) emptyEl.classList.toggle('hidden', visibleItems.length > 0);
+
   document.getElementById('sceneTree').innerHTML = sorted.map((it) => {
     const on = it.id === plan.current;
+    const kind = sceneObjKind(it);
     const tags = [
-      it.ok ? '' : '草稿',
+      kind,
+      it.ok ? '可上线' : '草稿',
       it.visible === false ? '隐藏' : '',
       it.locked ? '锁定' : ''
     ].filter(Boolean).join(' · ');
     return `<button type="button" data-id="${it.id}" class="w-full text-left rounded-xl px-3 py-2 ${on ? 'bg-slate-800 text-white' : 'hover:bg-slate-50 text-slate-700'}">
-      <div class="truncate">${it.name}</div>
-      ${tags ? `<div class="text-[11px] ${on ? 'text-slate-300' : 'text-slate-400'} mt-0.5">${tags}</div>` : ''}
+      <div class="truncate font-medium">${it.name}</div>
+      <div class="text-[11px] ${on ? 'text-slate-300' : 'text-slate-400'} mt-0.5">${tags}</div>
     </button>`;
-  }).join('') || '<p class="text-xs text-slate-400 px-2 py-3">场景为空，请加入已发布模型</p>';
+  }).join('') || '<p class="text-xs text-slate-400 px-2 py-3">还没有对象。<br>点「加入模型」开始布景。</p>';
 
-  document.getElementById('sceneObjs').innerHTML = sorted.filter((it) => it.visible !== false).map((it) => {
+  document.getElementById('sceneObjs').innerHTML = visibleItems.map((it) => {
     const on = it.id === plan.current;
-    const tone = it.ok ? 'bg-sky-500/80 border-sky-200 text-white' : 'bg-slate-500/70 border-slate-300 text-slate-100';
-    return `<button type="button" data-id="${it.id}" class="absolute rounded-lg border text-[11px] px-2 py-1 ${tone} ${on ? 'ring-2 ring-amber-300' : ''}" style="left:${it.x}%;top:${it.y}%;width:${it.w}%;height:${it.h}%;z-index:${it.z || 1}">${it.name}${it.locked ? ' 🔒' : ''}</button>`;
+    const kind = sceneObjKind(it);
+    const tone = it.ok
+      ? 'bg-sky-500/85 border-sky-200 text-white'
+      : 'bg-slate-500/75 border-slate-300 text-slate-100';
+    return `<button type="button" data-id="${it.id}" class="absolute rounded-lg border text-left text-[11px] px-2 py-1.5 shadow ${tone} ${on ? 'ring-2 ring-amber-300' : ''}" style="left:${it.x}%;top:${it.y}%;width:${it.w}%;height:${it.h}%;z-index:${it.z || 1}">
+      <div class="text-[10px] opacity-80">${kind}${it.locked ? ' · 锁定' : ''}</div>
+      <div class="font-semibold leading-tight mt-0.5">${it.name}</div>
+    </button>`;
   }).join('');
 
   renderSceneProp();
@@ -914,13 +986,14 @@ function renderSceneProp() {
   const plan = activePlan();
   const it = (plan.items || []).find((x) => x.id === plan.current);
   if (!it) {
-    document.getElementById('sceneProp').innerHTML = '点选场景中的对象';
+    document.getElementById('sceneProp').innerHTML = '<p class="text-slate-500 leading-5">在左侧列表或主视中点选一个模型对象，即可调整位置、显隐与层级。</p>';
     return;
   }
   const disabled = !it.ok ? 'disabled' : '';
   document.getElementById('sceneProp').innerHTML = `
-    <div class="font-medium text-slate-800 mb-2">${it.name}</div>
-    <div class="flex justify-between py-1 border-b border-slate-100 text-xs"><span>状态</span><span>${it.ok ? '可发布' : '草稿，不可上线'}</span></div>
+    <div class="font-medium text-slate-800 mb-1">${it.name}</div>
+    <div class="text-[11px] text-slate-400 mb-2">${sceneObjKind(it)} · 大屏主视中的摆放块</div>
+    <div class="flex justify-between py-1 border-b border-slate-100 text-xs"><span>上线状态</span><span>${it.ok ? '可发布' : '草稿，不可上线'}</span></div>
     <div class="grid grid-cols-2 gap-2 mt-3">
       <label class="text-[11px] text-slate-500">X%<input type="number" id="sc_x" class="mt-1 w-full rounded border px-2 py-1 text-sm" value="${Math.round(it.x)}" ${disabled}></label>
       <label class="text-[11px] text-slate-500">Y%<input type="number" id="sc_y" class="mt-1 w-full rounded border px-2 py-1 text-sm" value="${Math.round(it.y)}" ${disabled}></label>
@@ -985,15 +1058,47 @@ function bindSceneEvents() {
   });
 }
 
-function switchScenePlan() {
-  scene.activePlanId = document.getElementById('scenePlan').value;
+function renderScenePlans() {
+  const list = document.getElementById('scenePlanList');
+  if (!list) return;
+  const sync = scene.overviewSync || {};
+  list.innerHTML = (scene.plans || []).map((p) => {
+    const on = p.id === scene.activePlanId;
+    const objCount = (p.items || []).length;
+    const viewCount = (p.views || []).length;
+    const synced = sync.planId === p.id;
+    return `<div class="rounded-xl border px-2.5 py-2 ${on ? 'border-slate-800 bg-slate-800 text-white' : 'border-slate-200 bg-white'}">
+      <button type="button" class="w-full text-left" onclick="selectScenePlan('${p.id}')">
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-sm font-medium truncate">${p.name}</span>
+          ${synced ? `<span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded ${on ? 'bg-sky-500/30 text-sky-100' : 'bg-sky-50 text-sky-700'}">同步概览</span>` : ''}
+        </div>
+        <div class="text-[11px] mt-0.5 ${on ? 'text-slate-300' : 'text-slate-400'}">${objCount} 个对象 · ${viewCount} 个视角${on ? ' · 编辑中' : ''}</div>
+      </button>
+      <div class="flex flex-wrap gap-1 mt-1.5 ${on ? '' : ''}">
+        <button type="button" class="text-[11px] px-1.5 py-0.5 rounded ${on ? 'bg-white/10 hover:bg-white/20' : 'bg-slate-50 hover:bg-slate-100 text-slate-600'}" onclick="renameScenePlan('${p.id}')">重命名</button>
+        <button type="button" class="text-[11px] px-1.5 py-0.5 rounded ${on ? 'bg-white/10 hover:bg-white/20' : 'bg-slate-50 hover:bg-slate-100 text-slate-600'}" onclick="duplicateScenePlan('${p.id}')">复制</button>
+        <button type="button" class="text-[11px] px-1.5 py-0.5 rounded ${on ? 'bg-rose-500/20 text-rose-100 hover:bg-rose-500/30' : 'bg-rose-50 text-rose-600 hover:bg-rose-100'}" onclick="deleteScenePlan('${p.id}')">删除</button>
+      </div>
+    </div>`;
+  }).join('') || '<p class="text-xs text-slate-400 px-1 py-2">暂无方案，请新建</p>';
+}
+
+function selectScenePlan(id) {
+  if (!scene.plans.some((p) => p.id === id)) return;
+  scene.activePlanId = id;
   renderScene();
+}
+
+function switchScenePlan() {
+  selectScenePlan(document.getElementById('scenePlan') && document.getElementById('scenePlan').value);
 }
 
 function addScenePlan() {
   AdminKit.openModal('新建场景方案', AdminKit.field('方案名称', 'f_plan_name', { value: '新方案' }), () => {
     const name = String(AdminKit.val('f_plan_name') || '').trim();
     if (!name) { AdminKit.toast('请填写方案名称'); return false; }
+    if (scene.plans.some((p) => p.name === name)) { AdminKit.toast('方案名称已存在'); return false; }
     const id = AdminKit.uid('p');
     const plan = makeScenePlan(id, name, []);
     plan.current = '';
@@ -1006,6 +1111,68 @@ function addScenePlan() {
     AdminKit.toast('已新建方案「' + name + '」');
     return true;
   });
+}
+
+function renameScenePlan(id) {
+  const plan = scene.plans.find((p) => p.id === id);
+  if (!plan) return;
+  AdminKit.openModal('重命名方案', AdminKit.field('方案名称', 'f_plan_name', { value: plan.name }), () => {
+    const name = String(AdminKit.val('f_plan_name') || '').trim();
+    if (!name) { AdminKit.toast('请填写方案名称'); return false; }
+    if (scene.plans.some((p) => p.id !== id && p.name === name)) { AdminKit.toast('方案名称已存在'); return false; }
+    plan.name = name;
+    markSceneDirty();
+    renderScene();
+    AdminKit.toast('已重命名为「' + name + '」');
+    return true;
+  });
+}
+
+function duplicateScenePlan(id) {
+  const src = scene.plans.find((p) => p.id === id);
+  if (!src) return;
+  const copy = AdminKit.clone(src);
+  copy.id = AdminKit.uid('p');
+  copy.name = src.name + ' 副本';
+  let n = 2;
+  while (scene.plans.some((p) => p.name === copy.name)) {
+    copy.name = src.name + ' 副本' + n;
+    n += 1;
+  }
+  const viewIdMap = {};
+  copy.views = (copy.views || []).map((v) => {
+    const nid = AdminKit.uid('v');
+    viewIdMap[v.id] = nid;
+    return { ...v, id: nid, layout: AdminKit.clone(v.layout || []) };
+  });
+  copy.activeViewId = viewIdMap[src.activeViewId] || (copy.views[0] && copy.views[0].id) || '';
+  scene.plans.push(copy);
+  scene.activePlanId = copy.id;
+  markSceneDirty();
+  renderScene();
+  AdminKit.toast('已复制方案「' + copy.name + '」');
+}
+
+function deleteScenePlan(id) {
+  if ((scene.plans || []).length <= 1) {
+    AdminKit.toast('至少保留 1 套方案');
+    return;
+  }
+  const plan = scene.plans.find((p) => p.id === id);
+  if (!plan) return;
+  if (!confirm('删除方案「' + plan.name + '」？其对象与视角将一并删除。')) return;
+  scene.plans = scene.plans.filter((p) => p.id !== id);
+  if (scene.activePlanId === id) scene.activePlanId = scene.plans[0].id;
+  if (scene.overviewSync && scene.overviewSync.planId === id) {
+    const next = scene.plans[0];
+    scene.overviewSync = {
+      planId: next.id,
+      viewId: next.activeViewId || (next.views[0] && next.views[0].id) || ''
+    };
+  }
+  markSceneDirty();
+  renderScene();
+  AdminKit.toast('已删除方案');
 }
 
 function setSceneRatio() {
@@ -1401,17 +1568,24 @@ function refreshAllStatus() {
 }
 
 AdminKit.ensureModal();
+function initialPanelName() {
+  try {
+    const q = new URLSearchParams(location.search).get('panel');
+    if (q) return resolvePanelName(q);
+  } catch (e) {}
+  return resolvePanelName(location.hash || '#model');
+}
 document.querySelectorAll('#sideNav .nav').forEach((a) => {
   a.addEventListener('click', (e) => {
     e.preventDefault();
-    location.hash = a.getAttribute('data-nav');
+    const name = resolvePanelName(a.getAttribute('data-nav'));
+    showPanel(name);
   });
 });
 window.addEventListener('hashchange', () => {
-  const name = (location.hash || '#model').replace(/^#/, '') || 'model';
-  showPanel(META[name] ? name : 'model', { silentHash: true });
+  showPanel(resolvePanelName(location.hash || '#model'), { silentHash: true });
 });
-showPanel(META[(location.hash || '#model').replace(/^#/, '')] ? (location.hash || '#model').replace(/^#/, '') : 'model', { silentHash: true });
+showPanel(initialPanelName(), { silentHash: true });
 </script>
 </body>
 </html>

@@ -235,19 +235,38 @@ function syncChrome() {
   paintSideNav();
 }
 
-function loadFrame(force) {
+function frameUrl() {
   const t = NAV[curTheme];
+  return t.page + '?embed=1&panel=' + encodeURIComponent(curMod) + '&v=20261119nav3#' + curMod;
+}
+
+function switchFramePanel() {
   const frame = document.getElementById('themeFrame');
-  const target = t.page + '?embed=1&v=20261119s#' + curMod;
-  if (!force && frameTheme === curTheme && frame.contentWindow) {
-    try {
-      if (frame.contentWindow.location.hash !== '#' + curMod) {
-        frame.contentWindow.location.hash = curMod;
-      }
-      return;
-    } catch (e) {}
+  try {
+    const win = frame.contentWindow;
+    if (win && typeof win.showPanel === 'function') {
+      win.showPanel(curMod, { silentHash: true });
+      try {
+        if (win.location.hash !== '#' + curMod) win.location.hash = curMod;
+      } catch (e) {}
+      return true;
+    }
+  } catch (e) {}
+  return false;
+}
+
+function loadFrame(forceReload) {
+  const frame = document.getElementById('themeFrame');
+  const target = frameUrl();
+  // 同主题只切二级菜单：优先页内切换，避免整页重载闪白
+  if (!forceReload && frameTheme === curTheme) {
+    if (switchFramePanel()) return;
   }
   frameTheme = curTheme;
+  frame.onload = function () {
+    frame.onload = null;
+    switchFramePanel();
+  };
   frame.src = target;
 }
 
@@ -257,10 +276,11 @@ function applyRoute(theme, mod) {
   if (!t.modules.some((m) => m.key === mod)) mod = t.modules[0].key;
   const themeChanged = curTheme !== theme || frameTheme !== theme;
   const modChanged = curMod !== mod;
+  const firstLoad = !frameTheme;
   curTheme = theme;
   curMod = mod;
   syncChrome();
-  if (themeChanged || !frameTheme) loadFrame(true);
+  if (firstLoad || themeChanged) loadFrame(true);
   else if (modChanged) loadFrame(false);
 }
 
