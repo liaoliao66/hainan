@@ -16,13 +16,12 @@
   <div class="mb-5">
     <div class="text-[11px] text-slate-400">海南金牌港 · 管理后台</div>
     <div class="text-lg font-semibold mt-1">基础配置</div>
-    <div class="text-[11px] text-slate-400 mt-1">模型 · 主题 · 模块</div>
+    <div class="text-[11px] text-slate-400 mt-1">模型 · 主题 · 场景 · 会话</div>
   </div>
   <nav id="sideNav" class="space-y-1 text-sm flex-1 overflow-auto">
     <a href="#model" data-nav="model" class="nav flex items-center gap-2 rounded-xl px-3 py-2 bg-slate-700 text-white"><i class="fa-solid fa-cube w-4 text-center"></i><span>模型管理</span></a>
     <a href="#theme" data-nav="theme" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-layer-group w-4 text-center"></i><span>多主题管理</span></a>
     <a href="#module" data-nav="module" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-table-cells w-4 text-center"></i><span>模块管理</span></a>
-    <div class="text-[11px] text-slate-500 px-3 pt-3 pb-1">扩展入口</div>
     <a href="#scene" data-nav="scene" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-pen-ruler w-4 text-center"></i><span>场景编辑</span></a>
     <a href="#resource" data-nav="resource" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-boxes-stacked w-4 text-center"></i><span>资源中心</span></a>
     <a href="#session" data-nav="session" class="nav flex items-center gap-2 rounded-xl px-3 py-2 text-slate-200 hover:bg-slate-700"><i class="fa-solid fa-tower-broadcast w-4 text-center"></i><span>大屏会话控制</span></a>
@@ -35,7 +34,7 @@
 </aside>
 
 <main class="flex-1 min-w-0 p-5 md:p-6 overflow-auto">
-  <div class="max-w-[1180px] mx-auto">
+  <div class="max-w-[1280px] mx-auto">
     <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
       <div>
         <div class="text-xs text-slate-400">管理后台 / 基础配置</div>
@@ -128,37 +127,134 @@
       </div>
     </section>
 
-    <!-- P1 入口 -->
-    <section data-panel="scene" class="hidden">
-      <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm text-center">
-        <div class="text-sky-700 text-3xl mb-3"><i class="fa-solid fa-pen-ruler"></i></div>
-        <h2 class="font-semibold text-lg">场景编辑</h2>
-        <p class="text-sm text-slate-500 mt-2">摆放、聚焦、16:9 预览。本期以独立业务页交付，后台提供入口。</p>
-        <a class="inline-flex mt-5 rounded-xl bg-slate-800 text-white px-4 py-2 text-sm" href="pc_scene_edit.html" target="_blank">打开场景编辑</a>
+    <!-- 场景编辑 -->
+    <section data-panel="scene" class="hidden space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <p class="text-xs text-slate-500">拖动可发布模型调整摆放；草稿仅可查看。保存视角写入本地演示。</p>
+        <div class="flex flex-wrap gap-2 text-sm">
+          <select id="sceneRatio" class="rounded-xl border border-slate-300 bg-white px-3 py-1.5" onchange="setSceneRatio()">
+            <option value="16:9">预览 16:9 指挥墙</option>
+            <option value="desk">预览工作站</option>
+          </select>
+          <button type="button" class="rounded-xl bg-slate-800 text-white px-3 py-1.5" onclick="saveSceneView()">保存视角</button>
+          <button type="button" class="rounded-xl border border-slate-300 bg-white px-3 py-1.5" onclick="focusSceneObj()">聚焦主视中心</button>
+        </div>
+      </div>
+      <div class="grid xl:grid-cols-12 gap-4">
+        <aside class="xl:col-span-3 bg-white rounded-2xl p-3 border border-slate-200 shadow-sm">
+          <div class="font-semibold text-sm mb-2">场景树</div>
+          <div id="sceneTree" class="space-y-1 text-sm"></div>
+          <p class="text-[11px] text-slate-400 mt-3">未通过自检的模型不可放入上线场景。</p>
+        </aside>
+        <div class="xl:col-span-6">
+          <div id="sceneStage" class="bg-slate-900 rounded-2xl relative overflow-hidden border border-slate-700" style="aspect-ratio:16/9">
+            <div class="absolute inset-0 opacity-40" style="background:radial-gradient(circle at 40% 55%,#0e7490,transparent 42%),linear-gradient(160deg,#0f172a,#082f49)"></div>
+            <div id="sceneObjs" class="absolute inset-0"></div>
+            <div class="absolute left-3 bottom-3 text-[11px] text-slate-200 bg-slate-950/50 rounded-lg px-2 py-1">拖动对象调整摆放 · <span id="sceneViewLabel">指挥默认</span></div>
+          </div>
+        </div>
+        <aside class="xl:col-span-3 bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
+          <div class="font-semibold text-sm mb-3">对象属性</div>
+          <div id="sceneProp" class="text-sm text-slate-500">点选场景中的对象</div>
+          <div class="mt-4 rounded-xl bg-slate-50 p-3 text-xs text-slate-500 leading-5">
+            正常：保存后概览使用该视角。<br>边界：草稿模型灰色，不可上线摆放。<br>异常：自检失败保持灰色，不能发布。
+          </div>
+        </aside>
       </div>
     </section>
-    <section data-panel="resource" class="hidden">
-      <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm text-center">
-        <div class="text-sky-700 text-3xl mb-3"><i class="fa-solid fa-boxes-stacked"></i></div>
-        <h2 class="font-semibold text-lg">资源中心</h2>
-        <p class="text-sm text-slate-500 mt-2">模板组件应用到专题页。</p>
-        <a class="inline-flex mt-5 rounded-xl bg-slate-800 text-white px-4 py-2 text-sm" href="pc_resource_center.html" target="_blank">打开资源中心</a>
+
+    <!-- 资源中心 -->
+    <section data-panel="resource" class="hidden space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <p class="text-xs text-slate-500">专题模板与可复用组件；应用后保留数据对象，只替换展示组合。</p>
+        <input id="resQ" class="rounded-xl border border-slate-300 px-3 py-1.5 text-sm" placeholder="搜索模板 / 组件" oninput="renderResourceCards()">
+      </div>
+      <div id="resCards" class="grid md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-4 py-3 border-b border-slate-100 text-sm font-semibold">已应用到专题</div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-xs text-slate-600"><tr>
+              <th class="text-left px-3 py-2">模板</th><th class="text-left px-3 py-2">目标</th>
+              <th class="text-left px-3 py-2">版本</th><th class="text-left px-3 py-2">状态</th><th class="text-left px-3 py-2">操作</th>
+            </tr></thead>
+            <tbody id="resApplied"></tbody>
+          </table>
+        </div>
       </div>
     </section>
-    <section data-panel="session" class="hidden">
-      <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm text-center">
-        <div class="text-sky-700 text-3xl mb-3"><i class="fa-solid fa-tower-broadcast"></i></div>
-        <h2 class="font-semibold text-lg">大屏会话控制</h2>
-        <p class="text-sm text-slate-500 mt-2">PC 指挥席切换大屏模式与主题。</p>
-        <a class="inline-flex mt-5 rounded-xl bg-slate-800 text-white px-4 py-2 text-sm" href="pc_remote_session.html" target="_blank">打开会话控制</a>
+
+    <!-- 大屏会话控制 -->
+    <section data-panel="session" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div class="text-xs text-slate-400">当前会话</div>
+            <div class="font-semibold mt-1" id="sessName">兴盛指挥墙 · 16:9</div>
+            <div class="text-xs text-slate-500 mt-1">主题：<span id="sessTheme">概览</span> · 焦点：<span id="sessFocus">未指定</span></div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span id="sessBind" class="text-xs px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">已绑定</span>
+            <button type="button" class="rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-sm" onclick="toggleSessionBind()">切换绑定</button>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+        <div class="font-semibold text-sm mb-3">主题切换（页内下发）</div>
+        <div id="sessThemes" class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm"></div>
+      </div>
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+        <div class="font-semibold text-sm mb-3">焦点泊位</div>
+        <div class="grid grid-cols-2 gap-2 text-sm">
+          <button type="button" class="rounded-xl border border-slate-200 py-3 hover:bg-slate-50" onclick="setSessionFocus('1# 水泥熟料')">定位 1# 水泥熟料</button>
+          <button type="button" class="rounded-xl border border-slate-200 py-3 hover:bg-slate-50" onclick="setSessionFocus('2# 河砂')">定位 2# 河砂</button>
+        </div>
+        <div class="mt-4">
+          <div class="text-xs text-slate-400 mb-1">指令日志</div>
+          <div id="sessLog" class="rounded-xl bg-slate-50 border border-slate-100 px-3 py-2 text-sm text-slate-600 min-h-[72px]">等待指令。主题与焦点将在本页模拟下发，不新开大屏。</div>
+        </div>
       </div>
     </section>
-    <section data-panel="status" class="hidden">
-      <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm text-center">
-        <div class="text-sky-700 text-3xl mb-3"><i class="fa-solid fa-heart-pulse"></i></div>
-        <h2 class="font-semibold text-lg">接口与数据状态</h2>
-        <p class="text-sm text-slate-500 mt-2">9 系统接入与降级策略巡检。</p>
-        <a class="inline-flex mt-5 rounded-xl bg-slate-800 text-white px-4 py-2 text-sm" href="pc_data_status.html" target="_blank">打开接口状态</a>
+
+    <!-- 接口与数据状态 -->
+    <section data-panel="status" class="hidden space-y-4">
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm"><div class="text-xs text-slate-500">接入系统</div><div class="text-2xl font-semibold mt-1" id="stKpiTotal">0</div></div>
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm"><div class="text-xs text-slate-500">正常</div><div class="text-2xl font-semibold text-emerald-600 mt-1" id="stKpiOk">0</div></div>
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm"><div class="text-xs text-slate-500">抖动</div><div class="text-2xl font-semibold text-amber-600 mt-1" id="stKpiJitter">0</div></div>
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm"><div class="text-xs text-slate-500">中断</div><div class="text-2xl font-semibold text-rose-600 mt-1" id="stKpiDown">0</div></div>
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm"><div class="text-xs text-slate-500">今日失败重试</div><div class="text-2xl font-semibold mt-1" id="stKpiRetry">0</div></div>
+      </div>
+      <div class="grid xl:grid-cols-3 gap-4">
+        <div class="xl:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="px-4 py-3 border-b border-slate-100 flex items-center justify-between gap-2">
+            <div class="text-sm font-semibold">系统接入清单</div>
+            <button type="button" class="rounded-xl border border-slate-300 bg-white px-3 py-1 text-xs" onclick="refreshAllStatus()">全部巡检</button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead class="bg-slate-50 text-xs text-slate-600"><tr>
+                <th class="text-left px-3 py-2">系统</th><th class="text-left px-3 py-2">用途</th><th class="text-left px-3 py-2">最近同步</th>
+                <th class="text-left px-3 py-2">时延</th><th class="text-left px-3 py-2">状态</th><th class="text-left px-3 py-2">影响模块</th><th class="text-left px-3 py-2">操作</th>
+              </tr></thead>
+              <tbody id="statusBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="space-y-4">
+          <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
+            <div class="font-semibold mb-2 text-sm">降级策略</div>
+            <ul class="text-sm text-slate-600 space-y-2 list-disc pl-4">
+              <li>中断：对应模块显示「未接入」占位</li>
+              <li>抖动：保留最后成功数据并角标提示</li>
+              <li>未接入：主题可进，不阻断其它模块</li>
+            </ul>
+          </div>
+          <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
+            <div class="font-semibold mb-2 text-sm">最近事件</div>
+            <div id="statusEvents" class="text-sm space-y-2"></div>
+          </div>
+        </div>
       </div>
     </section>
   </div>
@@ -169,10 +265,10 @@ const META = {
   model: { title: '模型管理', desc: '模型清单、自检与发布；失败不可发布。本地演示存储。' },
   theme: { title: '多主题管理', desc: '六大屏启用、排序、默认主题；保存后大屏底栏同步。' },
   module: { title: '模块管理', desc: '跨主题模块上墙总控；保存后回写各主题后台开关。' },
-  scene: { title: '场景编辑', desc: 'P1 入口：跳转独立场景编辑页。' },
-  resource: { title: '资源中心', desc: 'P1 入口：跳转资源中心。' },
-  session: { title: '大屏会话控制', desc: 'P1 入口：跳转大屏会话控制。' },
-  status: { title: '接口与数据状态', desc: 'P1 入口：跳转接口巡检页。' }
+  scene: { title: '场景编辑', desc: '摆放已发布模型、保存指挥视角、按 16:9 大屏预览。' },
+  resource: { title: '资源中心', desc: '专题模板检索并应用到六大屏主题；本地演示。' },
+  session: { title: '大屏会话控制', desc: '指挥席绑定大屏，页内切换主题与焦点泊位。' },
+  status: { title: '接口与数据状态', desc: '源系统接入健康、同步时延、失败重试与模块降级。' }
 };
 
 const THEME_PAGE = {
@@ -243,6 +339,10 @@ const MODULE_CATALOG = [
 const MODEL_STORE = 'hn_admin_model_v1';
 const THEME_STORE = 'hn_wall_theme_cfg_v1';
 const MODULE_STORE = 'hn_wall_module_cfg_v1';
+const SCENE_STORE = 'hn_admin_scene_v1';
+const RESOURCE_STORE = 'hn_admin_resource_v1';
+const SESSION_STORE = 'hn_admin_session_v1';
+const STATUS_STORE = 'hn_admin_status_v1';
 
 const MODEL_DEFAULTS = {
   rows: [
@@ -277,10 +377,70 @@ function defaultModules() {
   };
 }
 
+const SCENE_DEFAULTS = {
+  ratio: '16:9',
+  viewLabel: '指挥默认',
+  current: 'bim1',
+  items: [
+    { id: 'oblique', name: '港区倾斜_2026Q3', ok: true, x: 18, y: 22, w: 46, h: 38 },
+    { id: 'bim1', name: '1号泊位BIM', ok: true, x: 22, y: 40, w: 18, h: 16 },
+    { id: 'bim2', name: '2号泊位BIM', ok: true, x: 40, y: 46, w: 16, h: 14 },
+    { id: 'yard', name: '堆场A精细模', ok: false, x: 52, y: 58, w: 18, h: 14 }
+  ]
+};
+
+const RESOURCE_TPLS = [
+  { name: '双泊位指挥', desc: '1#水泥熟料 / 2#河砂，KPI 与告警同屏', parts: '泊位对、货种条、视频四宫格' },
+  { name: '装卸进度', desc: '船、卸船机、皮带、堆场一条链路', parts: '进度条、在泊表、设备状态' },
+  { name: '卡口拥堵', desc: '卡口排队、轨迹与视频核验', parts: '拥堵榜、轨迹、离线标识' },
+  { name: '设备健康', desc: '在线率、振动告警、利用率', parts: '健康分、故障趋势' },
+  { name: '吞吐经营', desc: '年设计 700 万吨进度、货种结构与船时效率', parts: '翻牌、货种排行、效率预警' },
+  { name: '应急联动', desc: '事件定位、应急资源、广播提示', parts: '事件卡、资源清单、视频' }
+];
+
+const RESOURCE_DEFAULTS = {
+  applied: [
+    { id: 'a1', name: '双泊位指挥', target: '概览大屏', version: 'v1.0.0', status: '使用中' },
+    { id: 'a2', name: '装卸进度', target: '生产一张图', version: 'v1.0.0', status: '使用中' }
+  ]
+};
+
+const SESSION_DEFAULTS = {
+  bound: true,
+  theme: '概览',
+  focus: '未指定',
+  logs: ['等待指令。主题与焦点将在本页模拟下发，不新开大屏。']
+};
+
+const STATUS_DEFAULTS = {
+  retryToday: 14,
+  events: [
+    { level: 'rose', text: '16:10 地磅接口中断，已自动重试 3 次' },
+    { level: 'amber', text: '15:56 视频链路抖动，部分点位延迟升高' },
+    { level: 'slate', text: '15:40 生产数据拉取成功 12,840 条' }
+  ],
+  systems: [
+    { id: 's1', name: '码头生产管理系统', usage: '船舶/作业/堆场', sync: '刚刚', latency: '1.2s', status: '正常', impact: '生产/概览' },
+    { id: 's2', name: '设备物资管理系统', usage: '设备状态', sync: '1分钟前', latency: '0.8s', status: '正常', impact: '设备/生产' },
+    { id: 's3', name: '安全管理系统', usage: '告警/应急', sync: '刚刚', latency: '1.0s', status: '正常', impact: '调度/概览' },
+    { id: 's4', name: '视频监控', usage: '实时视频', sync: '刚刚', latency: '2.6s', status: '抖动', impact: '视频面板' },
+    { id: 's5', name: '卡口/道闸', usage: '通行记录', sync: '2分钟前', latency: '1.5s', status: '抖动', impact: '交通' },
+    { id: 's6', name: '地磅系统', usage: '过磅', sync: '18分钟前', latency: '—', status: '中断', impact: '生产集疏运' },
+    { id: 's7', name: '设备控制系统', usage: '皮带机状态', sync: '刚刚', latency: '0.9s', status: '正常', impact: '设备' },
+    { id: 's8', name: '海关通关辅助', usage: '通关状态', sync: '刚刚', latency: '1.1s', status: '正常', impact: '调度/概览/交通' },
+    { id: 's9', name: 'AIS', usage: '船舶位置', sync: '刚刚', latency: '0.6s', status: '正常', impact: '生产/概览' }
+  ]
+};
+
 let models = AdminKit.load(MODEL_STORE, MODEL_DEFAULTS);
 let themes = AdminKit.load(THEME_STORE, THEME_DEFAULTS);
 let modules = AdminKit.load(MODULE_STORE, defaultModules());
+let scene = AdminKit.load(SCENE_STORE, SCENE_DEFAULTS);
+let resources = AdminKit.load(RESOURCE_STORE, RESOURCE_DEFAULTS);
+let session = AdminKit.load(SESSION_STORE, SESSION_DEFAULTS);
+let statusData = AdminKit.load(STATUS_STORE, STATUS_DEFAULTS);
 let curPanel = 'model';
+let resPick = RESOURCE_TPLS[0];
 
 function ensureModuleCatalog() {
   const map = {};
@@ -303,11 +463,15 @@ function showPanel(name, opts) {
   if (!META[name]) name = 'model';
   curPanel = name;
   AdminKit.showPanel(name, META, opts);
-  const saveable = name === 'model' || name === 'theme' || name === 'module';
+  const saveable = name === 'model' || name === 'theme' || name === 'module' || name === 'scene' || name === 'resource' || name === 'session' || name === 'status';
   document.getElementById('btnSave').style.display = saveable ? '' : 'none';
   if (name === 'model') renderModels();
   if (name === 'theme') renderThemes();
   if (name === 'module') renderModules();
+  if (name === 'scene') renderScene();
+  if (name === 'resource') { renderResourceCards(); renderResourceApplied(); }
+  if (name === 'session') renderSession();
+  if (name === 'status') renderStatus();
 }
 
 function renderModels() {
@@ -516,6 +680,22 @@ function saveCurrent() {
     localStorage.setItem(MODULE_STORE, JSON.stringify(modules));
     syncModuleToThemeStores();
     AdminKit.toast('模块上墙已保存，并回写各主题后台');
+    return;
+  }
+  if (curPanel === 'scene') {
+    AdminKit.save(SCENE_STORE, scene);
+    return;
+  }
+  if (curPanel === 'resource') {
+    AdminKit.save(RESOURCE_STORE, resources);
+    return;
+  }
+  if (curPanel === 'session') {
+    AdminKit.save(SESSION_STORE, session);
+    return;
+  }
+  if (curPanel === 'status') {
+    AdminKit.save(STATUS_STORE, statusData);
   }
 }
 
@@ -534,7 +714,289 @@ function resetCurrent() {
     localStorage.setItem(MODULE_STORE, JSON.stringify(modules));
     syncModuleToThemeStores();
     renderModules();
+  } else if (curPanel === 'scene') {
+    scene = AdminKit.clone(SCENE_DEFAULTS);
+    AdminKit.save(SCENE_STORE, scene);
+    renderScene();
+  } else if (curPanel === 'resource') {
+    resources = AdminKit.clone(RESOURCE_DEFAULTS);
+    AdminKit.save(RESOURCE_STORE, resources);
+    renderResourceCards();
+    renderResourceApplied();
+  } else if (curPanel === 'session') {
+    session = AdminKit.clone(SESSION_DEFAULTS);
+    AdminKit.save(SESSION_STORE, session);
+    renderSession();
+  } else if (curPanel === 'status') {
+    statusData = AdminKit.clone(STATUS_DEFAULTS);
+    AdminKit.save(STATUS_STORE, statusData);
+    renderStatus();
   }
+}
+
+/* —— 场景编辑 —— */
+function renderScene() {
+  const items = scene.items || [];
+  if (!items.some((x) => x.id === scene.current)) scene.current = (items[0] && items[0].id) || '';
+  document.getElementById('sceneRatio').value = scene.ratio || '16:9';
+  document.getElementById('sceneStage').style.aspectRatio = scene.ratio === 'desk' ? '16/10' : '16/9';
+  document.getElementById('sceneViewLabel').textContent = scene.viewLabel || '指挥默认';
+  document.getElementById('sceneTree').innerHTML = items.map((it) =>
+    `<button type="button" data-id="${it.id}" class="w-full text-left rounded-xl px-3 py-2 ${it.id === scene.current ? 'bg-slate-800 text-white' : 'hover:bg-slate-50 text-slate-700'}">${it.name}${it.ok ? '' : ' · 草稿'}</button>`
+  ).join('');
+  document.getElementById('sceneObjs').innerHTML = items.map((it) =>
+    `<button type="button" data-id="${it.id}" class="absolute rounded-lg border text-[11px] px-2 py-1 ${it.ok ? 'bg-sky-500/80 border-sky-200 text-white' : 'bg-slate-500/70 border-slate-300 text-slate-100'} ${it.id === scene.current ? 'ring-2 ring-amber-300' : ''}" style="left:${it.x}%;top:${it.y}%;width:${it.w}%;height:${it.h}%">${it.name}</button>`
+  ).join('');
+  const it = items.find((x) => x.id === scene.current);
+  document.getElementById('sceneProp').innerHTML = it
+    ? `<div class="font-medium text-slate-800 mb-2">${it.name}</div>
+      <div class="flex justify-between py-1 border-b border-slate-100"><span>状态</span><span>${it.ok ? '可发布' : '草稿，不可上线'}</span></div>
+      <div class="flex justify-between py-1 border-b border-slate-100"><span>水平位置</span><span>${Math.round(it.x)}%</span></div>
+      <div class="flex justify-between py-1"><span>垂直位置</span><span>${Math.round(it.y)}%</span></div>`
+    : '点选场景中的对象';
+  bindSceneEvents();
+}
+
+function bindSceneEvents() {
+  document.querySelectorAll('#sceneTree button, #sceneObjs button').forEach((b) => {
+    b.onclick = () => { scene.current = b.getAttribute('data-id'); renderScene(); };
+  });
+  document.querySelectorAll('#sceneObjs button').forEach((b) => {
+    b.onpointerdown = (ev) => {
+      const it = scene.items.find((x) => x.id === b.getAttribute('data-id'));
+      if (!it) return;
+      if (!it.ok) { AdminKit.toast('草稿模型仅可查看，不能调整上线摆放'); return; }
+      const stage = document.getElementById('sceneStage').getBoundingClientRect();
+      scene.current = it.id;
+      const move = (e) => {
+        it.x = Math.max(2, Math.min(80, ((e.clientX - stage.left) / stage.width) * 100 - it.w / 2));
+        it.y = Math.max(2, Math.min(75, ((e.clientY - stage.top) / stage.height) * 100 - it.h / 2));
+        b.style.left = it.x + '%';
+        b.style.top = it.y + '%';
+      };
+      const up = () => {
+        window.removeEventListener('pointermove', move);
+        window.removeEventListener('pointerup', up);
+        renderScene();
+      };
+      window.addEventListener('pointermove', move);
+      window.addEventListener('pointerup', up);
+    };
+  });
+}
+
+function setSceneRatio() {
+  scene.ratio = document.getElementById('sceneRatio').value;
+  document.getElementById('sceneStage').style.aspectRatio = scene.ratio === 'desk' ? '16/10' : '16/9';
+  AdminKit.toast(scene.ratio === '16:9' ? '已按指挥墙 16:9 预览' : '已按工作站比例预览');
+}
+
+function saveSceneView() {
+  const it = scene.items.find((x) => x.id === scene.current);
+  if (!it) return;
+  scene.viewLabel = it.name + '构图';
+  document.getElementById('sceneViewLabel').textContent = scene.viewLabel;
+  AdminKit.save(SCENE_STORE, scene);
+  if (!it.ok) AdminKit.toast('当前对象未通过发布条件，视角已保存，对象不会上线');
+  else AdminKit.toast('视角已保存，概览将使用「' + it.name + '」所在构图');
+}
+
+function focusSceneObj() {
+  const it = scene.items.find((x) => x.id === scene.current);
+  if (!it) return;
+  it.x = 34;
+  it.y = 36;
+  renderScene();
+  AdminKit.toast('已将「' + it.name + '」聚焦到主视中心');
+}
+
+/* —— 资源中心 —— */
+function renderResourceCards() {
+  const q = (document.getElementById('resQ').value || '').trim();
+  const list = RESOURCE_TPLS.filter((t) => !q || (t.name + t.desc + t.parts).includes(q));
+  document.getElementById('resCards').innerHTML = list.map((t) => `
+    <article class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+      <h3 class="font-semibold">${t.name}</h3>
+      <p class="text-sm text-slate-500 mt-1">${t.desc}</p>
+      <p class="text-xs text-slate-400 mt-2">组件：${t.parts}</p>
+      <button type="button" class="mt-3 rounded-xl bg-slate-800 text-white px-3 py-1.5 text-sm" onclick="openApplyResource('${t.name}')">应用到专题</button>
+    </article>`).join('') || '<p class="text-sm text-slate-400 col-span-full">没有匹配的模板</p>';
+}
+
+function renderResourceApplied() {
+  const rows = resources.applied || [];
+  document.getElementById('resApplied').innerHTML = rows.map((r) => `<tr class="border-t border-slate-100">
+    <td class="px-3 py-2">${r.name}</td>
+    <td class="px-3 py-2">${r.target}</td>
+    <td class="px-3 py-2">${r.version}</td>
+    <td class="px-3 py-2 ${r.status === '刚应用' ? 'text-sky-700' : 'text-emerald-600'}">${r.status}</td>
+    <td class="px-3 py-2"><button type="button" class="text-rose-600" onclick="removeApplied('${r.id}')">移除</button></td>
+  </tr>`).join('') || `<tr><td class="px-3 py-6 text-slate-400" colspan="5">暂无应用记录</td></tr>`;
+}
+
+function openApplyResource(name) {
+  resPick = RESOURCE_TPLS.find((t) => t.name === name) || RESOURCE_TPLS[0];
+  const targets = ['概览大屏', '生产一张图', '交通一张图', '设备设施一张图', '经营分析一张图', '智慧调度一张图'];
+  const body = `
+    <p class="text-sm text-slate-500 mb-3">${resPick.name} · ${resPick.parts}</p>
+    ${AdminKit.field('目标专题', 'f_res_target', { value: targets[0], options: targets }, 'select')}
+    <p class="text-xs text-slate-400 mt-2">应用后保留现有数据对象，只替换展示组件组合。</p>`;
+  AdminKit.openModal('应用到专题', body, () => {
+    resources.applied.unshift({
+      id: AdminKit.uid('a'),
+      name: resPick.name,
+      target: AdminKit.val('f_res_target'),
+      version: 'v1.0.0',
+      status: '刚应用'
+    });
+    renderResourceApplied();
+    AdminKit.toast('「' + resPick.name + '」已应用到' + AdminKit.val('f_res_target'));
+    return true;
+  });
+}
+
+function removeApplied(id) {
+  if (!confirm('确认移除该应用记录？')) return;
+  resources.applied = (resources.applied || []).filter((x) => x.id !== id);
+  renderResourceApplied();
+  AdminKit.toast('已移除应用记录');
+}
+
+/* —— 大屏会话控制 —— */
+function renderSession() {
+  document.getElementById('sessTheme').textContent = session.theme || '概览';
+  document.getElementById('sessFocus').textContent = session.focus || '未指定';
+  const bind = document.getElementById('sessBind');
+  if (session.bound) {
+    bind.textContent = '已绑定';
+    bind.className = 'text-xs px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100';
+  } else {
+    bind.textContent = '未绑定';
+    bind.className = 'text-xs px-2 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-100';
+  }
+  const keys = Object.keys(THEME_PAGE);
+  document.getElementById('sessThemes').innerHTML = keys.map((n) => {
+    const on = n === session.theme;
+    return `<button type="button" class="rounded-xl border py-3 text-center ${on ? 'border-slate-800 bg-slate-800 text-white' : 'border-slate-200 hover:bg-slate-50'}" onclick="setSessionTheme('${n}')">${n}</button>`;
+  }).join('');
+  const logs = session.logs || [];
+  document.getElementById('sessLog').innerHTML = logs.map((l) => `<div class="py-0.5">${l}</div>`).join('');
+}
+
+function pushSessionLog(msg) {
+  const now = new Date();
+  const ts = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+  session.logs = session.logs || [];
+  session.logs.unshift(ts + ' ' + msg);
+  if (session.logs.length > 8) session.logs.length = 8;
+  renderSession();
+}
+
+function toggleSessionBind() {
+  session.bound = !session.bound;
+  pushSessionLog(session.bound ? '已重新绑定兴盛指挥墙' : '已解除绑定（演示）');
+  AdminKit.toast(session.bound ? '会话已绑定' : '会话已解绑');
+}
+
+function setSessionTheme(name) {
+  if (!session.bound) { AdminKit.toast('请先绑定大屏会话'); return; }
+  session.theme = name;
+  pushSessionLog('已页内下发主题「' + name + '」，指挥墙保持当前会话');
+  AdminKit.toast('主题已切换为「' + name + '」');
+}
+
+function setSessionFocus(name) {
+  if (!session.bound) { AdminKit.toast('请先绑定大屏会话'); return; }
+  session.focus = name;
+  pushSessionLog('已页内定位焦点「' + name + '」');
+  AdminKit.toast('焦点已定位到「' + name + '」');
+}
+
+/* —— 接口与数据状态 —— */
+function statusClass(s) {
+  if (s === '正常') return 'text-emerald-600';
+  if (s === '抖动') return 'text-amber-600';
+  return 'text-rose-600';
+}
+
+function renderStatus() {
+  const rows = statusData.systems || [];
+  document.getElementById('stKpiTotal').textContent = rows.length;
+  document.getElementById('stKpiOk').textContent = rows.filter((r) => r.status === '正常').length;
+  document.getElementById('stKpiJitter').textContent = rows.filter((r) => r.status === '抖动').length;
+  document.getElementById('stKpiDown').textContent = rows.filter((r) => r.status === '中断').length;
+  document.getElementById('stKpiRetry').textContent = statusData.retryToday || 0;
+  document.getElementById('statusBody').innerHTML = rows.map((r) => {
+    let act = '拉取';
+    let fn = `pullStatus('${r.id}')`;
+    if (r.status === '抖动') { act = '重连'; fn = `reconnectStatus('${r.id}')`; }
+    if (r.status === '中断') { act = '重试'; fn = `retryStatus('${r.id}')`; }
+    return `<tr class="border-t border-slate-100 hover:bg-slate-50">
+      <td class="px-3 py-2 font-medium">${r.name}</td>
+      <td class="px-3 py-2">${r.usage}</td>
+      <td class="px-3 py-2">${r.sync}</td>
+      <td class="px-3 py-2">${r.latency}</td>
+      <td class="px-3 py-2 ${statusClass(r.status)}">${r.status}</td>
+      <td class="px-3 py-2">${r.impact}</td>
+      <td class="px-3 py-2"><button type="button" class="text-sky-700" onclick="${fn}">${act}</button></td>
+    </tr>`;
+  }).join('');
+  const levelMap = { rose: 'bg-rose-50 text-rose-700', amber: 'bg-amber-50 text-amber-700', slate: 'bg-slate-50 text-slate-600' };
+  document.getElementById('statusEvents').innerHTML = (statusData.events || []).map((e) =>
+    `<div class="rounded-xl ${levelMap[e.level] || levelMap.slate} px-3 py-2">${e.text}</div>`
+  ).join('') || '<div class="text-slate-400 text-sm">暂无事件</div>';
+}
+
+function pushStatusEvent(level, text) {
+  statusData.events = statusData.events || [];
+  statusData.events.unshift({ level, text });
+  if (statusData.events.length > 6) statusData.events.length = 6;
+}
+
+function pullStatus(id) {
+  const row = statusData.systems.find((x) => x.id === id);
+  if (!row) return;
+  row.sync = '刚刚';
+  row.latency = (0.6 + Math.random()).toFixed(1) + 's';
+  if (row.status !== '正常') row.status = '正常';
+  pushStatusEvent('slate', row.name + ' 手工拉取成功');
+  renderStatus();
+  AdminKit.toast('手工拉取成功');
+}
+
+function reconnectStatus(id) {
+  const row = statusData.systems.find((x) => x.id === id);
+  if (!row) return;
+  row.status = '正常';
+  row.sync = '刚刚';
+  row.latency = (0.8 + Math.random()).toFixed(1) + 's';
+  pushStatusEvent('slate', row.name + ' 已重连');
+  renderStatus();
+  AdminKit.toast('已重连');
+}
+
+function retryStatus(id) {
+  const row = statusData.systems.find((x) => x.id === id);
+  if (!row) return;
+  statusData.retryToday = (statusData.retryToday || 0) + 1;
+  row.status = '正常';
+  row.sync = '刚刚';
+  row.latency = (1 + Math.random()).toFixed(1) + 's';
+  pushStatusEvent('slate', row.name + ' 重试成功，链路恢复');
+  renderStatus();
+  AdminKit.toast('已触发重试并恢复');
+}
+
+function refreshAllStatus() {
+  (statusData.systems || []).forEach((r) => {
+    if (r.status === '中断') return;
+    r.sync = '刚刚';
+    if (r.status === '抖动') r.latency = (1.5 + Math.random()).toFixed(1) + 's';
+    else r.latency = (0.5 + Math.random()).toFixed(1) + 's';
+  });
+  pushStatusEvent('slate', '全部巡检完成（中断项需手工重试）');
+  renderStatus();
+  AdminKit.toast('巡检完成');
 }
 
 AdminKit.ensureModal();
