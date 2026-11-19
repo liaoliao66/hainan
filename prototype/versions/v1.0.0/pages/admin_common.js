@@ -18,9 +18,11 @@
       style.textContent = `
         html.admin-embed,html.admin-embed body{height:100%;margin:0}
         html.admin-embed body{display:block!important;min-height:100%;overflow:auto;background:#f8fafc}
-        html.admin-embed aside{display:none!important}
-        html.admin-embed main{padding:16px 20px!important;max-width:none}
+        html.admin-embed body > aside{display:none!important}
+        html.admin-embed main{padding:12px 16px!important;max-width:none}
         html.admin-embed .admin-embed-hide{display:none!important}
+        html.admin-embed #pageTitle,html.admin-embed #pageDesc{font-size:inherit}
+        html.admin-embed [data-panel="scene"] .scene-layout{display:grid!important;grid-template-columns:minmax(280px,34%) 1fr;gap:12px;align-items:start}
       `;
       document.head.appendChild(style);
       return;

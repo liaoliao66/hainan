@@ -9,6 +9,12 @@
 <script src="admin_common.js"></script>
 <style>
   [data-panel].hidden{display:none!important}
+  .scene-layout{display:grid;grid-template-columns:minmax(280px,34%) 1fr;gap:12px;align-items:start}
+  @media (max-width:1100px){.scene-layout{grid-template-columns:1fr}}
+  .scene-zone{position:absolute;inset:0;pointer-events:none;opacity:.35}
+  .scene-zone-sea{left:0;right:38%;top:0;bottom:42%;background:linear-gradient(180deg,#0c4a6e66,#082f4988)}
+  .scene-zone-berth{left:8%;right:28%;top:38%;bottom:18%;background:linear-gradient(90deg,#33415555,#47556944);border:1px dashed #94a3b866}
+  .scene-zone-yard{left:48%;right:6%;top:48%;bottom:10%;background:#3f621255;border:1px dashed #a3e63555}
 </style>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex">
@@ -129,12 +135,12 @@
 
     <!-- 场景编辑 -->
     <section data-panel="scene" class="hidden">
-      <div class="grid lg:grid-cols-12 gap-4 items-start">
-        <!-- 左：配置 -->
-        <aside class="lg:col-span-4 space-y-3 lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto pr-0.5">
+      <div class="scene-layout">
+        <!-- 左：配置（勿用 body>aside 以外的侧栏标签被嵌入态误伤；此处用 div） -->
+        <div class="space-y-3 max-h-[calc(100vh-100px)] overflow-y-auto pr-0.5">
           <div class="rounded-2xl border border-slate-200 bg-slate-800 text-slate-100 px-4 py-3">
-            <div class="text-sm font-semibold">布景配置</div>
-            <p class="text-xs text-slate-300 mt-1 leading-5">左侧改配置，右侧看<strong class="text-white">指挥大屏主视</strong>效果。流程：选方案 → 加入模型并拖动 → 保存视角 → 同步概览。</p>
+            <div class="text-sm font-semibold">布景工作台</div>
+            <p class="text-xs text-slate-300 mt-1 leading-5">左配置 / 右大屏。支持多方案、图层、对齐与发布检查。</p>
           </div>
 
           <div id="sceneSummary" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-600 space-y-1"></div>
@@ -147,12 +153,11 @@
               </div>
               <button type="button" class="rounded-xl bg-sky-700 text-white px-3 py-1.5 text-xs" onclick="addScenePlan()">新建方案</button>
             </div>
-            <div id="scenePlanList" class="space-y-1.5 max-h-[200px] overflow-auto"></div>
-            <p class="text-[11px] text-slate-400 leading-4">每套方案独立对象与视角；可复制后微调。至少保留 1 套。</p>
+            <div id="scenePlanList" class="space-y-1.5 max-h-[180px] overflow-auto"></div>
           </div>
 
           <div class="bg-white rounded-2xl p-3 border border-slate-200 shadow-sm space-y-2">
-            <div class="text-[11px] text-slate-400">当前方案操作</div>
+            <div class="text-[11px] text-slate-400">布景工具</div>
             <select id="sceneRatio" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-sm" onchange="setSceneRatio()">
               <option value="16:9">预览比例：指挥墙 16:9</option>
               <option value="desk">预览比例：工作站</option>
@@ -160,20 +165,39 @@
             <div class="grid grid-cols-2 gap-2 text-sm">
               <button type="button" class="rounded-xl bg-sky-700 text-white px-3 py-2" onclick="openAddSceneModel()">加入模型</button>
               <button type="button" class="rounded-xl bg-slate-800 text-white px-3 py-2" onclick="saveNamedSceneView()">保存视角</button>
-              <button type="button" class="rounded-xl border border-sky-300 bg-sky-50 text-sky-800 px-3 py-2 col-span-2" onclick="markSceneSyncOverview()">将本方案设为同步概览</button>
+              <button type="button" class="rounded-xl border border-sky-300 bg-sky-50 text-sky-800 px-3 py-2" onclick="markSceneSyncOverview()">同步概览</button>
+              <button type="button" class="rounded-xl border border-amber-300 bg-amber-50 text-amber-800 px-3 py-2" onclick="runScenePublishCheck()">发布检查</button>
+            </div>
+            <div class="flex flex-wrap gap-1.5 text-[11px]">
+              <button type="button" class="rounded-lg border border-slate-200 px-2 py-1 hover:bg-slate-50" onclick="alignSceneObj('left')">左对齐</button>
+              <button type="button" class="rounded-lg border border-slate-200 px-2 py-1 hover:bg-slate-50" onclick="alignSceneObj('center')">水平居中</button>
+              <button type="button" class="rounded-lg border border-slate-200 px-2 py-1 hover:bg-slate-50" onclick="alignSceneObj('right')">右对齐</button>
+              <button type="button" class="rounded-lg border border-slate-200 px-2 py-1 hover:bg-slate-50" onclick="nudgeSceneObj(0,-2)">↑</button>
+              <button type="button" class="rounded-lg border border-slate-200 px-2 py-1 hover:bg-slate-50" onclick="nudgeSceneObj(0,2)">↓</button>
+              <button type="button" class="rounded-lg border border-slate-200 px-2 py-1 hover:bg-slate-50" onclick="nudgeSceneObj(-2,0)">←</button>
+              <button type="button" class="rounded-lg border border-slate-200 px-2 py-1 hover:bg-slate-50" onclick="nudgeSceneObj(2,0)">→</button>
+              <button type="button" class="rounded-lg border border-slate-200 px-2 py-1 hover:bg-slate-50" onclick="layerBringFront()">置顶层</button>
+              <button type="button" class="rounded-lg border border-slate-200 px-2 py-1 hover:bg-slate-50" onclick="layerSendBack()">置底层</button>
             </div>
             <div class="flex flex-wrap gap-2 text-xs">
               <button type="button" class="rounded-lg border border-slate-200 px-2 py-1 hover:bg-slate-50" onclick="focusSceneObj()">聚焦中心</button>
               <button type="button" class="rounded-lg border border-slate-200 px-2 py-1 hover:bg-slate-50" onclick="toggleSceneGrid()">网格</button>
+              <button type="button" class="rounded-lg border border-slate-200 px-2 py-1 hover:bg-slate-50" onclick="toggleSceneSnap()">吸附 <span id="sceneSnapBadge">开</span></button>
               <button type="button" class="rounded-lg border border-slate-200 px-2 py-1 hover:bg-slate-50" onclick="toggleSceneSafe()">安全边距</button>
+              <button type="button" class="rounded-lg border border-slate-200 px-2 py-1 hover:bg-slate-50" onclick="toggleSceneCompare()">对比预览</button>
             </div>
+          </div>
+
+          <div class="bg-white rounded-2xl p-3 border border-slate-200 shadow-sm">
+            <div class="text-[11px] text-slate-400 mb-1">图层面板</div>
+            <div class="font-semibold text-sm mb-2">按层级排序（上=靠前）</div>
+            <div id="sceneLayers" class="space-y-1 text-sm max-h-[160px] overflow-auto"></div>
           </div>
 
           <div class="bg-white rounded-2xl p-3 border border-slate-200 shadow-sm">
             <div class="text-[11px] text-slate-400 mb-1">对象列表</div>
             <div class="font-semibold text-sm mb-2">场景中的模型</div>
-            <div id="sceneTree" class="space-y-1 text-sm max-h-[220px] overflow-auto"></div>
-            <p class="text-[11px] text-slate-400 mt-2 leading-4">仅已发布可加入；灰色草稿不可上线拖拽。</p>
+            <div id="sceneTree" class="space-y-1 text-sm max-h-[160px] overflow-auto"></div>
           </div>
 
           <div class="bg-white rounded-2xl p-3 border border-slate-200 shadow-sm">
@@ -186,20 +210,16 @@
             <div class="text-[11px] text-slate-400 mb-1">选中对象</div>
             <div class="font-semibold text-sm mb-3">摆放与属性</div>
             <div id="sceneProp" class="text-sm text-slate-500">在列表或右侧大屏中点选模型</div>
-            <div class="mt-3 rounded-xl bg-slate-50 border border-slate-100 p-3 text-xs text-slate-500 leading-5">
-              正常：拖动/改数值 → 保存视角 → 同步概览。<br>
-              边界：隐藏不交互；锁定防误拖。<br>
-              异常：灰色草稿不能上线。
-            </div>
+            <div id="sceneCheckBox" class="mt-3 hidden rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900 space-y-1"></div>
           </div>
-        </aside>
+        </div>
 
         <!-- 右：大屏 -->
-        <div class="lg:col-span-8 space-y-2 lg:sticky lg:top-2">
+        <div class="space-y-2 sticky top-1">
           <div class="flex flex-wrap items-end justify-between gap-2">
             <div>
               <div class="text-sm font-semibold text-slate-800">指挥大屏主视 · <span id="scenePlanTitle" class="text-sky-700">指挥默认</span></div>
-              <div class="text-[11px] text-slate-500">正在预览当前选中方案；切换左侧方案可对比不同布景</div>
+              <div class="text-[11px] text-slate-500" id="sceneSyncHint">当前编辑方案；可将本方案设为同步概览</div>
             </div>
             <div class="flex flex-wrap gap-3 text-[11px] text-slate-500">
               <span class="inline-flex items-center gap-1"><i class="inline-block w-2.5 h-2.5 rounded bg-sky-500"></i>可发布</span>
@@ -207,18 +227,32 @@
               <span class="inline-flex items-center gap-1"><i class="inline-block w-2.5 h-2.5 rounded border-2 border-amber-400"></i>选中</span>
             </div>
           </div>
-          <div id="sceneStage" class="bg-slate-900 rounded-2xl relative overflow-hidden border-2 border-slate-600 shadow-md w-full min-h-[420px]" style="aspect-ratio:16/9">
-            <div class="absolute top-3 left-3 z-10 text-[11px] px-2 py-1 rounded-lg bg-slate-950/70 text-slate-100 border border-slate-600">指挥大屏 · <span id="sceneRatioBadge">16:9</span></div>
-            <div class="absolute inset-0 opacity-40" style="background:radial-gradient(circle at 40% 55%,#0e7490,transparent 42%),linear-gradient(160deg,#0f172a,#082f49)"></div>
-            <div id="sceneGrid" class="absolute inset-0 pointer-events-none hidden" style="background-image:linear-gradient(rgba(148,163,184,.18) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,.18) 1px,transparent 1px);background-size:10% 10%"></div>
-            <div id="sceneSafe" class="absolute inset-[6%] border border-dashed border-amber-300/50 rounded-lg pointer-events-none hidden"></div>
-            <div id="sceneEmpty" class="absolute inset-0 z-[5] hidden flex flex-col items-center justify-center text-center px-6">
-              <div class="text-slate-300 text-sm font-medium">主视还没有可上线模型</div>
-              <p class="text-xs text-slate-400 mt-2 max-w-sm leading-5">在左侧点「加入模型」，选择已发布成果后，再拖到右侧大屏摆放。</p>
-              <button type="button" class="mt-4 rounded-xl bg-sky-600 text-white px-4 py-2 text-sm" onclick="openAddSceneModel()">加入已发布模型</button>
+          <div id="sceneStageWrap" class="grid gap-2" style="grid-template-columns:1fr">
+            <div id="sceneStage" class="bg-slate-900 rounded-2xl relative overflow-hidden border-2 border-slate-600 shadow-md w-full min-h-[380px]" style="aspect-ratio:16/9">
+              <div class="absolute top-3 left-3 z-10 text-[11px] px-2 py-1 rounded-lg bg-slate-950/70 text-slate-100 border border-slate-600">指挥大屏 · <span id="sceneRatioBadge">16:9</span></div>
+              <div class="scene-zone">
+                <div class="absolute scene-zone-sea"></div>
+                <div class="absolute scene-zone-berth"></div>
+                <div class="absolute scene-zone-yard"></div>
+                <div class="absolute left-[12%] top-[22%] text-[10px] text-sky-200/70">海域</div>
+                <div class="absolute left-[18%] top-[52%] text-[10px] text-slate-300/80">码头泊位</div>
+                <div class="absolute left-[58%] top-[62%] text-[10px] text-lime-200/70">堆场</div>
+              </div>
+              <div class="absolute inset-0 opacity-30" style="background:radial-gradient(circle at 40% 55%,#0e7490,transparent 42%),linear-gradient(160deg,#0f172a,#082f49)"></div>
+              <div id="sceneGrid" class="absolute inset-0 pointer-events-none hidden" style="background-image:linear-gradient(rgba(148,163,184,.18) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,.18) 1px,transparent 1px);background-size:5% 5%"></div>
+              <div id="sceneSafe" class="absolute inset-[6%] border border-dashed border-amber-300/50 rounded-lg pointer-events-none hidden"></div>
+              <div id="sceneEmpty" class="absolute inset-0 z-[5] hidden flex flex-col items-center justify-center text-center px-6">
+                <div class="text-slate-300 text-sm font-medium">主视还没有可上线模型</div>
+                <p class="text-xs text-slate-400 mt-2 max-w-sm leading-5">在左侧点「加入模型」，再拖到右侧大屏摆放。</p>
+                <button type="button" class="mt-4 rounded-xl bg-sky-600 text-white px-4 py-2 text-sm" onclick="openAddSceneModel()">加入已发布模型</button>
+              </div>
+              <div id="sceneObjs" class="absolute inset-0 z-[6]"></div>
+              <div class="absolute left-3 bottom-3 z-10 text-[11px] text-slate-200 bg-slate-950/55 rounded-lg px-2 py-1">拖动调整 · 吸附网格 · 视角：<span id="sceneViewLabel">指挥默认</span></div>
             </div>
-            <div id="sceneObjs" class="absolute inset-0 z-[6]"></div>
-            <div class="absolute left-3 bottom-3 z-10 text-[11px] text-slate-200 bg-slate-950/55 rounded-lg px-2 py-1">拖动色块调整位置 · 当前视角：<span id="sceneViewLabel">指挥默认</span></div>
+            <div id="sceneCompareStage" class="hidden bg-slate-900 rounded-2xl relative overflow-hidden border border-slate-500 w-full min-h-[220px]" style="aspect-ratio:16/9">
+              <div class="absolute top-2 left-2 z-10 text-[11px] px-2 py-1 rounded bg-slate-950/70 text-amber-200 border border-slate-600">对比：同步概览方案</div>
+              <div id="sceneCompareObjs" class="absolute inset-0"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -463,6 +497,8 @@ const SCENE_DEFAULTS = {
   ratio: '16:9',
   showGrid: true,
   showSafe: true,
+  snap: true,
+  compare: false,
   dirty: false,
   activePlanId: 'p1',
   overviewSync: { planId: 'p1', viewId: 'v_p1' },
@@ -491,6 +527,8 @@ function normalizeScene(raw) {
     if (!raw.overviewSync) raw.overviewSync = { planId: raw.activePlanId, viewId: (raw.plans[0] && raw.plans[0].activeViewId) || '' };
     if (raw.showGrid == null) raw.showGrid = true;
     if (raw.showSafe == null) raw.showSafe = true;
+    if (raw.snap == null) raw.snap = true;
+    if (raw.compare == null) raw.compare = false;
     return raw;
   }
   // 兼容旧版扁平结构
@@ -510,6 +548,8 @@ function normalizeScene(raw) {
     ratio: raw.ratio || '16:9',
     showGrid: true,
     showSafe: true,
+    snap: true,
+    compare: false,
     dirty: false,
     activePlanId: 'p1',
     overviewSync: { planId: 'p1', viewId: plan.activeViewId },
@@ -902,9 +942,23 @@ function clearSceneDirty() {
 function sceneObjKind(it) {
   const n = (it && it.name) || '';
   if (/倾斜|航测|全域/.test(n)) return '倾斜摄影';
-  if (/BIM|泊位|堆场/.test(n)) return 'BIM/精细模';
-  if (!it.ok) return '草稿';
+  if (/BIM|泊位/.test(n)) return 'BIM';
+  if (/堆场/.test(n)) return '精细模';
+  if (!it || !it.ok) return '草稿';
   return '模型';
+}
+
+function sceneObjIcon(it) {
+  const k = sceneObjKind(it);
+  if (k === '倾斜摄影') return 'fa-globe';
+  if (k === 'BIM') return 'fa-cube';
+  if (k === '精细模') return 'fa-warehouse';
+  return 'fa-box';
+}
+
+function snapVal(v) {
+  if (!scene.snap) return v;
+  return Math.round(v / 2) * 2;
 }
 
 function renderSceneSummary() {
@@ -940,6 +994,17 @@ function renderScene() {
   if (ratioBadge) ratioBadge.textContent = scene.ratio === 'desk' ? '工作站' : '16:9';
   document.getElementById('sceneGrid').classList.toggle('hidden', !scene.showGrid);
   document.getElementById('sceneSafe').classList.toggle('hidden', !scene.showSafe);
+  const snapBadge = document.getElementById('sceneSnapBadge');
+  if (snapBadge) snapBadge.textContent = scene.snap ? '开' : '关';
+
+  const sync = scene.overviewSync || {};
+  const syncPlan = (scene.plans || []).find((p) => p.id === sync.planId);
+  const syncHint = document.getElementById('sceneSyncHint');
+  if (syncHint) {
+    syncHint.textContent = syncPlan
+      ? ('编辑中：「' + plan.name + '」 · 同步概览：「' + syncPlan.name + '」' + (syncPlan.id === plan.id ? '（本方案）' : ''))
+      : ('编辑中：「' + plan.name + '」 · 尚未设置同步概览');
+  }
 
   const view = (plan.views || []).find((v) => v.id === plan.activeViewId);
   document.getElementById('sceneViewLabel').textContent = view ? view.name : plan.name;
@@ -959,7 +1024,7 @@ function renderScene() {
       it.locked ? '锁定' : ''
     ].filter(Boolean).join(' · ');
     return `<button type="button" data-id="${it.id}" class="w-full text-left rounded-xl px-3 py-2 ${on ? 'bg-slate-800 text-white' : 'hover:bg-slate-50 text-slate-700'}">
-      <div class="truncate font-medium">${it.name}</div>
+      <div class="truncate font-medium"><i class="fa-solid ${sceneObjIcon(it)} mr-1 opacity-70"></i>${it.name}</div>
       <div class="text-[11px] ${on ? 'text-slate-300' : 'text-slate-400'} mt-0.5">${tags}</div>
     </button>`;
   }).join('') || '<p class="text-xs text-slate-400 px-2 py-3">还没有对象。<br>点「加入模型」开始布景。</p>';
@@ -971,15 +1036,62 @@ function renderScene() {
       ? 'bg-sky-500/85 border-sky-200 text-white'
       : 'bg-slate-500/75 border-slate-300 text-slate-100';
     return `<button type="button" data-id="${it.id}" class="absolute rounded-lg border text-left text-[11px] px-2 py-1.5 shadow ${tone} ${on ? 'ring-2 ring-amber-300' : ''}" style="left:${it.x}%;top:${it.y}%;width:${it.w}%;height:${it.h}%;z-index:${it.z || 1}">
-      <div class="text-[10px] opacity-80">${kind}${it.locked ? ' · 锁定' : ''}</div>
+      <div class="text-[10px] opacity-80"><i class="fa-solid ${sceneObjIcon(it)} mr-1"></i>${kind}${it.locked ? ' · 锁定' : ''}</div>
       <div class="font-semibold leading-tight mt-0.5">${it.name}</div>
     </button>`;
   }).join('');
 
+  renderSceneLayers();
+  renderSceneCompare();
   renderSceneProp();
   renderSceneViews();
   renderSceneSummary();
   bindSceneEvents();
+}
+
+function renderSceneLayers() {
+  const el = document.getElementById('sceneLayers');
+  if (!el) return;
+  const plan = activePlan();
+  const sorted = (plan.items || []).slice().sort((a, b) => (b.z || 0) - (a.z || 0));
+  el.innerHTML = sorted.map((it) => {
+    const on = it.id === plan.current;
+    return `<div class="flex items-center gap-1 rounded-lg px-2 py-1.5 ${on ? 'bg-slate-800 text-white' : 'hover:bg-slate-50'}">
+      <button type="button" class="flex-1 text-left truncate text-xs" onclick="selectSceneObj('${it.id}')">
+        <i class="fa-solid ${sceneObjIcon(it)} mr-1 opacity-70"></i>L${it.z || 1} · ${it.name}
+        ${it.visible === false ? ' · 隐' : ''}${it.locked ? ' · 锁' : ''}
+      </button>
+      <button type="button" class="text-[10px] px-1 ${on ? 'text-slate-200' : 'text-slate-500'}" onclick="moveSceneLayer('${it.id}',1)">↑</button>
+      <button type="button" class="text-[10px] px-1 ${on ? 'text-slate-200' : 'text-slate-500'}" onclick="moveSceneLayer('${it.id}',-1)">↓</button>
+    </div>`;
+  }).join('') || '<p class="text-xs text-slate-400 px-1">暂无图层</p>';
+}
+
+function selectSceneObj(id) {
+  const plan = activePlan();
+  plan.current = id;
+  renderScene();
+}
+
+function renderSceneCompare() {
+  const wrap = document.getElementById('sceneStageWrap');
+  const box = document.getElementById('sceneCompareStage');
+  const objs = document.getElementById('sceneCompareObjs');
+  if (!wrap || !box || !objs) return;
+  const on = !!scene.compare;
+  box.classList.toggle('hidden', !on);
+  wrap.style.gridTemplateColumns = on ? '1fr 1fr' : '1fr';
+  if (!on) return;
+  const sync = scene.overviewSync || {};
+  const plan = (scene.plans || []).find((p) => p.id === sync.planId) || activePlan();
+  const items = (plan.items || []).filter((it) => it.visible !== false).slice().sort((a, b) => (a.z || 0) - (b.z || 0));
+  objs.innerHTML = items.map((it) => {
+    const tone = it.ok ? 'bg-amber-500/70 border-amber-200 text-white' : 'bg-slate-500/60 border-slate-300 text-slate-100';
+    return `<div class="absolute rounded-lg border text-[10px] px-1.5 py-1 ${tone}" style="left:${it.x}%;top:${it.y}%;width:${it.w}%;height:${it.h}%;z-index:${it.z || 1}">
+      <div class="opacity-80"><i class="fa-solid ${sceneObjIcon(it)}"></i> ${sceneObjKind(it)}</div>
+      <div class="font-semibold">${it.name}</div>
+    </div>`;
+  }).join('') || '<div class="absolute inset-0 flex items-center justify-center text-xs text-slate-400">同步方案暂无对象</div>';
 }
 
 function renderSceneProp() {
@@ -1041,8 +1153,12 @@ function bindSceneEvents() {
       if (it.locked) { AdminKit.toast('对象已锁定，请先解锁'); renderScene(); return; }
       const stage = document.getElementById('sceneStage').getBoundingClientRect();
       const move = (e) => {
-        it.x = Math.max(2, Math.min(80, ((e.clientX - stage.left) / stage.width) * 100 - it.w / 2));
-        it.y = Math.max(2, Math.min(75, ((e.clientY - stage.top) / stage.height) * 100 - it.h / 2));
+        let x = ((e.clientX - stage.left) / stage.width) * 100 - it.w / 2;
+        let y = ((e.clientY - stage.top) / stage.height) * 100 - it.h / 2;
+        x = snapVal(Math.max(2, Math.min(80, x)));
+        y = snapVal(Math.max(2, Math.min(75, y)));
+        it.x = x;
+        it.y = y;
         b.style.left = it.x + '%';
         b.style.top = it.y + '%';
       };
@@ -1056,6 +1172,110 @@ function bindSceneEvents() {
       window.addEventListener('pointerup', up);
     };
   });
+}
+
+function currentSceneObj() {
+  const plan = activePlan();
+  return (plan.items || []).find((x) => x.id === plan.current);
+}
+
+function alignSceneObj(mode) {
+  const it = currentSceneObj();
+  if (!it) { AdminKit.toast('请先选中对象'); return; }
+  if (!it.ok || it.locked) { AdminKit.toast('当前对象不可调整'); return; }
+  if (mode === 'left') it.x = 4;
+  if (mode === 'center') it.x = Math.max(2, 50 - it.w / 2);
+  if (mode === 'right') it.x = Math.max(2, 96 - it.w);
+  it.x = snapVal(it.x);
+  markSceneDirty();
+  renderScene();
+}
+
+function nudgeSceneObj(dx, dy) {
+  const it = currentSceneObj();
+  if (!it) { AdminKit.toast('请先选中对象'); return; }
+  if (!it.ok || it.locked) { AdminKit.toast('当前对象不可调整'); return; }
+  it.x = snapVal(Math.max(2, Math.min(80, it.x + dx)));
+  it.y = snapVal(Math.max(2, Math.min(75, it.y + dy)));
+  markSceneDirty();
+  renderScene();
+}
+
+function layerBringFront() {
+  const plan = activePlan();
+  const it = currentSceneObj();
+  if (!it) { AdminKit.toast('请先选中对象'); return; }
+  const maxZ = Math.max(0, ...(plan.items || []).map((x) => x.z || 0));
+  it.z = maxZ + 1;
+  markSceneDirty();
+  renderScene();
+}
+
+function layerSendBack() {
+  const plan = activePlan();
+  const it = currentSceneObj();
+  if (!it) { AdminKit.toast('请先选中对象'); return; }
+  const zs = (plan.items || []).map((x) => x.z || 1);
+  const minZ = zs.length ? Math.min.apply(null, zs) : 1;
+  it.z = minZ - 1;
+  markSceneDirty();
+  renderScene();
+}
+
+function toggleSceneSnap() {
+  scene.snap = !scene.snap;
+  markSceneDirty();
+  renderScene();
+  AdminKit.toast(scene.snap ? '已开启网格吸附' : '已关闭网格吸附');
+}
+
+function toggleSceneCompare() {
+  scene.compare = !scene.compare;
+  renderScene();
+  AdminKit.toast(scene.compare ? '已打开对比预览' : '已关闭对比预览');
+}
+
+function runScenePublishCheck() {
+  const plan = activePlan();
+  const items = plan.items || [];
+  const issues = [];
+  if (sceneDirty) issues.push({ level: 'warn', text: '存在未保存改动，请先点右上角「保存」' });
+  const drafts = items.filter((x) => !x.ok);
+  if (drafts.length) issues.push({ level: 'error', text: '含 ' + drafts.length + ' 个草稿/不可上线对象：' + drafts.map((x) => x.name).join('、') });
+  items.forEach((it) => {
+    if (it.x < 0 || it.y < 0 || it.x + it.w > 100 || it.y + it.h > 100) {
+      issues.push({ level: 'warn', text: '「' + it.name + '」可能越出主视边界' });
+    }
+  });
+  for (let i = 0; i < items.length; i++) {
+    for (let j = i + 1; j < items.length; j++) {
+      const a = items[i];
+      const b = items[j];
+      if (a.visible === false || b.visible === false) continue;
+      const overlap = !(a.x + a.w <= b.x || b.x + b.w <= a.x || a.y + a.h <= b.y || b.y + b.h <= a.y);
+      if (overlap) issues.push({ level: 'warn', text: '「' + a.name + '」与「' + b.name + '」区域重叠' });
+    }
+  }
+  const sync = scene.overviewSync || {};
+  if (sync.planId !== plan.id) issues.push({ level: 'info', text: '当前方案尚未设为同步概览' });
+  if (!(plan.views || []).length) issues.push({ level: 'warn', text: '尚未保存命名视角' });
+
+  const box = document.getElementById('sceneCheckBox');
+  if (!box) return;
+  box.classList.remove('hidden');
+  if (!issues.length) {
+    box.className = 'mt-3 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-xs text-emerald-900 space-y-1';
+    box.innerHTML = '<div class="font-medium">发布检查通过</div><div>无阻塞项，可将本方案同步概览。</div>';
+    AdminKit.toast('发布检查通过');
+    return;
+  }
+  const hasError = issues.some((x) => x.level === 'error');
+  box.className = 'mt-3 rounded-xl border p-3 text-xs space-y-1 ' + (hasError ? 'border-rose-200 bg-rose-50 text-rose-900' : 'border-amber-200 bg-amber-50 text-amber-900');
+  box.innerHTML = '<div class="font-medium mb-1">发布检查结果（' + issues.length + '）</div>' + issues.map((x) => {
+    const tag = x.level === 'error' ? '阻塞' : (x.level === 'warn' ? '注意' : '提示');
+    return '<div>[' + tag + '] ' + x.text + '</div>';
+  }).join('');
+  AdminKit.toast(hasError ? '检查未通过，请处理阻塞项' : '检查完成，有注意事项');
 }
 
 function renderScenePlans() {
